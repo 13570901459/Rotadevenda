@@ -1,0 +1,67 @@
+  
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+<button onclick="history.back()"style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+    Voltar
+  </button>
+  
+
+  <button onclick="location.href='planobiz125es.html'"style="background-color: green ; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
+    Próximo
+  </button>
+    </div>
+
+<button onclick="compartilharWhatsApp()" style="background-color: #25D366; color: white; padding: 10px 20px; border: none; border-radius: 5px; display: flex; align-items: center; gap: 8px;">
+  <!-- Ícone genérico de compartilhar -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
+    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.01 3.01 0 000-1.4l7.02-4.11A3 3 0 0018 7.91 3 3 0 1015 5a3.01 3.01 0 00.04.52L8.02 9.63a3 3 0 100 4.73l7.02 4.11c-.03.16-.04.33-.04.5a3 3 0 103-2.89z"/>
+  </svg>
+
+  
+</button>
+
+
+
+  /* botao de baixar catalgo */
+  .btn-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border: 2px solid #dc3545;
+  border-radius: 50%;
+  color: #dc3545;
+  font-size: 22px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.btn-download:hover {
+  background-color: #dc3545;
+  color: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+}
+
+
+<!-- BOTÃO DE DOWNLOAD DA IMAGEM -->
+<a href="imagem/palnopop.png" download class="btn-download" title="Baixar imagem">
+  <i class="bi bi-download"></i>
+</a>
+
+
+
+
+
+
+function compartilharWhatsApp() {
+    var url = window.location.href;
+    var mensagem = encodeURIComponent("Acabei de te enviar os planos da disponíveis, dá uma olhadinha com calma e vê qual se encaixa melhor no seu orçamento: " + url);
+    var whatsappUrl = "https://wa.me/?text=" + mensagem;
+    window.open(whatsappUrl, '_blank');
+  }
