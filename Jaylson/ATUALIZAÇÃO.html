@@ -1,518 +1,975 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Planos de Consórcio</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Favicon -->
-  <link rel="shortcut icon" href="PCX CBS.jpg" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <meta charset="utf-8" />
+    <title>JAYLSON ARAÚJO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
 
-  
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-    }
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="sua-foto.png" type="image/x-icon">
 
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      text-align: center;
-    }
+    <!-- Link BoxIcons -->
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
 
-    .moto-info {
-      margin-bottom: 20px;
-    }
+    <!-- Link Swiper's CSS -->
+    <link rel="stylesheet" href="swiper-bundle.css" />
 
-    .moto-img {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto 10px;
-      border-radius: 10px;
-    }
+    <!-- Link CSS Style -->
+    <link rel="stylesheet" href="style.css">
 
-    .moto-nome {
-      font-size: 22px;
-      font-weight: bold;
-      color: #333;
-      margin-bottom: 15px;
-    }
-
-    h1 {
-      color: #d30000;
-      margin-bottom: 20px;
-    }
-
-    h2 {
-      color: #d30000;
-      margin-top: 30px;
-    }
-
-    .btn-video {
-      display: block;
-      margin: 0 auto 30px;
-      background: #d30000;
-      color: white;
-      padding: 12px 20px;
-      text-align: center;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      text-decoration: none;
-      max-width: 300px;
-      cursor: pointer;
-    }
-
-    .btn-video:hover {
-      background: #a80000;
-    }
-
-    .plano-section {
-      margin-bottom: 30px;
-    }
-
-    .btn-parcela {
-      display: block;
-      width: 80%;
-      margin: 10px auto;
-      padding: 12px;
-      background: #efefef;
-      border: 2px solid #d30000;
-      color: #d30000;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn-parcela:hover {
-      background: #d30000;
-      color: white;
-    }
-
-    .btn-parcela.selecionado {
-      background: #d30000;
-      color: white;
-    }
-
-    .nota {
-      font-style: italic;
-      font-size: 14px;
-      color: #555;
-      margin-bottom: 30px;
-    }
-
-    .btn-interesse {
-      display: block;
-      margin: 20px auto;
-      background: #25D366;
-      color: white;
-      padding: 12px 20px;
-      text-align: center;
-      border: none;
-      border-radius: 6px;
-      font-size: 16px;
-      max-width: 300px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .btn-interesse:hover {
-      background: #1da851;
-    }
-
-
-
-/* Espaçamento entre colunas e linhas */
-  
-
-    .parcelas-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-  }
-  
-
-  .radio-option {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    border: 2px solid transparent;
-    border-radius: 9999px;
-    cursor: pointer;
-    transition: background-color 0.2s, border-color 0.2s;
-  }
-  .radio-option:hover {
-    background-color: #f3f3f3;
-  }
-
-  input[type="radio"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border: 2px solid #ccc;
-    border-radius: 50%;
-    margin-right: 0.75rem;
-    position: relative;
-    cursor: pointer;
-  }
-  input[type="radio"]::before {
-    content: "";
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    background-color: transparent;
-  }
-
-  input[type="radio"]:checked {
-    border-color: #d10000;
-  }
-  input[type="radio"]:checked::before {
-    background-color: #d10000;
-  }
-  input[type="radio"]:checked + span {
-    font-weight: bold;
-    color: #000;
-  }
-  input[type="radio"]:checked ~ .radio-option,
-  input[type="radio"]:checked + span {
-    /* Não é usado ~ porque usamos input + span dentro do mesmo label */
-  }
-  /* Borda vermelha aplicada ao label pai quando o input filho estiver checked */
-  input[type="radio"]:checked {
-    outline: none;
-  }
-  input[type="radio"]:checked + span {
-    /* placeholder */
-  }
-
-  /* botao de baixar catalgo */
-  .btn-download {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 50px;
-  height: 50px;
-  background-color: transparent;
-  border: 2px solid #dc3545;
-  border-radius: 50%;
-  color: #dc3545;
-  font-size: 22px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  margin-top: 10px;
-}
-
-.btn-download:hover {
-  background-color: #dc3545;
-  color: white;
-  transform: scale(1.05);
-  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
-}
-
-  </style>
+    <!-- Scroll suave -->
+    <style>
+      
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
 </head>
+
 <body>
 
-<button onclick="history.back()"style="background-color: red; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-    Voltar
-  </button>
-  
-
-  <button onclick="location.href='planoscg160titan.html'"style="background-color: green ; color: white; padding: 10px 20px; border: none; border-radius: 5px;">
-    Próximo
-  </button>
-    </div>
-
-<button onclick="compartilharWhatsApp()" style="background-color: #25D366; color: white; padding: 10px 20px; border: none; border-radius: 5px; display: flex; align-items: center; gap: 8px;">
-  <!-- Ícone genérico de compartilhar -->
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
-    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7a3.01 3.01 0 000-1.4l7.02-4.11A3 3 0 0018 7.91 3 3 0 1015 5a3.01 3.01 0 00.04.52L8.02 9.63a3 3 0 100 4.73l7.02 4.11c-.03.16-.04.33-.04.5a3 3 0 103-2.89z"/>
-  </svg>
-
-  
-</button>
-
-
-  <div class="container">
-
-    <!-- IMAGEM E NOME DA MOTO -->
-    <div class="moto-info">
-      <img src="PCX CBS.jpg" alt="Moto" class="moto-img">
-      <div class="moto-nome">PCX CBS</div>
-    </div>
-
-    <!-- BOTÃO DE VÍDEO -->
-    <a href="https://youtu.be/DWdzDToDNeo?si=tkHLe4_7vEUSZwLc" target="_blank" class="btn-video">
-      Como Funciona o Consórcio
-    </a>
-
-    <!-- TÍTULO E PLANOS -->
     <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <title>Planos Honda – Carrossel</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- SwiperJS CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-</head>
-
-<body class="bg-gray-100 p-6">
-  <!-- 🟥 CARROSSEL -->
-  <div class="swiper mySwiper">
-    <div class="swiper-wrapper">
-
-      <!-- ░░░ SLIDE 1 – #Vou de Honda ░░░ -->
-      <div class="swiper-slide">
-        <div id="plano-honda-1" class="relative mx-auto w-80 rounded-xl bg-white p-5 shadow-lg">
-          <img src="//ddccctl8fxsqn.cloudfront.net/content/static/images/prod/2024-06/vou-honda_nova.png.webp"
-               alt="Plano #VoudeHonda" class="vehicle-plan_icon--image">
-               <!-- BOTÃO DE VÍDEO -->
-    <a href="https://youtu.be/l0IgydHQqyY?si=boeQE5PsoU2ZxXxv" target="_blank" class="text-sm text-red-600 hover:underline flex items-center space-x-1">
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M10 15l5.19-3L10 9v6z"/><path d="M21 6.5a2.5 2.5 0 0 0-2.5-2.5H5.5A2.5 2.5 0 0 0 3 6.5v11a2.5 2.5 0 0 0 2.5 2.5h13a2.5 2.5 0 0 0 2.5-2.5v-11zM5.5 5h13a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5v-11A1.5 1.5 0 0 1 5.5 5z"/>
-  </svg>
-  <span>Como funciona o Plano</span>
-</a>
-
-          <h2 class="moto-nome mb-4 text-lg font-semibold">#Vou de Honda – PCX CBS</h2>
-
-          <!-- Nº de parcelas -->
-<p class="mb-1 text-sm font-medium text-gray-500">Número de parcelas:</p>
-<div class="grid grid-cols-3 gap-2 text-sm">
-  <label class="flex items-center space-x-1 font-medium">
-    <input type="radio" name="parcelas-1" value="80x" checked
-           data-valor="332,41" data-cont="12" class="h-3 w-3 accent-red-600">
-    <span>80x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="60x" data-valor="430,54" data-cont="16" class="h-3 w-3 accent-red-600" />
-    <span>60x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="48x" data-valor="530,31" data-cont="20" class="h-3 w-3 accent-red-600" />
-    <span>48x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="36x" data-valor="698,65" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>36x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="24x" data-valor="1.027,60" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>24x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="18x" data-valor="1.362,19" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>18x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-1" value="12x" data-valor="2.031,41" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>12x</span>
-  </label>
-</div>
+    <html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Consultor Honda - JAYLSON ARAÚJO</title>
+        <!-- Ícones do Bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
+        <style>
 
 
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-          <!-- Valor da parcela -->
-          <p class="mt-4 mb-1 text-sm font-medium text-gray-500">Valor da parcela:</p>
-          <span id="valor-seguro-1" class="text-2xl font-bold leading-none">R$ 332,41</span>
-
-          <!-- Contemplações -->
-          <div class="mt-4 flex items-center justify-between text-sm">
-            <p class="text-gray-500">Previsão de<br>contemplações mensais:</p>
-            <p id="contemplacoes-1" class="text-lg font-semibold">12</p>
-          </div>
-             <div class="mt-4 flex items-center justify-between text-sm">
-  <p class="text-gray-500">Documentação inclusa*:</p>
-
-  <img src="//ddccctl8fxsqn.cloudfront.net/content/static/images/prod/2019-06/no.svg" alt="Não incluso" class="h-5 w-5">
-</div>
-          <div class="mt-4 text-sm">
-            <p class="text-gray-500">Valor do crédito:</p>
-            <p class="text-lg font-semibold">R$ 19.798,00</p>
-          </div>
-          <!-- Botão Whats -->
-          <a id="btnInteresse-1" target="_blank"
-             class="mt-6 block w-full rounded-md bg-green-600 py-2 text-center font-semibold text-white transition hover:bg-green-700">
-            Tenho interesse
-          </a>
-        </div>
-      </div>
-
-      <!-- ░░░ SLIDE 2 – #Vou de Honda+ ░░░ -->
-      <div class="swiper-slide">
-        <div id="plano-honda-2" class="relative mx-auto w-80 rounded-xl bg-white p-5 shadow-lg">
-          <img src="//ddccctl8fxsqn.cloudfront.net/content/static/images/prod/2024-05/vou-honda-mais_.png.webp"
-               alt="Plano #VoudeHonda+" class="vehicle-plan_icon--image">
-               <!-- BOTÃO DE VÍDEO -->
-    <a href="https://youtu.be/Q5yWqphpKJ4?si=aP2waBUosgstArd6" target="_blank" class="text-sm text-red-600 hover:underline flex items-center space-x-1">
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M10 15l5.19-3L10 9v6z"/><path d="M21 6.5a2.5 2.5 0 0 0-2.5-2.5H5.5A2.5 2.5 0 0 0 3 6.5v11a2.5 2.5 0 0 0 2.5 2.5h13a2.5 2.5 0 0 0 2.5-2.5v-11zM5.5 5h13a1.5 1.5 0 0 1 1.5 1.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 17.5v-11A1.5 1.5 0 0 1 5.5 5z"/>
-  </svg>
-  <span>Como funciona o Plano</span>
-</a>
-          <h2 class="moto-nome mb-4 text-lg font-semibold">#Vou de Honda+ – PCX CBS</h2>
-<!-- Nº de parcelas -->
-<p class="mb-1 text-sm font-medium text-gray-500">Número de parcelas:</p>
-<div class="grid grid-cols-3 gap-2 text-sm">
-  <label class="flex items-center space-x-1 font-medium">
-    <input type="radio" name="parcelas-2" value="80x" checked
-           data-valor="355,48" data-cont="12" class="h-3 w-3 accent-red-600">
-    <span>80x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="60x" data-valor="460,42" data-cont="16" class="h-3 w-3 accent-red-600" />
-    <span>60x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="48x" data-valor="567,12" data-cont="20" class="h-3 w-3 accent-red-600" />
-    <span>48x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="36x" data-valor="747,14" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>36x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="24x" data-valor="1.098,93" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>24x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="18x" data-valor="1.456,75" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>18x</span>
-  </label>
-
-  <label class="flex cursor-pointer items-center space-x-1">
-    <input type="radio" name="parcelas-2" value="12x" data-valor="2.172,41" data-cont="26" class="h-3 w-3 accent-red-600" />
-    <span>12x</span>
-  </label>
-</div>
+body, html {
+  overflow-x: hidden; /* Impede rolagem lateral */
+  width: 100%;
+}
 
 
 
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+            }
+            #header_bg {
+                background-size: cover;
+                background-position: center;
+                height: 120px;
+            }
+    
+            .header_seller_image {
+                width: 100px;
+                height: 100px;
+                background-size: cover;
+                background-position: center;
+                border-radius: 50%;
+                border: 4px solid #fff;
+                box-shadow: 0 0 10px rgba(0,0,0,0.2);
+            }
+    
+            .header_store_image {
+                width: 70px;
+                height: 70px;
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+    
+            .header_seller_name {
+                font-size: 22px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+            }
+    
+            .header_seller_bio {
+                font-size: 16px;
+                color: #555;
+            }
+    
+            .btn-circle {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                display: inline-flex;
+                justify-content: center;
+                align-items: center;
+            }
+    
+            .btn-primary {
+                background-color: #d90429;
+                border: none;
+            }
+    
+            .btn-outline-primary {
+                border-color: #d90429;
+                color: #d90429;
+            }
+    
+            .btn-outline-primary:hover {
+                background-color: #d90429;
+                color: white;
+            }
+    
+            @media (max-width: 768px) {
+                .header_seller_image {
+                    margin-bottom: 10px;
+                }
+                
+            }
+         
+          
+            .whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  background-color: #25D366;
+  color: white;
+  border-radius: 30px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  font-family: Arial, sans-serif;
+  transition: transform 0.3s;
+}
 
-          <!-- Valor da parcela -->
-          <p class="mt-4 mb-1 text-sm font-medium text-gray-500">Valor da parcela:</p>
-          <span id="valor-seguro-2" class="text-2xl font-bold leading-none">R$ 355,48</span>
+.whatsapp-float:hover {
+  transform: scale(1.05);
+}
 
-          <!-- Contemplações -->
-          <div class="mt-4 flex items-center justify-between text-sm">
-            <p class="text-gray-500">Previsão de<br>contemplações mensais:</p>
-            <p id="contemplacoes-2" class="text-lg font-semibold">12</p>
-          </div>
-          <div class="mt-4 flex items-center justify-between text-sm">
-            <p class="text-gray-500">Documentação inclusa*:</p>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 01.083 1.32l-.083.094-8.006 8.007a1 1 0 01-1.32.083l-.094-.083-4.004-4.004a1 1 0 011.32-1.497l.094.083L8 12.584l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
-            </svg>
- </div>
+.whatsapp-text {
+  margin-left: 10px;
+  font-weight: bold;
+  white-space: nowrap;
+}
 
 
-
-          <div class="mt-4 text-sm">
-            <p class="text-gray-500">Valor do crédito:</p>
-            <p class="text-lg font-semibold">R$ 19.798,00</p>
-          </div>
-
-          <!-- Botão Whats -->
-          <a id="btnInteresse-2" target="_blank"
-             class="mt-6 block w-full rounded-md bg-green-600 py-2 text-center font-semibold text-white transition hover:bg-green-700">
-            Tenho interesse
-          </a>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Navegação -->
-    <div class="swiper-button-next"></div>
-    <div class="swiper-button-prev"></div>
-    <div class="swiper-pagination"></div>
-  </div>
-<!-- BOTÃO DE DOWNLOAD DA IMAGEM -->
-<a href="imagem/planopcxcbs.png" download class="btn-download" title="Baixar imagem">
-  <i class="bi bi-download"></i>
-</a>
-  <!-- SwiperJS -->
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-  <script>
-    /* === Swiper === */
-    new Swiper('.mySwiper', {
-      slidesPerView: 1,
-      spaceBetween: 20,
-      loop: true,
-      navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' },
-      pagination: { el: '.swiper-pagination', clickable: true },
-    });
-
-    /* === Cartões / WhatsApp === */
-    const numeroZap = '5581991152441';
-
-    function iniciarCartao(id, idx) {
-      const card       = document.getElementById(id);
-      const radios     = card.querySelectorAll(`input[name="parcelas-${idx}"]`);
-      const spanValor  = document.getElementById(`valor-seguro-${idx}`);
-      const spanCont   = document.getElementById(`contemplacoes-${idx}`);
-      const btn        = document.getElementById(`btnInteresse-${idx}`);
-      const nomePlano  = card.querySelector('.moto-nome').textContent.trim();
-
-      function atualiza(radioEl) {
-        const parcelas = radioEl.value;
-        const valor    = radioEl.dataset.valor;
-        const cont     = radioEl.dataset.cont;
-
-        spanValor.textContent = `R$ ${valor}`;
-        spanCont.textContent  = cont;
-
-        const msg = `Olá! Tenho interesse no consórcio: ${nomePlano}. Plano escolhido: ${parcelas} de R$ ${valor}. Previsão de ${cont} contemplações mensais.`;
-        btn.href  = `https://wa.me/${numeroZap}?text=${encodeURIComponent(msg)}`;
-      }
-
-      /* valor inicial */
-      atualiza(card.querySelector('input:checked'));
-
-      /* quando trocar */
-      radios.forEach(r => r.addEventListener('change', e => atualiza(e.target)));
+.nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      max-width: 400px;
+      margin: 40px auto;
     }
 
-    /* liga os dois slides */
-    iniciarCartao('plano-honda-1', 1);
-    iniciarCartao('plano-honda-2', 2);
+    .nav-button {
+      padding: 12px 24px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-button:hover {
+      background-color: #0056b3;
+    }
+
+    .nav-button i {
+      margin: 0 8px;
+    }
+
+    .header_seller_image {
+    width: 140px;              /* aumenta o tamanho da imagem */
+    height: 140px;
+    border-radius: 50%;        /* imagem redonda */
+    background-size: cover;    /* cobre toda a área */
+    background-position: center;
+    box-shadow: 0 0 10px #ccc; /* sombra suave */
+    border: 4px solid white;   /* borda opcional */
+}
+
+/* --- CSS complementares --- */
+.product-box {
+  --bs-border-opacity: 1;
+  border-width: 2px;                /* borda mais evidente */
+}
+
+/* selo lançamento */
+.badge-launch {
+  position: absolute;
+  top: -10px;                       /* sobe um pouquinho */
+  left: 14px;
+  background: #d50032;              /* vermelho Honda */
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: .35rem .35rem 0 0; /* só cantos de cima arredondados */
+}
+
+/* ícone de zoom */
+.zoom-icon {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 1.4rem;
+  color: #d50032;                   /* mesma cor do vermelho */
+  text-decoration: none;
+}
+
+/* preço grande */
+.price {
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.price .asterisk {
+  font-size: 1rem;
+}
+
+/* texto “com Seguro…” em cinza claro */
+.extra {
+  color: #777;
+}
+
+/* opcional: animação de hover no botão vermelho */
+.btn-danger:hover {
+  filter: brightness(1.1);
+}
 
 
-    function compartilharWhatsApp() {
-    var url = window.location.href;
-    var mensagem = encodeURIComponent("Acabei de te enviar os planos da disponíveis, dá uma olhadinha com calma e vê qual se encaixa melhor no seu orçamento: " + url);
-    var whatsappUrl = "https://wa.me/?text=" + mensagem;
-    window.open(whatsappUrl, '_blank');
-  }
-  </script>
-</body>
+   </style>
+    </head>
+    <body>
+    
+    <header id="header">
+        
+        <!-- Topo com imagem de fundo -->
+        <p style="background-color: red; height: 30px;"></p>
+    
+        <div class="container">
 
-</html>
+            <!-- Linha da imagem do consultor e da loja -->
+            <div class="row">
+                <div class="col-6 d-flex align-items-center">
+                    <p class="header_seller_image mb-0" style="background-image: url('sua-foto.png');"></p>
+                  
+
+
+                </div>
+                
+                
+            <!-- Nome, Bio e Botões lateralmente -->
+            <div class="row align-items-center mt-3">
+                <div class="col-md-12 d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+                    <!-- Nome + Bio -->
+                    <div class="mb-3 mb-md-0">
+
+                        
+                        <p class="header_seller_name mb-1">
+                            JAYLSON ARAÚJO
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M9.51447 2.91542C8.90071 3.43846 8.1376 3.75455 7.33377 3.8187C5.45794 3.96839 3.96839 5.45794 3.8187 7.33377C3.75455 8.1376 3.43846 8.90071 2.91542 9.51447C1.69486 10.9467 1.69486 13.0533 2.91542 14.4855C3.43846 15.0993 3.75455 15.8624 3.8187 16.6662C3.96839 18.5421 5.45794 20.0316 7.33377 20.1813C8.1376 20.2455 8.90071 20.5615 9.51447 21.0846C10.9467 22.3051 13.0533 22.3051 14.4855 21.0846C15.0993 20.5615 15.8624 20.2455 16.6662 20.1813C18.5421 20.0316 20.0316 18.5421 20.1813 16.6662C20.2455 15.8624 20.5615 15.0993 21.0846 14.4855C22.3051 13.0533 22.3051 10.9467 21.0846 9.51447C20.5615 8.90071 20.2455 8.1376 20.1813 7.33377C20.0316 5.45794 18.5421 3.96839 16.6662 3.8187C15.8624 3.75455 15.0993 3.43846 14.4855 2.91542C13.0533 1.69486 10.9467 1.69486 9.51447 2.91542Z" fill="#0788F5"></path>
+                              <path d="M9 12L11 14L15.5 9.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                          </svg>
+                        </p>
+                        <p class="header_seller_bio mb-0">
+                            Ser livre não é ter duas asas, é ter duas rodas.
+                        </p>
+                    </div>
+    
+                    <!-- Botões -->
+                    <div class="d-flex flex-wrap justify-content-md-end gap-2">
+                  
+                        <a href="https://wa.me/5581982749115" class="btn btn-primary d-flex align-items-center">
+                            <i class="bi bi-whatsapp me-1"></i> Fale comigo
+                        </a>
+                        <a href="https://instagram.com/jaylson.motorac?igsh=MTMzMnk1Y3Zwczd4dQ%3D%3D" target="_blank" class="btn btn-outline-primary btn-circle">
+                            <i class="bi bi-instagram"></i>
+                        </a>
+                    </a>
+                    <a href="https://www.facebook.com/jaylson22" target="_blank" class="btn btn-outline-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                        <i class="bi bi-facebook"></i>
+                    </a>
+                        <a href="tel:+5581982749115" class="btn btn-outline-primary btn-circle">
+                            <i class="bi bi-telephone"></i>
+                        </a>
+                        <a href="https://youtube.com/" target="_blank" class="btn btn-outline-danger btn-circle">
+                            <i class="bi bi-youtube"></i>
+                        </a>
+                        <a href="catalogo.pdf" target="_blank" class="btn btn-outline-danger btn-circle">
+                            <i class="bi bi-download"></i>
+                        </a>
+                        
+                        <div>
+                            
+                            </a>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+
+
+    </header>
+    
+   <!-- BOTÃO FLUTUANTE WHATSAPP COM TEXTO -->
+<a href="https://wa.me/5581982749115" 
+target="_blank" 
+class="whatsapp-float">
+<img src="sua-foto.png" 
+    alt="WhatsApp" 
+    width="48" 
+    height="48" 
+    class="rounded-circle">
+<span class="whatsapp-text">Estou online. Fale agora!</span>
+</a>
+    
+    
+
+
+
+
+            
+    <!-- HEADER END -->
+
+    <!-- MAIN -->
+    <main>
+        <!-- HERO -->
+        <section class="hero container">
+            <div class="hero__content swiper" id="hero">
+                <div class="swiper-wrapper">
+                    <div class="hero__slide swiper-slide">
+                        <div class="hero__slide-text">
+                            <h1></h1>  <!-- posso escrever algo-->
+                            <p>A moto que você deseja, com a parcela que cabe no seu bolso!</p>
+                        </div>
+                        <div class="hero__slide-img">
+                            <img src="1.png" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- HERO END -->
+
+        <!-- ESCOLHA SUA MOTO -->
+       <div class='row'>
+  <!-- POP 110i +10 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='pop.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>POP 110i +10</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='moto1.jpg' class='img-fluid moto__img' alt='POP 110i +10'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 207,57<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='pop.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospop.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- BIZ 125 ES -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='dtBIZ125ES.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>BIZ 125 ES</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='BIZ 125 ESv1.jpg' class='img-fluid moto__img' alt='BIZ 125 ES'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 235,63<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='dtBIZ125ES.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planobiz125es.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- ELITE 125 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='dtELITE125.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>ELITE 125</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='ELITE 125.jpg' class='img-fluid moto__img' alt='ELITE 125'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 256,31<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='dtELITE125.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoelite125.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- BIZ 125 EX -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='BIZ125EX.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>BIZ 125 EX</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='BIZ 125 EX.jpg' class='img-fluid moto__img' alt='BIZ 125 EX'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 291,66<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='BIZ125EX.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planobiz125ex.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 START -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160START.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 START</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 START.jpg' class='img-fluid moto__img' alt='CG 160 START'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 304,58<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160START.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg160start.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- PCX CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='PCXCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>PCX CBS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='PCX CBS.jpg' class='img-fluid moto__img' alt='PCX CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 329,15<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='PCXCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospcxcbs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 FAN -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160FAN.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 FAN</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 FAN.jpg' class='img-fluid moto__img' alt='CG 160 FAN'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$  332,41<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160FAN.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg1160fan.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 TITAN -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160TITAN.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 TITAN</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 TITAN.jpg' class='img-fluid moto__img' alt='CG 160 TITAN'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 356,63<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160TITAN.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg160titan.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- PCX ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='PCXABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>PCX ABS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='PCX ABS.jpg' class='img-fluid moto__img' alt='PCX ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 361,12<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='PCXABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospcxabs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- NXR 160 BROS CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='NXR160BROSCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>NXR 160 BROS CBS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='NXR 160 BROS CBS.jpg' class='img-fluid moto__img' alt='NXR 160 BROS CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 381,19<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='NXR160BROSCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosnxr160broscbs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- NXR 160 BROS ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='NXR160BROSABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>NXR 160 BROS ABS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='NXR 160 BROS ABS.jpg' class='img-fluid moto__img' alt='NXR 160 BROS ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 397,55<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='NXR160BROSABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosnxr160brosabs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- XRE 190 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='XRE190.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>XRE 190</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='XRE 190.jpg' class='img-fluid moto__img' alt='XRE 190'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 416,83<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='XRE190.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosxre190.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CRF 250F -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CRF250F.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CRF 250F</h5>
+      <p class='text-center small text-muted mb-3'>Off Road</p>
+      <div class='text-center mb-3'>
+        <img src='CRF 250F.jpg' class='img-fluid moto__img' alt='CRF 250F'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 412,86<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CRF250F.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CRF250FPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CB 300F TWISTER CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CB 300FTWISTERCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CB 300F TWISTER CBS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CB 300F TWISTER CBS.jpg' class='img-fluid moto__img' alt='CB 300F TWISTER CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 433,92<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CB 300FTWISTERCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CB 300FTWISTERCBSPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- HONDA ADV -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='HONDAADV.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>HONDA ADV</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='HONDA ADV.jpg' class='img-fluid moto__img' alt='HONDA ADV'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 445,83<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='HONDAADV.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='HONDA ADVPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CB 300F TWISTER ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CB 300FTWISTERABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CB 300F TWISTER ABS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CB 300F TWISTER ABS.jpg' class='img-fluid moto__img' alt='CB 300F TWISTER ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 451,20<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CB 300FTWISTERABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CB 300F TWISTER ABSPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- XR 300L Tornado -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='XR300LTornado.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>XR 300L Tornado</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='XR 300L Tornado.jpg' class='img-fluid moto__img' alt='XR 300L Tornado'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 552,88<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='XR300LTornado.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='XR 300L TornadoPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- SAHARA 300 ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='SAHARA300ABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>SAHARA 300 ABS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='SAHARA 300 ABS.jpg' class='img-fluid moto__img' alt='SAHARA 300 ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 542,32<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='SAHARA300ABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='SAHARA 300 ABS  Adventure.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- SAHARA 300 ADV -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='SAHARA300ADV.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>SAHARA 300 ADV</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='SAHARA 300 ADV.jpg' class='img-fluid moto__img' alt='SAHARA 300 ADV'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 560,82<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='SAHARA300ADV.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='SAHARA 300 ADV.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+
+           <!-- HORNET 500 -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+    <span class="badge-launch">Lançamento</span>
+    <a href="hornet500.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">Hornet 500</h5>
+    <p class="text-center small text-muted mb-3">Street</p>
+    <div class="text-center mb-3">
+      <img src="hornet500v.png" class="img-fluid moto__img" alt="Hornet 500">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 780,03<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="hornet500.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CB 500FPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+
+  <!--<-- <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+<div class="product-box">
+<p class="title text-uppercase mb-0">CB 500X</p>
+<p class="subtitle mb-0">Adventure</p>
+<p class="image">
+    <img src="CB 500X.jpg" alt="Moto 1" class="moto__img"></p>
+    <p>
+        <a href="CB500X.html" class="btn btn-primary w-100 d-block mb-2">
+           Detalhes da moto
+        </a>
+      
+        <a href="CB 500XPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
+           Planos de consórcio
+        </a>
+      
+        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
+           Financiamento
+        </a>
+      </p>
+</div>                </div> -->
+    <!-- NX 500 -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+    <!-- selo “Lançamento”-->
+    <span class="badge-launch">Lançamento</span>
+
+    <!-- ícone de zoom (Bootstrap Icons) -->
+    <a href="DTNX500.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+
+    <!-- título + subtítulo -->
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">NX 500</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+
+    <!-- imagem -->
+    <div class="text-center mb-3">
+      <img src="NX500V.jpg" class="img-fluid moto__img" alt="NX 500">
+    </div>
+
+    <!-- preço -->
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 829,43<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+
+    <!-- botões -->
+    <a href="DTNX500.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="nx500plano.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- TRX 420 FOURTRAX FM -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="TRX420FOURTRAXFM.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">TRX 420 FOURTRAX FM</h5>
+    <p class="text-center small text-muted mb-3">Off Road</p>
+    <div class="text-center mb-3">
+      <img src="TRX 420 FOURTRAX FM.jpg" class="img-fluid moto__img" alt="TRX 420 FOURTRAX FM">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 931,48<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="TRX420FOURTRAXFM.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="TRX 420 FOURTRAX FMPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- NC 750X ABS MT -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+   <!-- <span class="badge-launch">Lançamento</span>-->
+    <a href="NC750XABSMT.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">NC 750X ABS MT</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+    <div class="text-center mb-3">
+      <img src="NC 750X ABS MT.jpg" class="img-fluid moto__img" alt="NC 750X ABS MT">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 971,39<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="NC750XABSMT.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="NC 750X ABS MTPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CB 1000R -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CB 1000R.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CB 1000R (70% do valor)
+</h5>
+    <p class="text-center small text-muted mb-3">Street</p>
+    <div class="text-center mb-3">
+      <img src="CB 1000R.jpg" class="img-fluid moto__img" alt="CB 1000R">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 994,93<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CB 1000R.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CB 1000RPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CBR 650R -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CBR 650R.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CBR 650R</h5>
+    <p class="text-center small text-muted mb-3">Sport</p>
+    <div class="text-center mb-3">
+      <img src="CBR 650R.jpg" class="img-fluid moto__img" alt="CBR 650R">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 1.000,52<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CBR 650R.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CBR 650RPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CRF 1100L AFRICA TWIN -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CRF1100LAFRICATWIN.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CRF 1100L AFRICA TWIN</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+    <div class="text-center mb-3">
+      <img src="CRF 1100L AFRICA TWIN.jpg" class="img-fluid moto__img" alt="CRF 1100L AFRICA TWIN">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 1.022,90<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CRF1100LAFRICATWIN.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CRF 1100L AFRICA TWINPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+
+        </div>
+        <!-- ESCOLHA SUA MOTO END -->
+
+        
+    </main>
+    <!-- MAIN END -->
+
+    <!-- FOOTER -->
+    <footer class="footer container">
+        
+            
+        <div class="copy">
+            <p>&copy; Todos os direitos reservados</p>
+            <span>Leandro Silva</span>
+        </div>
+    </footer>
+    <!-- FOOTER END -->
+
+    <!-- Swiper JS -->
+    <script src="assets/js/swiper-bundle.js"></script>
+    <script src="assets/js/style.js"></script>
+     <!-- Bootstrap JS (opcional, se for usar interações como modal ou dropdowns) -->
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+     <!-- SCRIPT DE FILTRO -->
+
 
 </body>
 </html>

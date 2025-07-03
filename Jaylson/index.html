@@ -196,6 +196,54 @@ body, html {
     border: 4px solid white;   /* borda opcional */
 }
 
+/* --- CSS complementares --- */
+.product-box {
+  --bs-border-opacity: 1;
+  border-width: 2px;                /* borda mais evidente */
+}
+
+/* selo lançamento */
+.badge-launch {
+  position: absolute;
+  top: -10px;                       /* sobe um pouquinho */
+  left: 14px;
+  background: #d50032;              /* vermelho Honda */
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 4px 12px;
+  border-radius: .35rem .35rem 0 0; /* só cantos de cima arredondados */
+}
+
+/* ícone de zoom */
+.zoom-icon {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 1.4rem;
+  color: #d50032;                   /* mesma cor do vermelho */
+  text-decoration: none;
+}
+
+/* preço grande */
+.price {
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+.price .asterisk {
+  font-size: 1rem;
+}
+
+/* texto “com Seguro…” em cinza claro */
+.extra {
+  color: #777;
+}
+
+/* opcional: animação de hover no botão vermelho */
+.btn-danger:hover {
+  filter: brightness(1.1);
+}
 
 
    </style>
@@ -315,417 +363,430 @@ class="whatsapp-float">
         <!-- HERO END -->
 
         <!-- ESCOLHA SUA MOTO -->
-        <div class="row">
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">POP 110i +10</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-     <img src="moto1.jpg" alt="Moto 1" class="moto__img">
-</p>
+       <div class='row'>
+  <!-- POP 110i +10 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='pop.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>POP 110i +10</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='moto1.jpg' class='img-fluid moto__img' alt='POP 110i +10'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 207,57<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='pop.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospop.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
 
-<!-- Botões -->
-<!-- Botões -->
-<p>
-    <a href="pop.html" class="btn btn-primary w-100 d-block mb-2">
-       Detalhes da moto
-    </a>
-  
-    <a href="planospop.html" class="btn btn-outline-danger w-100 d-block mb-2">
-       Planos de consórcio
-    </a>
-  
-    <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-       Financiamento
-    </a>
-  </p>
-</div>                </div>
-<!-- BIZ 125 ES -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">BIZ 125 ES</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="BIZ 125 ESv1.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="dtBIZ125ES.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planobiz125es.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-<!-- MOTO -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">ELITE 125</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="ELITE 125.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="dtELITE125.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planoelite125.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-<!-- MOTO -->
+  <!-- BIZ 125 ES -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='dtBIZ125ES.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>BIZ 125 ES</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='BIZ 125 ESv1.jpg' class='img-fluid moto__img' alt='BIZ 125 ES'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 235,63<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='dtBIZ125ES.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planobiz125es.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
 
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">BIZ 125 EX</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="BIZ 125 EX.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="BIZ125EX.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planobiz125ex.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-<!-- MOTO -->
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CG 160 START</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CG 160 START.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CG160START.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planoscg160start.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">PCX CBS</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="PCX CBS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="PCXCBS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planospcxcbs.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CG 160 FAN</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CG 160 FAN.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CG160FAN.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planoscg1160fan.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CG 160 TITAN</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CG 160 TITAN.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CG160TITAN.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planoscg160titan.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">PCX ABS</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="PCX ABS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="PCXABS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planospcxabs.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">NXR 160 BROS CBS</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="NXR 160 BROS CBS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="NXR160BROSCBS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planosnxr160broscbs.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">NXR 160 BROS ABS</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="NXR 160 BROS ABS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="NXR160BROSABS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planosnxr160brosabs.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">XRE 190</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="XRE 190.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="XRE190.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="planosxre190.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CRF 250F</p>
-<p class="subtitle mb-0">Off Road</p>
-<p class="image">
-    <img src="CRF 250F.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CRF250F.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CRF250FPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CB 300F TWISTER CBS</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CB 300F TWISTER CBS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CB 300FTWISTERCBS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CB 300FTWISTERCBSPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">HONDA ADV</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="HONDA ADV.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="HONDAADV.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="HONDA ADVPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CB 300F TWISTER ABS</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CB 300F TWISTER ABS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CB 300FTWISTERABS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CB 300F TWISTER ABSPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">XR 300L Tornado</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="XR 300L Tornado.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="XR300LTornado.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="XR 300L TornadoPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">SAHARA 300 ABS</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="SAHARA 300 ABS.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="SAHARA300ABS.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="SAHARA 300 ABS  Adventure.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">SAHARA 300 ADV</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="SAHARA 300 ADV.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="SAHARA300ADV.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="SAHARA 300 ADV.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CB 500F</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CB 500F.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CB500F.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CB 500FPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
+  <!-- ELITE 125 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='dtELITE125.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>ELITE 125</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='ELITE 125.jpg' class='img-fluid moto__img' alt='ELITE 125'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 256,31<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='dtELITE125.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoelite125.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- BIZ 125 EX -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='BIZ125EX.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>BIZ 125 EX</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='BIZ 125 EX.jpg' class='img-fluid moto__img' alt='BIZ 125 EX'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 291,66<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='BIZ125EX.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planobiz125ex.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 START -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160START.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 START</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 START.jpg' class='img-fluid moto__img' alt='CG 160 START'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 304,58<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160START.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg160start.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- PCX CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='PCXCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>PCX CBS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='PCX CBS.jpg' class='img-fluid moto__img' alt='PCX CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 329,15<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='PCXCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospcxcbs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 FAN -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160FAN.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 FAN</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 FAN.jpg' class='img-fluid moto__img' alt='CG 160 FAN'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$  332,41<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160FAN.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg1160fan.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CG 160 TITAN -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='CG160TITAN.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CG 160 TITAN</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CG 160 TITAN.jpg' class='img-fluid moto__img' alt='CG 160 TITAN'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 356,63<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CG160TITAN.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planoscg160titan.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- PCX ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='PCXABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>PCX ABS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='PCX ABS.jpg' class='img-fluid moto__img' alt='PCX ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 361,12<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='PCXABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planospcxabs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- NXR 160 BROS CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='NXR160BROSCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>NXR 160 BROS CBS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='NXR 160 BROS CBS.jpg' class='img-fluid moto__img' alt='NXR 160 BROS CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 381,19<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='NXR160BROSCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosnxr160broscbs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- NXR 160 BROS ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='NXR160BROSABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>NXR 160 BROS ABS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='NXR 160 BROS ABS.jpg' class='img-fluid moto__img' alt='NXR 160 BROS ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 397,55<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='NXR160BROSABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosnxr160brosabs.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- XRE 190 -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='XRE190.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>XRE 190</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='XRE 190.jpg' class='img-fluid moto__img' alt='XRE 190'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 416,83<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='XRE190.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='planosxre190.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CRF 250F -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CRF250F.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CRF 250F</h5>
+      <p class='text-center small text-muted mb-3'>Off Road</p>
+      <div class='text-center mb-3'>
+        <img src='CRF 250F.jpg' class='img-fluid moto__img' alt='CRF 250F'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 412,86<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CRF250F.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CRF250FPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CB 300F TWISTER CBS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CB 300FTWISTERCBS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CB 300F TWISTER CBS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CB 300F TWISTER CBS.jpg' class='img-fluid moto__img' alt='CB 300F TWISTER CBS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 433,92<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CB 300FTWISTERCBS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CB 300FTWISTERCBSPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- HONDA ADV -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='HONDAADV.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>HONDA ADV</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='HONDA ADV.jpg' class='img-fluid moto__img' alt='HONDA ADV'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 445,83<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='HONDAADV.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='HONDA ADVPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- CB 300F TWISTER ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='CB 300FTWISTERABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>CB 300F TWISTER ABS</h5>
+      <p class='text-center small text-muted mb-3'>Street</p>
+      <div class='text-center mb-3'>
+        <img src='CB 300F TWISTER ABS.jpg' class='img-fluid moto__img' alt='CB 300F TWISTER ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 451,20<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='CB 300FTWISTERABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='CB 300F TWISTER ABSPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- XR 300L Tornado -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+ <span class='badge-launch'>Lançamento</span>
+      <a href='XR300LTornado.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>XR 300L Tornado</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='XR 300L Tornado.jpg' class='img-fluid moto__img' alt='XR 300L Tornado'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 552,88<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='XR300LTornado.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='XR 300L TornadoPLANO.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- SAHARA 300 ABS -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='SAHARA300ABS.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>SAHARA 300 ABS</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='SAHARA 300 ABS.jpg' class='img-fluid moto__img' alt='SAHARA 300 ABS'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 542,32<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='SAHARA300ABS.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='SAHARA 300 ABS  Adventure.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+  <!-- SAHARA 300 ADV -->
+  <div class='col-xl-3 col-lg-4 col-md-6 col-12 mb-4'>
+    <div class='product-box border border-danger rounded-3 p-3 position-relative h-100'>
+<!-- <span class='badge-launch'>Lançamento</span>-->
+      <a href='SAHARA300ADV.html' class='zoom-icon'>
+        <i class='bi bi-search-plus'></i>
+      </a>
+      <h5 class='text-center fw-bold mt-4 mb-0 text-uppercase'>SAHARA 300 ADV</h5>
+      <p class='text-center small text-muted mb-3'>Adventure</p>
+      <div class='text-center mb-3'>
+        <img src='SAHARA 300 ADV.jpg' class='img-fluid moto__img' alt='SAHARA 300 ADV'>
+      </div>
+      <p class='text-center small mb-0'>Parcelas mensais a partir de</p>
+      <p class='price text-danger text-center mb-0'>R$ 560,82<span class='asterisk'>*</span></p>
+      <p class='text-center extra small mb-3'>com Seguro de Vida em Grupo</p>
+      <a href='SAHARA300ADV.html' class='btn btn-outline-secondary w-100 mb-2'>Detalhes da moto</a>
+      <a href='SAHARA 300 ADV.html' class='btn btn-outline-danger w-100 mb-2'>Planos de consórcio</a>
+      <a href='FormulárioFinanciamento.html' class='btn btn-danger w-100'>FINANCIAMENTO</a>
+    </div>
+  </div>
+
+
+           <!-- HORNET 500 -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+    <span class="badge-launch">Lançamento</span>
+    <a href="hornet500.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">Hornet 500</h5>
+    <p class="text-center small text-muted mb-3">Street</p>
+    <div class="text-center mb-3">
+      <img src="hornet500v.png" class="img-fluid moto__img" alt="Hornet 500">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 780,03<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="hornet500.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="planoshornet500.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+
+  <!--<-- <div class="col-xl-3 col-lg-4 col-md-6 col-12">
 <div class="product-box">
 <p class="title text-uppercase mb-0">CB 500X</p>
 <p class="subtitle mb-0">Adventure</p>
@@ -744,128 +805,146 @@ class="whatsapp-float">
            Financiamento
         </a>
       </p>
-</div>                </div>
+</div>                </div> -->
     <!-- NX 500 -->
-  <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">NX 500</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="NX500V.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="DTNX500.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="nx500plano.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">TRX 420 FOURTRAX FM</p>
-<p class="subtitle mb-0">Off Road</p>
-<p class="image">
-    <img src="TRX 420 FOURTRAX FM.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="TRX420FOURTRAXFM.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="TRX 420 FOURTRAX FMPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">NC 750X ABS MT</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="NC 750X ABS MT.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="NC750XABSMT.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="NC 750X ABS MTPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CB 1000R</p>
-<p class="subtitle mb-0">Street</p>
-<p class="image">
-    <img src="CB 1000R.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CB 1000R.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CB 1000RPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CBR 650R</p>
-<p class="subtitle mb-0">Sport</p>
-<p class="image">
-    <img src="CBR 650R.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CBR 650R.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CBR 650RPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
-            <div class="col-xl-3 col-lg-4 col-md-6 col-12">
-<div class="product-box">
-<p class="title text-uppercase mb-0">CRF 1100L  AFRICA TWIN</p>
-<p class="subtitle mb-0">Adventure</p>
-<p class="image">
-    <img src="CRF 1100L AFRICA TWIN.jpg" alt="Moto 1" class="moto__img"></p>
-    <p>
-        <a href="CRF1100LAFRICATWIN.html" class="btn btn-primary w-100 d-block mb-2">
-           Detalhes da moto
-        </a>
-      
-        <a href="CRF 1100L AFRICA TWINPLANO.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Planos de consórcio
-        </a>
-      
-        <a href="FormulárioFinanciamento.html" class="btn btn-outline-danger w-100 d-block mb-2">
-           Financiamento
-        </a>
-      </p>
-</div>                </div>
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+    <!-- selo “Lançamento”-->
+    <span class="badge-launch">Lançamento</span>
+
+    <!-- ícone de zoom (Bootstrap Icons) -->
+    <a href="DTNX500.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+
+    <!-- título + subtítulo -->
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">NX 500</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+
+    <!-- imagem -->
+    <div class="text-center mb-3">
+      <img src="NX500V.jpg" class="img-fluid moto__img" alt="NX 500">
+    </div>
+
+    <!-- preço -->
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 829,43<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+
+    <!-- botões -->
+    <a href="DTNX500.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="nx500plano.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- TRX 420 FOURTRAX FM -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="TRX420FOURTRAXFM.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">TRX 420 FOURTRAX FM</h5>
+    <p class="text-center small text-muted mb-3">Off Road</p>
+    <div class="text-center mb-3">
+      <img src="TRX 420 FOURTRAX FM.jpg" class="img-fluid moto__img" alt="TRX 420 FOURTRAX FM">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 931,48<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="TRX420FOURTRAXFM.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="TRX 420 FOURTRAX FMPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- NC 750X ABS MT -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+   <!-- <span class="badge-launch">Lançamento</span>-->
+    <a href="NC750XABSMT.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">NC 750X ABS MT</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+    <div class="text-center mb-3">
+      <img src="NC 750X ABS MT.jpg" class="img-fluid moto__img" alt="NC 750X ABS MT">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 971,39<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="NC750XABSMT.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="NC 750X ABS MTPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CB 1000R -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CB 1000R.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CB 1000R (70% do valor)
+</h5>
+    <p class="text-center small text-muted mb-3">Street</p>
+    <div class="text-center mb-3">
+      <img src="CB 1000R.jpg" class="img-fluid moto__img" alt="CB 1000R">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 994,93<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CB 1000R.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CB 1000RPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CBR 650R -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CBR 650R.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CBR 650R</h5>
+    <p class="text-center small text-muted mb-3">Sport</p>
+    <div class="text-center mb-3">
+      <img src="CBR 650R.jpg" class="img-fluid moto__img" alt="CBR 650R">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 1.000,52<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CBR 650R.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CBR 650RPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+<!-- CRF 1100L AFRICA TWIN -->
+<div class="col-xl-3 col-lg-4 col-md-6 col-12 mb-4">
+  <div class="product-box border border-danger rounded-3 p-3 position-relative h-100">
+<!-- <span class='badge-launch'>Lançamento</span>-->
+    <a href="CRF1100LAFRICATWIN.html" class="zoom-icon">
+      <i class="bi bi-search-plus"></i>
+    </a>
+    <h5 class="text-center fw-bold mt-4 mb-0 text-uppercase">CRF 1100L AFRICA TWIN</h5>
+    <p class="text-center small text-muted mb-3">Adventure</p>
+    <div class="text-center mb-3">
+      <img src="CRF 1100L AFRICA TWIN.jpg" class="img-fluid moto__img" alt="CRF 1100L AFRICA TWIN">
+    </div>
+    <p class="text-center small mb-0">Parcelas mensais a partir de</p>
+    <p class="price text-danger text-center mb-0">R$ 1.022,90<span class="asterisk">*</span></p>
+    <p class="text-center extra small mb-3">com Seguro de Vida em Grupo</p>
+    <a href="CRF1100LAFRICATWIN.html" class="btn btn-outline-secondary w-100 mb-2">Detalhes da moto</a>
+    <a href="CRF 1100L AFRICA TWINPLANO.html" class="btn btn-outline-danger w-100 mb-2">Planos de consórcio</a>
+    <a href="FormulárioFinanciamento.html" class="btn btn-danger w-100">FINANCIAMENTO</a>
+  </div>
+</div>
+
+
         </div>
         <!-- ESCOLHA SUA MOTO END -->
 
