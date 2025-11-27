@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link rel="shortcut icon" href="sua-foto.png" type="image/x-icon">
-    <title>Detalhes da Moto - CBR 650R</title>
+    <title>Detalhes da Moto - CB 650R E-Clutch</title>
     <link rel="stylesheet" href="style.css">
     <style>
         body {
@@ -55,9 +55,9 @@
             cursor: pointer;
         }
 
-        .cor-preta { background-color: #000; }
+        .cor-azul { background-color: #3715d1; }
         .cor-vermelha { background-color: #c40000; }
-        .cor-prata { background-color: #FFFFFF; }
+        .cor-cinza { background-color: #646464; }
 
         .descricao {
             font-size: 1.1rem;
@@ -67,21 +67,22 @@
 </head>
 <body>
     <div class="container">
-        <h1>CBR 650R</h1>
+        <h1>CB 650R E-Clutch</h1>
 
         <div class="moto-imagem">
-            <img id="motoImagem" src="CBR 650RV.jpg" alt="POP 110i +10 Preta">
+            <img id="motoImagem" src="CB 650R E-Clutch.png" alt="POP 110i +10 Preta">
         </div>
 
         <div class="cores">
+            <div class="cor-btn cor-azul" onclick="trocarImagem('azul')"></div>
             <div class="cor-btn cor-vermelha" onclick="trocarImagem('vermelha')"></div>
-            <div class="cor-btn cor-prata" onclick="trocarImagem('prata')"></div>
+            <div class="cor-btn cor-cinza" onclick="trocarImagem('cinza')"></div>
         </div>
         <!-- Vídeo da moto -->
 
 
         <div class="descricao">
-            <h2>Sobre a CBR 650R</h2>
+            <h2>Sobre a CB 650R E-Clutch</h2>
             <p>
               A CBR 650R carrega o DNA das pistas para as ruas, com um design inspirado na CBR 1000RR Fireblade. Com linhas esculpidas para máxima aerodinâmica, ela combina elegância e performance em uma sport-touring de tirar o fôlego.
             </p>
@@ -111,14 +112,14 @@
     <script>
         function trocarImagem(cor) {
             const imagem = document.getElementById('motoImagem');
-            if(cor === 'preta') {
-                imagem.src = 'moto-preta.jpg';
+            if(cor === 'vermelha') {
+                imagem.src = 'CB 650R E-Clutch.png';
                 imagem.alt = 'Honda CG 160 Preta';
-            } else if(cor === 'vermelha') {
-                imagem.src = 'CBR 650RV.jpg';
+            } else if(cor === 'azul') {
+                imagem.src = 'CB 650R E-Clutchv.png';
                 imagem.alt = 'Honda CG 160 Vermelha';
-            } else if(cor === 'prata') {
-                imagem.src = 'CBR 650RB.jpg';
+            } else if(cor === 'cinza') {
+                imagem.src = 'CB 650R E-Clutchvc.png';
                 imagem.alt = 'Honda CG 160 Prata';
             }
         }
