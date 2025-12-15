@@ -41,7 +41,42 @@
           <label for="nome" class="block text-sm font-semibold mb-1">Nome completo*</label>
           <input type="text" id="nome" name="nome" class="border p-2 rounded w-full" placeholder="Nome completo" required>
         </div>
-
+        <!-- Estado de Nascimento -->
+        <div>
+          <label for="Estado de Nascimento" class="block text-sm font-semibold mb-1">Estado de Nascimento*</label>
+          <input type="text" id="Estado de Nascimento" name="Estado de Nascimento" class="border p-2 rounded w-full" placeholder="Nome compleEstado de Nascimento" required>
+        </div>
+        <!-- Nome da Mãe -->
+        <div>
+          <label for="Nome da Mãe" class="block text-sm font-semibold mb-1">Nome da Mãe*</label>
+          <input type="text" id="Nome da Mãe" name="Nome da Mãe" class="border p-2 rounded w-full" placeholder="Nome da Mãe" required>
+        </div>
+        <!-- Nome da Pai -->
+        <div>
+          <label for="Nome da Pai" class="block text-sm font-semibold mb-1">Nome da Pai*</label>
+          <input type="text" id="Nome da Pai" name="Nome da Pai" class="border p-2 rounded w-full" placeholder="Nome da Pai" required>
+        </div>
+        <!-- Nacionalidade -->
+        <div>
+          <label for="Nacionalidade" class="block text-sm font-semibold mb-1">Nacionalidade*</label>
+          <select id="Nacionalidade" name="Nacionalidade" class="border p-2 rounded w-full" required>
+            <option value="">Selecione</option>
+            <option value="Brasileira">Brasileira</option>
+            <option value="União Estável">Estrangeira</option>
+        
+          </select>
+        </div>
+ <!-- ESTADO CIVIL-->
+        <div>
+          <label for="Estado Civil" class="block text-sm font-semibold mb-1">Estado Civil*</label>
+          <select id="Estado Civil" name="Estado Civil" class="border p-2 rounded w-full" required>
+            <option value="">Selecione</option>
+            <option value="Solteiro(a)">Solteiro(a)</option>
+            <option value="União Estável">União Estável</option>
+            <option value="Casado(a)">Casado(a)</option>
+            <option value="Divorciado(a)">Divorciado(a)</option>
+          </select>
+        </div>
         <!-- CPF -->
         <div>
           <label for="cpf" class="block text-sm font-semibold mb-1">CPF*</label>
@@ -53,7 +88,7 @@
           <label for="nascimento" class="block text-sm font-semibold mb-1">Data de nascimento*</label>
           <input type="date" id="nascimento" name="nascimento" class="border p-2 rounded w-full" required>
         </div>
-
+        
         <!-- Telefone -->
         <div>
           <label for="telefone" class="block text-sm font-semibold mb-1">Telefone para contato*</label>
@@ -96,62 +131,72 @@
 
         <!-- Número do documento -->
         <div>
-          <label for="numero_documento" class="block text-sm font-semibold mb-1">Número do documento*</label>
-          <input type="text" id="numero_documento" name="numero_documento" class="border p-2 rounded w-full" placeholder="12345678‑X" required>
+          <label for="Número do documento" class="block text-sm font-semibold mb-1">Número do documento*</label>
+          <input type="text" id="Número do documento" name="Número do documento" class="border p-2 rounded w-full" placeholder="12345678‑X" required>
         </div>
 
         <!-- Órgão expedidor -->
         <div>
-          <label for="orgao" class="block text-sm font-semibold mb-1">Órgão expedidor</label>
-          <input type="text" id="orgao" name="orgao" class="border p-2 rounded w-full" placeholder="SSP, DETRAN...">
+          <label for="Órgão expedidor" class="block text-sm font-semibold mb-1">Órgão expedidor</label>
+          <input type="text" id="Órgão expedidor" name="Órgão expedidor" class="border p-2 rounded w-full" placeholder="SSP, DETRAN...">
         </div>
 
         <!-- Data de emissão -->
         <div>
-          <label for="emissao" class="block text-sm font-semibold mb-1">Data de emissão</label>
-          <input type="date" id="emissao" name="emissao" class="border p-2 rounded w-full">
+          <label for="Data de emissão" class="block text-sm font-semibold mb-1">Data de emissão</label>
+          <input type="date" id="Data de emissão" name="Data de emissão" class="border p-2 rounded w-full">
         </div>
 
-        <!-- Rendimento -->
+        <!-- Renda Mensal -->
         <div>
-          <label for="rendimento" class="block text-sm font-semibold mb-1">Rendimento por mês</label>
-          <input type="text" id="rendimento" name="rendimento" class="border p-2 rounded w-full" placeholder="R$">
+          <label for="Renda Mensal" class="block text-sm font-semibold mb-1">Renda Mensal</label>
+          <input type="text" id="Renda Mensal" name="Renda Mensal" class="border p-2 rounded w-full" placeholder="R$">
         </div>
 
-        <!-- Trabalho -->
+        <!-- Profissão -->
         <div>
-          <label for="trabalho" class="block text-sm font-semibold mb-1">No que trabalha?</label>
-          <input type="text" id="trabalho" name="trabalho" class="border p-2 rounded w-full">
+          <label for="Profissão" class="block text-sm font-semibold mb-1">Profissão?</label>
+          <input type="text" id="Profissão" name="Profissão" class="border p-2 rounded w-full">
         </div>
 
         <!-- Cidade -->
         <div>
-          <label for="cidade" class="block text-sm font-semibold mb-1">Cidade</label>
-          <input type="text" id="cidade" name="cidade" class="border p-2 rounded w-full">
+          <label for="Cidade" class="block text-sm font-semibold mb-1">Cidade</label>
+          <input type="text" id="Cidade" name="cidade" class="border p-2 rounded w-full">
         </div>
 
         <!-- Bairro -->
         <div>
-          <label for="bairro" class="block text-sm font-semibold mb-1">Bairro</label>
-          <input type="text" id="bairro" name="bairro" class="border p-2 rounded w-full">
+          <label for="Bairro" class="block text-sm font-semibold mb-1">Bairro</label>
+          <input type="text" id="Bairro" name="Bairro" class="border p-2 rounded w-full">
+        </div>
+        <!-- Rua -->
+        <div>
+          <label for="Rua" class="block text-sm font-semibold mb-1">Rua</label>
+          <input type="text" id="Rua" name="Rua" class="border p-2 rounded w-full">
         </div>
 
         <!-- Número -->
         <div>
-          <label for="numero" class="block text-sm font-semibold mb-1">Número</label>
-          <input type="text" id="numero" name="numero" class="border p-2 rounded w-full">
+          <label for="Número" class="block text-sm font-semibold mb-1">Número</label>
+          <input type="text" id="Número" name="Número" class="border p-2 rounded w-full">
+        </div>
+        <!-- Cep -->
+        <div>
+          <label for="Cep" class="block text-sm font-semibold mb-1">Cep</label>
+          <input type="text" id="Cep" name="Cep" class="border p-2 rounded w-full">
         </div>
 
         <!-- Estado -->
         <div>
-          <label for="estado" class="block text-sm font-semibold mb-1">Estado</label>
-          <input type="text" id="estado" name="estado" class="border p-2 rounded w-full">
+          <label for="Estado" class="block text-sm font-semibold mb-1">Estado</label>
+          <input type="text" id="Estado" name="Estado" class="border p-2 rounded w-full">
         </div>
 
         <!-- Ponto de referência -->
         <div class="md:col-span-2">
-          <label for="referencia" class="block text-sm font-semibold mb-1">Ponto de referência</label>
-          <input type="text" id="referencia" name="referencia" class="border p-2 rounded w-full">
+          <label for="Ponto de referência" class="block text-sm font-semibold mb-1">Ponto de referência</label>
+          <input type="text" id="Ponto de referência" name="Ponto de referência" class="border p-2 rounded w-full">
         </div>
 
       </div>
