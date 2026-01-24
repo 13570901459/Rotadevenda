@@ -3,111 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vyper Store | Oficial</title>
+    <title>DS Store | Oficial</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
-
-.modern-cart {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1100;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.cart-glass {
-    background: rgba(188, 0, 255, 0.15); /* Roxo translúcido */
-    backdrop-filter: blur(10px); /* Efeito de vidro */
-    -webkit-backdrop-filter: blur(10px);
-    border: 2px solid rgba(188, 0, 255, 0.5);
-    padding: 12px 18px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 8px 32px 0 rgba(188, 0, 255, 0.3), 
-                inset 0 0 10px rgba(188, 0, 255, 0.2);
-    color: #fff;
-}
-
-.modern-cart:hover {
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0 0 20px rgba(188, 0, 255, 0.6);
-}
-
-#cart-count {
-    background: var(--primary);
-    color: white;
-    font-weight: 900;
-    font-size: 14px;
-    min-width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    box-shadow: 0 0 10px var(--primary);
-    animation: pulse-cart 2s infinite;
-}
-
-@keyframes pulse-cart {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); box-shadow: 0 0 15px var(--primary); }
-    100% { transform: scale(1); }
-}
-
-/* Ajuste para Mobile */
-@media (max-width: 600px) {
-    .modern-cart {
-        top: auto;
-        bottom: 90px; /* Acima do botão do WhatsApp */
-        right: 20px;
-    }
-}
-
-        /* Estilo do Botão Flutuante */
-.whatsapp-float {
-    position: fixed;
-    width: 60px;
-    height: 60px;
-    bottom: 20px;
-    right: 20px;
-    background-color: #25d366;
-    color: #FFF;
-    border-radius: 50px;
-    text-align: center;
-    font-size: 30px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
-    z-index: 3000; /* Garante que fique acima de tudo */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.3s ease;
-}
-
-.whatsapp-float:hover {
-    transform: scale(1.1); /* Efeito de aumentar ao passar o mouse */
-    background-color: #20ba5a;
-}
-
-.whatsapp-float img {
-    width: 35px;
-    height: 35px;
-}
-
-/* Ajuste para não cobrir o botão em telas muito pequenas */
-@media (max-width: 600px) {
-    .whatsapp-float {
-        width: 50px;
-        height: 50px;
-        bottom: 15px;
-        right: 15px;
-    }
-    .whatsapp-float img {
-        width: 30px;
-    }
-}
         :root {
             --primary: #bc00ff;
             --bg: #0a0a0a;
@@ -119,6 +17,26 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
+        /* LOGO DINAMICO */
+        .logo {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -1.5px;
+            background: linear-gradient(45deg, #bc00ff, #7000ff, #00d4ff, #bc00ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient-flow 5s ease infinite;
+            filter: drop-shadow(0 0 8px rgba(188, 0, 255, 0.3));
+        }
+
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         /* HEADER & BUSCA */
         header {
             padding: 15px 5%;
@@ -129,7 +47,6 @@
         }
 
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .logo { font-weight: 900; font-size: 24px; color: var(--primary); }
 
         .search-container {
             width: 100%;
@@ -151,81 +68,87 @@
 
         #search-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(188, 0, 255, 0.2); }
 
-        /* CATEGORIAS */
-        .categories-nav {
-            display: flex;
-            gap: 15px;
-            overflow-x: auto;
-            padding: 10px 5%;
-            background: #000;
-            scrollbar-width: none;
-        }
-        .categories-nav::-webkit-scrollbar { display: none; }
-
-        .cat-btn {
-            background: #1a1a1a;
-            border: 1px solid #333;
-            color: #888;
-            padding: 10px 20px;
-            border-radius: 50px;
-            white-space: nowrap;
+        /* CARRINHO MODERNO (GLASS) */
+        .modern-cart {
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
             transition: 0.3s;
         }
 
-        .cat-btn.active, .cat-btn:hover {
+        .cart-glass {
+            background: rgba(188, 0, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 2px solid rgba(188, 0, 255, 0.5);
+            padding: 10px 15px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        #cart-count {
             background: var(--primary);
             color: white;
-            border-color: var(--primary);
+            font-weight: 900;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 14px;
         }
 
-        /* GRID */
+        /* CATEGORIAS */
+        .categories-nav {
+            display: flex; gap: 10px; overflow-x: auto; padding: 15px 5%; background: #000; scrollbar-width: none;
+        }
+        .categories-nav::-webkit-scrollbar { display: none; }
+        .cat-btn {
+            background: #1a1a1a; border: 1px solid #333; color: #888; padding: 10px 20px;
+            border-radius: 50px; white-space: nowrap; cursor: pointer; font-size: 12px; font-weight: 700;
+        }
+        .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* GRID PRODUTOS */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
         .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;
         }
-
         .product-card {
-            background: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 15px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            transition: 0.3s;
+            background: var(--card-bg); border: 1px solid #222; border-radius: 15px; overflow: hidden;
+            display: flex; flex-direction: column; transition: 0.3s;
         }
-
-        .product-card:hover { transform: translateY(-5px); border-color: var(--primary); }
-        .product-img { width: 100%; aspect-ratio: 1/1; background: #222; object-fit: cover; }
-        .product-info { padding: 15px; flex-grow: 1; }
-        .product-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; height: 40px; overflow: hidden; }
-        
-        .price-new { color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; background: #222; }
+        .product-info { padding: 15px; }
+        .product-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; height: 35px; overflow: hidden; }
+        .price-new { color: var(--primary); font-size: 22px; font-weight: 900; margin-bottom: 12px; }
         .add-btn {
             width: 100%; background: var(--primary); color: white; border: none;
-            padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;
+            padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer;
         }
 
-        /* CARRINHO */
+        /* SIDEBAR CARRINHO */
         #cart-sidebar {
-            position: fixed; right: -100%; top: 0; width: 100%; max-width: 350px;
-            height: 100%; background: #0f0f0f; z-index: 2000; padding: 25px;
-            transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+            position: fixed; right: -100%; top: 0; width: 100%; max-width: 380px;
+            height: 100%; background: #0f0f0f; z-index: 2000; padding: 30px;
+            transition: 0.4s; border-left: 1px solid #222;
         }
         #cart-sidebar.active { right: 0; }
-        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
-        .checkout-btn {
-            width: 100%; background: var(--whatsapp); color: white; border: none;
-            padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer;
+        .cart-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #222; }
+        .remove-item { background: none; border: none; color: #ff4d4d; cursor: pointer; font-size: 18px; }
+        .checkout-btn { width: 100%; background: var(--whatsapp); color: white; border: none; padding: 15px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: 15px; }
+        .clear-cart-btn { width: 100%; background: transparent; color: #666; border: 1px solid #333; padding: 10px; border-radius: 10px; margin-top: 10px; cursor: pointer; }
+
+        /* WHATSAPP FLOAT */
+        .whatsapp-float {
+            position: fixed; width: 60px; height: 60px; bottom: 20px; right: 20px;
+            background: #25d366; border-radius: 50px; display: flex; align-items: center;
+            justify-content: center; z-index: 3000; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+        .whatsapp-float img { width: 35px; }
 
         @media (max-width: 600px) {
             .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .product-title { font-size: 13px; }
+            .logo { font-size: 20px; }
         }
     </style>
 </head>
@@ -235,20 +158,15 @@
     <div class="header-top">
         <div class="logo">DS STORE</div>
         <div class="modern-cart" onclick="toggleCart()">
-    <div class="cart-glass">
-        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-        </svg>
-        <span id="cart-count">0</span>
-    </div>
-</div>
+            <div class="cart-glass">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                <span id="cart-count">0</span>
+            </div>
+        </div>
     </div>
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="O que você está procurando?" onkeyup="filterProducts()">
+        <input type="text" id="search-input" placeholder="Pesquisar produto..." onkeyup="filterProducts()">
     </div>
-    
 </header>
 
 <div class="categories-nav">
@@ -262,18 +180,28 @@
 </div>
 
 <div class="container">
-    <div class="product-grid" id="product-list">
-        </div>
+    <div class="product-grid" id="product-list"></div>
 </div>
 
 <div id="cart-sidebar">
-    <h3>Seu Carrinho</h3><br>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+        <h3>Meu Carrinho</h3>
+        <button onclick="toggleCart()" style="background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
+    </div>
     <div id="cart-items-list"></div>
-    <hr style="border: 1px solid #222; margin: 15px 0;">
-    <h4>Total: R$ <span id="cart-total">0.00</span></h4>
-    <button class="checkout-btn" onclick="sendWhatsApp()">Finalizar no WhatsApp</button>
-    <button onclick="toggleCart()" style="background:none; border:none; color:gray; margin-top:20px; cursor:pointer;">Fechar</button>
+    <div style="margin-top: 30px; border-top: 1px solid #222; padding-top: 20px;">
+        <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 900;">
+            <span>Total:</span>
+            <span style="color: var(--primary);">R$ <span id="cart-total">0,00</span></span>
+        </div>
+        <button class="checkout-btn" onclick="sendWhatsApp()">FINALIZAR PEDIDO</button>
+        <button class="clear-cart-btn" onclick="clearCart()">Limpar tudo</button>
+    </div>
 </div>
+
+<a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg">
+</a>
 
 <script>
     const products = [
@@ -290,6 +218,11 @@
     let cart = [];
     let currentCategory = "TODOS";
 
+    // Formata número para Moeda Brasileira (Vírgula)
+    function formatMoney(value) {
+        return value.toLocaleString('pt-br', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
     function renderProducts(data) {
         const list = document.getElementById('product-list');
         list.innerHTML = data.map(p => `
@@ -297,8 +230,8 @@
                 <img src="${p.img}" class="product-img">
                 <div class="product-info">
                     <div class="product-title">${p.name}</div>
-                    <div class="price-new">R$ ${p.price.toFixed(2)}</div>
-                    <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">COMPRAR</button>
+                    <div class="price-new">R$ ${formatMoney(p.price)}</div>
+                    <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">ADICIONAR</button>
                 </div>
             </div>
         `).join('');
@@ -329,29 +262,50 @@
 
     function updateCart() {
         const list = document.getElementById('cart-items-list');
+        const count = document.getElementById('cart-count');
+        const totalDisp = document.getElementById('cart-total');
+        
         let total = 0;
-        list.innerHTML = cart.map(i => {
-            total += i.price;
-            return `<div class="cart-item"><span>${i.name}</span><span>R$ ${i.price.toFixed(2)}</span></div>`;
-        }).join('');
-        document.getElementById('cart-count').innerText = cart.length;
-        document.getElementById('cart-total').innerText = total.toFixed(2);
+        if (cart.length === 0) {
+            list.innerHTML = "<p style='color:#666; text-align:center;'>Vazio</p>";
+        } else {
+            list.innerHTML = cart.map((item, index) => {
+                total += item.price;
+                return `
+                    <div class="cart-item">
+                        <div>
+                            <p style="font-weight:700;">${item.name}</p>
+                            <p style="color:var(--primary);">R$ ${formatMoney(item.price)}</p>
+                        </div>
+                        <button class="remove-item" onclick="removeItem(${index})">🗑️</button>
+                    </div>
+                `;
+            }).join('');
+        }
+        count.innerText = cart.length;
+        totalDisp.innerText = formatMoney(total);
+    }
+
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCart();
+    }
+
+    function clearCart() {
+        if (confirm("Limpar carrinho?")) { cart = []; updateCart(); }
     }
 
     function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
 
     function sendWhatsApp() {
         if(cart.length === 0) return alert("Carrinho vazio!");
-        let msg = "*NOVO PEDIDO - VYPER STORE*%0A%0A" + cart.map(i => `• ${i.name}`).join('%0A');
-        msg += `%0A%0A*TOTAL: R$ ${document.getElementById('cart-total').innerText}*`;
+        const total = document.getElementById('cart-total').innerText;
+        let msg = "*PEDIDO - DS STORE*%0A%0A" + cart.map(i => `• ${i.name} (R$ ${formatMoney(i.price)})`).join('%0A');
+        msg += `%0A%0A*TOTAL: R$ ${total}*`;
         window.open(`https://wa.me/5511999999999?text=${msg}`);
     }
 
-    // Inicializar
     renderProducts(products);
 </script>
-<a href="https://wa.me/5511999999999" class="whatsapp-float" target="_blank">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-</a>
 </body>
 </html>
