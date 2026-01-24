@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vyper Store | Oficial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #bc00ff;
+            --bg: #0a0a0a;
+            --card-bg: #151515;
+            --text: #ffffff;
+            --whatsapp: #25d366;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
+
+        /* HEADER & BUSCA */
+        header {
+            padding: 15px 5%;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid #222;
+            position: sticky;
+            top: 0; z-index: 1000;
+        }
+
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .logo { font-weight: 900; font-size: 24px; color: var(--primary); }
+
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 12px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 50px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        #search-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(188, 0, 255, 0.2); }
+
+        /* CATEGORIAS */
+        .categories-nav {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 10px 5%;
+            background: #000;
+            scrollbar-width: none;
+        }
+        .categories-nav::-webkit-scrollbar { display: none; }
+
+        .cat-btn {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #888;
+            padding: 10px 20px;
+            border-radius: 50px;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .cat-btn.active, .cat-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* GRID */
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 15px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: 0.3s;
+        }
+
+        .product-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .product-img { width: 100%; aspect-ratio: 1/1; background: #222; object-fit: cover; }
+        .product-info { padding: 15px; flex-grow: 1; }
+        .product-title { font-size: 15px; font-weight: 600; margin-bottom: 10px; height: 40px; overflow: hidden; }
+        
+        .price-new { color: var(--primary); font-size: 20px; font-weight: 800; margin-bottom: 10px; }
+        .add-btn {
+            width: 100%; background: var(--primary); color: white; border: none;
+            padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer;
+        }
+
+        /* CARRINHO */
+        #cart-sidebar {
+            position: fixed; right: -100%; top: 0; width: 100%; max-width: 350px;
+            height: 100%; background: #0f0f0f; z-index: 2000; padding: 25px;
+            transition: 0.4s; box-shadow: -10px 0 30px rgba(0,0,0,0.5);
+        }
+        #cart-sidebar.active { right: 0; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+        .checkout-btn {
+            width: 100%; background: var(--whatsapp); color: white; border: none;
+            padding: 15px; border-radius: 10px; font-weight: bold; margin-top: 20px; cursor: pointer;
+        }
+
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .product-title { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <div class="logo">VYPER STORE</div>
+        <button class="add-btn" style="width: auto; padding: 8px 15px;" onclick="toggleCart()">
+            🛒 <span id="cart-count">0</span>
+        </button>
+    </div>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="O que você está procurando?" onkeyup="filterProducts()">
+    </div>
+</header>
+
+<div class="categories-nav">
+    <button class="cat-btn active" onclick="filterCategory('TODOS', this)">TODOS</button>
+    <button class="cat-btn" onclick="filterCategory('JOGOS E CHEATS', this)">JOGOS E CHEATS</button>
+    <button class="cat-btn" onclick="filterCategory('PROGRAMAS WIN/MAC', this)">PROGRAMAS WIN/MAC</button>
+    <button class="cat-btn" onclick="filterCategory('MARKETING DIGITAL', this)">MARKETING DIGITAL</button>
+    <button class="cat-btn" onclick="filterCategory('CONTAS STREAMING', this)">CONTAS STREAMING</button>
+    <button class="cat-btn" onclick="filterCategory('DESIGN E EDIÇÃO', this)">DESIGN E EDIÇÃO</button>
+    <button class="cat-btn" onclick="filterCategory('CURSOS PREMIUM', this)">CURSOS PREMIUM</button>
+</div>
+
+<div class="container">
+    <div class="product-grid" id="product-list">
+        </div>
+</div>
+
+<div id="cart-sidebar">
+    <h3>Seu Carrinho</h3><br>
+    <div id="cart-items-list"></div>
+    <hr style="border: 1px solid #222; margin: 15px 0;">
+    <h4>Total: R$ <span id="cart-total">0.00</span></h4>
+    <button class="checkout-btn" onclick="sendWhatsApp()">Finalizar no WhatsApp</button>
+    <button onclick="toggleCart()" style="background:none; border:none; color:gray; margin-top:20px; cursor:pointer;">Fechar</button>
+</div>
+
+<script>
+    const products = [
+        { name: "Cheat Warzone VIP", price: 49.90, cat: "JOGOS E CHEATS", img: "https://via.placeholder.com/300?text=Warzone" },
+        { name: "Adobe Pack 2024", price: 29.90, cat: "PROGRAMAS WIN/MAC", img: "https://via.placeholder.com/300?text=Adobe" },
+        { name: "Netflix 4K Ultra", price: 15.90, cat: "CONTAS STREAMING", img: "https://via.placeholder.com/300?text=Netflix" },
+        { name: "Curso Tráfego Pago", price: 39.90, cat: "MARKETING DIGITAL", img: "https://via.placeholder.com/300?text=Marketing" },
+        { name: "Pack Canva Pro VIP", price: 19.90, cat: "DESIGN E EDIÇÃO", img: "https://via.placeholder.com/300?text=Canva" },
+        { name: "Curso Python do Zero", price: 59.90, cat: "CURSOS PREMIUM", img: "https://via.placeholder.com/300?text=Python" },
+        { name: "Youtube Premium", price: 14.90, cat: "CONTAS STREAMING", img: "https://via.placeholder.com/300?text=Youtube" },
+        { name: "Disney+ & Star+", price: 19.90, cat: "CONTAS STREAMING", img: "https://via.placeholder.com/300?text=Disney" },
+    ];
+
+    let cart = [];
+    let currentCategory = "TODOS";
+
+    function renderProducts(data) {
+        const list = document.getElementById('product-list');
+        list.innerHTML = data.map(p => `
+            <div class="product-card">
+                <img src="${p.img}" class="product-img">
+                <div class="product-info">
+                    <div class="product-title">${p.name}</div>
+                    <div class="price-new">R$ ${p.price.toFixed(2)}</div>
+                    <button class="add-btn" onclick="addToCart('${p.name}', ${p.price})">COMPRAR</button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterCategory(cat, btn) {
+        currentCategory = cat;
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        filterProducts();
+    }
+
+    function filterProducts() {
+        const term = document.getElementById('search-input').value.toLowerCase();
+        const filtered = products.filter(p => {
+            const matchCat = currentCategory === "TODOS" || p.cat === currentCategory;
+            const matchSearch = p.name.toLowerCase().includes(term);
+            return matchCat && matchSearch;
+        });
+        renderProducts(filtered);
+    }
+
+    function addToCart(name, price) {
+        cart.push({name, price});
+        updateCart();
+        document.getElementById('cart-sidebar').classList.add('active');
+    }
+
+    function updateCart() {
+        const list = document.getElementById('cart-items-list');
+        let total = 0;
+        list.innerHTML = cart.map(i => {
+            total += i.price;
+            return `<div class="cart-item"><span>${i.name}</span><span>R$ ${i.price.toFixed(2)}</span></div>`;
+        }).join('');
+        document.getElementById('cart-count').innerText = cart.length;
+        document.getElementById('cart-total').innerText = total.toFixed(2);
+    }
+
+    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
+
+    function sendWhatsApp() {
+        if(cart.length === 0) return alert("Carrinho vazio!");
+        let msg = "*NOVO PEDIDO - VYPER STORE*%0A%0A" + cart.map(i => `• ${i.name}`).join('%0A');
+        msg += `%0A%0A*TOTAL: R$ ${document.getElementById('cart-total').innerText}*`;
+        window.open(`https://wa.me/5511999999999?text=${msg}`);
+    }
+
+    // Inicializar
+    renderProducts(products);
+</script>
+</body>
+</html>
