@@ -81,6 +81,8 @@
         mark { background: #fef08a; color: black; border-radius: 2px; }
 
         .highlight-tool { position: absolute; background: var(--dark); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; z-index: 500; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
+        .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -118,7 +120,7 @@
     </div>
 </aside>
 
-<main id="main-content" onclick="document.querySelector('aside').classList.remove('active')">
+<main id="main-content">
     <div id="secao-dashboard">
         <div class="stats-grid">
             <div class="card-stat"><small>Questões Realizadas</small><h2 id="total-q">0</h2></div>
@@ -190,6 +192,17 @@
         </div>
     </div>
 
+    <div id="modal-json" class="modal hidden">
+        <div class="modal-content">
+            <h2>Importar JSON</h2>
+            <textarea id="json-input" rows="10" style="width:100%; padding:10px; background:var(--bg); color:var(--text); border:1px solid var(--card-border); border-radius:8px; font-family:monospace;"></textarea>
+            <div style="margin-top:20px; display:flex; gap:10px; justify-content:flex-end">
+                <button class="btn" onclick="fecharModalJson()">Cancelar</button>
+                <button class="btn btn-accent" onclick="processarJsonInjetado()">Importar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="secao-simulado" class="hidden">
         <div class="card" style="max-width: 850px; margin: auto;">
             <div id="sim-status" style="font-weight:bold; color:var(--primary); margin-bottom:15px; border-bottom:1px solid var(--card-border); padding-bottom:10px;"></div>
@@ -213,45 +226,34 @@
     // --- REVISÃO ESPAÇADA ---
     function calcularRevisoes(dataInicio) {
         if(!dataInicio) return [];
-        const prazos = [1, 3, 7, 15, 30];
-        return prazos.map(d => {
+        return [1, 3, 7, 15, 30].map(d => {
             let data = new Date(dataInicio);
             data.setDate(data.getDate() + d);
             return data.toLocaleDateString('pt-BR', {day: '2-digit', month: '2-digit'});
         });
     }
 
-    // --- SISTEMA DE GRIFAR ---
+    // --- GRIFAR TEXTO ---
     document.addEventListener('mouseup', function(e) {
         const selection = window.getSelection();
         const text = selection.toString().trim();
         const simTxt = document.getElementById('sim-txt');
-        
-        // Remove botão de grifar anterior se existir
         const oldBtn = document.querySelector('.highlight-tool');
         if(oldBtn) oldBtn.remove();
-
-        if (text && simTxt.contains(selection.anchorNode)) {
+        if (text && simTxt && simTxt.contains(selection.anchorNode)) {
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
-            
             const btn = document.createElement('button');
             btn.className = 'highlight-tool';
             btn.innerText = 'Grifar';
             btn.style.top = (window.scrollY + rect.top - 35) + 'px';
             btn.style.left = rect.left + 'px';
-            
-            btn.onmousedown = (ev) => {
-                ev.preventDefault();
-                const mark = document.createElement('mark');
-                range.surroundContents(mark);
-                btn.remove();
-            };
+            btn.onmousedown = (ev) => { ev.preventDefault(); const mark = document.createElement('mark'); range.surroundContents(mark); btn.remove(); };
             document.body.appendChild(btn);
         }
     });
 
-    // --- CORE DO APP ---
+    // --- SISTEMA ---
     function navegar(id) { document.querySelector('aside').classList.remove('active'); mostrarSecao(id); }
     function mostrarSecao(id) {
         document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
@@ -289,16 +291,15 @@
         document.getElementById('materia-nome-txt').innerText = matAtiva.nome;
         document.getElementById('tabela-assuntos').innerHTML = matAtiva.assuntos.map(a => {
             const pct = (a.a+a.e)>0?((a.a/(a.a+a.e))*100).toFixed(0):0;
-            const revisoes = calcularRevisoes(a.dataEstudo);
-            const revHtml = revisoes.length ? revisoes.map(r => `<span class="revision-tag">${r}</span>`).join('') : '<small>Marque como visto</small>';
-            
+            const revHtml = a.dataEstudo ? calcularRevisoes(a.dataEstudo).map(r => `<span class="revision-tag">${r}</span>`).join('') : '<small>Pendente</small>';
             return `<tr>
                 <td><input type="checkbox" ${a.check?'checked':''} onchange="marcarVisto(${a.id})"></td>
                 <td><b>${a.nome}</b></td>
-                <td style="max-width:200px">${revHtml}</td>
+                <td>${revHtml}</td>
                 <td><b style="color:${pct>=70?'var(--success)':'var(--danger)'}">${pct}%</b></td>
                 <td>
                     <button class="btn btn-primary" style="padding:5px" onclick="irCadManual(${a.id})">✏️</button>
+                    <button class="btn btn-accent" style="padding:5px" onclick="abrirModalJson(${a.id})">{}</button>
                     <button class="btn btn-success" style="padding:5px" onclick="irSimulado(${a.id})">📝</button>
                 </td></tr>`;
         }).join('');
@@ -316,6 +317,7 @@
         salvar(); abrirMateria(matAtiva.id);
     }
 
+    // --- JSON E CADASTROS ---
     function irCadManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); mostrarSecao('cadastro'); }
     function salvarQuestaoManual() {
         assAtivo.questoes.push({
@@ -327,6 +329,23 @@
         salvar(); alert("Salvo!"); abrirMateria(matAtiva.id);
     }
 
+    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
+    function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
+    function processarJsonInjetado() {
+        try {
+            const data = JSON.parse(document.getElementById('json-input').value);
+            const lista = data.questoes || data;
+            lista.forEach(q => {
+                assAtivo.questoes.push({
+                    p: q.p||q.pergunta, a: q.a||q.opcoes[0], b: q.b||q.opcoes[1], c: q.c||q.opcoes[2], d: q.d||q.opcoes[3],
+                    r: q.r||q.resposta_correta, coment: q.coment||q.explicacao||"", erro: false
+                });
+            });
+            salvar(); fecharModalJson(); abrirMateria(matAtiva.id);
+        } catch(e) { alert("JSON Inválido"); }
+    }
+
+    // --- SIMULADO ---
     function irSimulado(id) {
         modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id);
         if(!assAtivo.questoes.length) return alert("Sem questões!");
@@ -336,11 +355,8 @@
 
     function irSimuladoErros() {
         modoErro = true; questoesSessao = [];
-        db.forEach(m => m.assuntos.forEach(a => {
-            const erradas = a.questoes.filter(q => q.erro === true);
-            questoesSessao = questoesSessao.concat(erradas);
-        }));
-        if(!questoesSessao.length) return alert("Não há erros para praticar!");
+        db.forEach(m => m.assuntos.forEach(a => { questoesSessao = questoesSessao.concat(a.questoes.filter(q => q.erro === true)); }));
+        if(!questoesSessao.length) return alert("Não há erros!");
         qIndex = 0; mostrarSecao('simulado'); renderQ();
     }
 
@@ -351,32 +367,24 @@
         document.getElementById('sim-next').classList.add('hidden');
         document.getElementById('sim-feedback').classList.add('hidden');
         document.getElementById('sim-opcs').innerHTML = ['A','B','C','D'].map(l => 
-            `<button class="alt-btn" id="btn-${l}" onclick="validar('${l}')" oncontextmenu="eliminarAlternativa(event, '${l}')">
+            `<button class="alt-btn" id="btn-${l}" onclick="validar('${l}')" oncontextmenu="eliminar(event, '${l}')">
                 <b>${l})</b> ${q[l.toLowerCase()]}
             </button>`
         ).join('');
     }
 
-    function eliminarAlternativa(e, l) {
-        e.preventDefault();
-        const btn = document.getElementById('btn-'+l);
-        if(!btn.disabled) btn.classList.toggle('eliminada');
-    }
+    function eliminar(e, l) { e.preventDefault(); document.getElementById('btn-'+l).classList.toggle('eliminada'); }
 
     function validar(l) {
+        if(document.getElementById('btn-'+l).classList.contains('eliminada')) return;
         const q = questoesSessao[qIndex];
-        const btnClicado = document.getElementById('btn-'+l);
-        if(btnClicado.classList.contains('eliminada')) return;
-
         document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true);
-        const dia = new Date().getDay();
-        
         if(l === q.r) {
-            btnClicado.classList.add('correta');
+            document.getElementById('btn-'+l).classList.add('correta');
             if(!modoErro) assAtivo.a++;
-            q.erro = false; histAcertos[dia]++;
+            q.erro = false; histAcertos[new Date().getDay()]++;
         } else {
-            btnClicado.classList.add('errada');
+            document.getElementById('btn-'+l).classList.add('errada');
             document.getElementById('btn-'+q.r).classList.add('correta');
             if(!modoErro) assAtivo.e++;
             q.erro = true;
@@ -386,8 +394,9 @@
         salvar();
     }
 
-    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Sessão finalizada!"); navegar('dashboard'); } }
+    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Fim!"); navegar('dashboard'); } }
 
+    // --- DASHBOARD ---
     function renderDashboard() {
         let tA=0, tE=0, tV=0;
         db.forEach(m => m.assuntos.forEach(a => { tA+=a.a; tE+=a.e; if(a.check) tV++; }));
@@ -404,14 +413,12 @@
         const diasMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
         grid.innerHTML = ['D','S','T','Q','Q','S','S'].map(d => `<small>${d}</small>`).join('');
         for(let i=1; i<=diasMes; i++) {
-            const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-            const temLog = logsEstudo[dataStr];
-            grid.innerHTML += `<div class="cal-day ${temLog?'active-day':''}" onclick="verLog('${dataStr}')">${i}</div>`;
+            const dStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            grid.innerHTML += `<div class="cal-day ${logsEstudo[dStr]?'active-day':''}" onclick="verLog('${dStr}')">${i}</div>`;
         }
     }
 
-    function verLog(d) { const log = logsEstudo[d]; document.getElementById('cal-detalhes').innerText = log ? `Estudado: ${log.join(', ')}` : "Sem registros."; }
-    
+    function verLog(d) { document.getElementById('cal-detalhes').innerText = logsEstudo[d] ? `Estudado: ${logsEstudo[d].join(', ')}` : "Sem registros."; }
     function renderGrafico() {
         const ctx = document.getElementById('graficoEvolucao').getContext('2d');
         if(window.myChart) window.myChart.destroy();
@@ -419,15 +426,11 @@
     }
 
     function exportarDados() { const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_Mike.json`; a.click(); }
-    function importarDados(e) { const r = new FileReader(); r.onload = (ev) => { try { db = JSON.parse(ev.target.result); salvar(); location.reload(); } catch(err) {alert("Arquivo inválido");} }; r.readAsText(e.target.files[0]); }
-
+    function importarDados(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); salvar(); location.reload(); }; r.readAsText(e.target.files[0]); }
     function toggleTimer() {
         const btn = document.getElementById('btn-timer-toggle');
         if (timerInterval) { clearInterval(timerInterval); timerInterval = null; btn.innerText = "Iniciar"; }
-        else {
-            timerInterval = setInterval(() => { seconds++; const hrs = String(Math.floor(seconds/3600)).padStart(2,'0'); const mins = String(Math.floor((seconds%3600)/60)).padStart(2,'0'); const secs = String(seconds%60).padStart(2,'0'); document.getElementById('display-timer').innerText = `${hrs}:${mins}:${secs}`; }, 1000);
-            btn.innerText = "Pausar";
-        }
+        else { timerInterval = setInterval(() => { seconds++; const hrs = String(Math.floor(seconds/3600)).padStart(2,'0'); const mins = String(Math.floor((seconds%3600)/60)).padStart(2,'0'); const secs = String(seconds%60).padStart(2,'0'); document.getElementById('display-timer').innerText = `${hrs}:${mins}:${secs}`; }, 1000); btn.innerText = "Pausar"; }
     }
     function resetTimer() { seconds = 0; document.getElementById('display-timer').innerText = "00:00:00"; }
 
