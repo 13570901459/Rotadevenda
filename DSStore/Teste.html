@@ -21,34 +21,31 @@
         
         body { margin: 0; display: flex; flex-direction: row; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
 
-        /* PADRÃO SIDEBAR */
         aside { 
             width: 280px; min-width: 280px; background: var(--dark); color: white; 
             display: flex; flex-direction: column; padding: 20px; border-right: 1px solid var(--card-border); 
-            z-index: 100;
+            z-index: 100; transition: transform 0.3s ease;
         }
 
         .logo { font-size: 1.4rem; font-weight: 800; color: var(--success); margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .theme-toggle { background: #334155; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; font-size: 0.8rem; width: 100%; font-weight: bold; border: 1px solid #475569; }
-        
         .user-rank { background: linear-gradient(45deg, #1e293b, #334155); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; border: 1px solid var(--accent); }
+        
         .timer-box { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; border: 1px solid var(--primary); }
         .timer-display { font-size: 1.5rem; font-family: monospace; color: var(--primary); font-weight: bold; margin: 5px 0; }
-
+        
         .nav-group { overflow-y: auto; flex: 1; margin-bottom: 10px; }
-        .nav-btn { width: 100%; background: transparent; border: none; color: #94a3b8; text-align: left; padding: 12px; cursor: pointer; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; font-weight: 500; }
+        .nav-btn { width: 100%; background: transparent; border: none; color: #94a3b8; text-align: left; padding: 12px; cursor: pointer; border-radius: 8px; margin-bottom: 5px; transition: 0.2s; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .nav-btn:hover, .nav-btn.active { background: var(--primary); color: white; }
 
-        /* CONTEÚDO PRINCIPAL */
-        main { flex: 1; padding: 30px; overflow-y: auto; scroll-behavior: smooth; position: relative; }
+        main { flex: 1; padding: 30px; overflow-y: auto; scroll-behavior: smooth; position: relative; width: 100%; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 20px; margin-bottom: 25px; }
         .card-stat { background: var(--white); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 4px solid var(--primary); border: 1px solid var(--card-border); }
-        .card-stat h2 { margin: 10px 0 0 0; font-size: 1.8rem; }
-
-        .card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; border: 1px solid var(--card-border); }
         
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; border: 1px solid var(--card-border); overflow-x: auto; }
+        
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
         
         .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; }
@@ -57,27 +54,24 @@
         .btn-danger { background: var(--danger); color: white; }
         .btn-accent { background: var(--accent); color: white; }
 
-        /* SISTEMA DE ELIMINAÇÃO */
-        .option-container { display: flex; align-items: stretch; gap: 10px; margin: 12px 0; }
-        .btn-x-eliminar { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-x-eliminar:hover { background: #ef4444; color: white; }
-        
-        .alt-btn { flex: 1; text-align: left; padding: 15px; border: 2px solid var(--card-border); border-radius: 8px; background: var(--white); cursor: pointer; color: var(--text); font-size: 1rem; position: relative; }
+        /* --- ESTILOS DAS QUESTÕES --- */
+        .question-option-container { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+        .alt-btn { flex: 1; text-align: left; padding: 15px; border: 2px solid var(--card-border); border-radius: 8px; background: var(--white); cursor: pointer; color: var(--text); font-size: 1rem; }
+        .btn-eliminar { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; padding: 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         
         .eliminada .alt-btn { opacity: 0.3; text-decoration: line-through; pointer-events: none; background: #f1f5f9; }
-        .eliminada .btn-x-eliminar { background: #64748b; color: white; border-color: #475569; }
+        .eliminada .btn-eliminar { background: #94a3b8; color: white; border-color: #64748b; }
 
         .correta { border-color: var(--success) !important; background: rgba(16, 185, 129, 0.15) !important; font-weight: bold; }
         .errada { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
-
-        .hidden { display: none !important; }
+        
+        .revision-tag { font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; background: var(--warning); color: white; margin-right: 3px; }
         mark { background: #fef08a; color: black; border-radius: 2px; }
-        .highlight-tool { position: absolute; background: var(--dark); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; z-index: 500; }
+        .highlight-tool { position: absolute; background: #000; color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; z-index: 1000; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
-        .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; }
-
-        .revision-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: var(--warning); color: white; margin-right: 4px; }
+        .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -85,12 +79,12 @@
 <aside>
     <div class="logo">FUTURO MIKE</div>
     <button class="theme-toggle" onclick="toggleDarkMode()" id="btn-theme">🌙 Modo Noturno</button>
-
-    <div class="user-rank">🛡️ <span id="rank-name" style="font-weight:bold">Recruta</span></div>
+    
+    <div class="user-rank">🛡️ <span id="rank-name">Recruta</span></div>
     
     <div class="timer-box">
         <div class="timer-display" id="display-timer">00:00:00</div>
-        <button class="btn btn-success" style="padding:5px 10px; font-size:0.7rem; width:100%" onclick="toggleTimer()" id="btn-timer-toggle">Iniciar Cronômetro</button>
+        <button class="btn btn-success" style="font-size:0.7rem" onclick="toggleTimer()" id="btn-timer-toggle">Iniciar</button>
     </div>
 
     <div class="nav-group">
@@ -98,157 +92,189 @@
         <div id="lista-materias-menu"></div>
     </div>
     
-    <button class="btn btn-primary" onclick="novaMateria()">+ Nova Disciplina</button>
+    <button class="btn btn-primary" onclick="novaMateria()">+ Disciplina</button>
 </aside>
 
 <main>
     <div id="secao-dashboard">
         <div class="stats-grid">
-            <div class="card-stat"><small>Questões Realizadas</small><h2 id="total-q">0</h2></div>
-            <div class="card-stat"><small>Acertos Totais</small><h2 id="total-a" style="color:var(--success)">0</h2></div>
-            <div class="card-stat"><small>Tópicos Concluídos</small><h2 id="total-v">0</h2></div>
+            <div class="card-stat"><small>Questões</small><h2 id="total-q">0</h2></div>
+            <div class="card-stat"><small>Acertos</small><h2 id="total-a" style="color:var(--success)">0</h2></div>
+            <div class="card-stat"><small>Tópicos Vistos</small><h2 id="total-vistos">0</h2></div>
         </div>
-
-        <div id="revisoes-alerta"></div>
-
         <div class="card">
-            <h3>📈 Evolução de Desempenho</h3>
+            <h3>📈 Evolução</h3>
             <canvas id="graficoEvolucao" height="100"></canvas>
         </div>
-
-        <button class="btn btn-danger" style="width:100%; padding:20px; font-size:1rem" onclick="irSimuladoErros()">🎯 PRATICAR APENAS ERROS</button>
+        <button class="btn btn-danger" onclick="irSimuladoErros()">🎯 Praticar Erros</button>
     </div>
 
     <div id="secao-materia" class="hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px">
+        <div class="header-page">
             <h1 id="materia-nome-txt">Disciplina</h1>
-            <button class="btn btn-primary" onclick="novoAssunto()">+ Adicionar Tópico</button>
+            <button class="btn btn-primary" onclick="novoAssunto()">+ Tópico</button>
         </div>
         <div class="card">
             <table>
-                <thead><tr><th>Status</th><th>Tópico</th><th>Ciclo de Revisão</th><th>Ações</th></tr></thead>
+                <thead><tr><th>Visto</th><th>Tópico</th><th>Revisões</th><th>%</th><th>Ações</th></tr></thead>
                 <tbody id="tabela-assuntos"></tbody>
             </table>
         </div>
     </div>
 
-    <div id="secao-simulado" class="hidden">
-        <div class="card" style="max-width: 850px; margin: auto;">
-            <div id="sim-status" style="font-weight:bold; color:var(--primary); margin-bottom:15px"></div>
-            <div id="sim-txt" style="font-size: 1.1rem; line-height: 1.6; margin-bottom: 20px; position: relative;"></div>
-            <div id="sim-opcs"></div>
-            <div id="sim-feedback" class="card hidden" style="margin-top:15px; background:rgba(37, 99, 235, 0.05); border-left:5px solid var(--primary)">
-                <strong>💡 Comentário:</strong> <p id="sim-coment-txt" style="margin:5px 0 0 0"></p>
-            </div>
-            <button class="btn btn-primary hidden" id="sim-next" style="margin-top:20px; width:100%; justify-content:center" onclick="proximaQ()">Próxima Questão</button>
+    <div id="secao-cadastro" class="hidden">
+        <div class="card">
+            <h2>Nova Questão</h2>
+            <textarea id="q-enun" rows="4" style="width:100%; margin-bottom:10px;" placeholder="Enunciado..."></textarea>
+            <input type="text" id="q-a" placeholder="Alternativa A" style="width:100%; margin-bottom:5px;">
+            <input type="text" id="q-b" placeholder="Alternativa B" style="width:100%; margin-bottom:5px;">
+            <input type="text" id="q-c" placeholder="Alternativa C" style="width:100%; margin-bottom:5px;">
+            <input type="text" id="q-d" placeholder="Alternativa D" style="width:100%; margin-bottom:10px;">
+            <label>Gabarito:</label>
+            <select id="q-gab"><option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option></select>
+            <textarea id="q-coment" placeholder="Comentário..." style="width:100%; margin-top:10px;"></textarea>
+            <button class="btn btn-success" onclick="salvarQuestaoManual()">Salvar</button>
         </div>
     </div>
 
     <div id="modal-json" class="modal hidden">
         <div class="modal-content">
-            <h2>Importar JSON de Questões</h2>
-            <textarea id="json-input" rows="10" style="width:100%; padding:10px; border-radius:8px; border:1px solid var(--card-border); font-family:monospace" placeholder='[{"p":"pergunta", "a":"opc1", "b":"opc2", "c":"opc3", "d":"opc4", "r":"A"}]'></textarea>
-            <div style="margin-top:15px; display:flex; gap:10px; justify-content:flex-end">
-                <button class="btn" onclick="fecharModalJson()">Cancelar</button>
-                <button class="btn btn-accent" onclick="processarJsonInjetado()">Importar Agora</button>
+            <h2>Importar Questões (JSON)</h2>
+            <textarea id="json-input" rows="10" style="width:100%; font-family:monospace;" placeholder='[{"p":"pergunta", "a":"opc1"...}]'></textarea>
+            <button class="btn btn-accent" onclick="processarJsonInjetado()">Importar</button>
+            <button class="btn" onclick="fecharModalJson()">Fechar</button>
+        </div>
+    </div>
+
+    <div id="secao-simulado" class="hidden">
+        <div class="card" style="max-width: 800px; margin: auto;">
+            <div id="sim-status" style="margin-bottom:10px; font-weight:bold;"></div>
+            <div id="sim-txt" style="font-size: 1.1rem; line-height: 1.6; position: relative;"></div>
+            <div id="sim-opcs"></div>
+            <div id="sim-feedback" class="card hidden" style="background:#eff6ff;">
+                <strong>💡 Comentário:</strong> <p id="sim-coment-txt"></p>
             </div>
+            <button class="btn btn-primary hidden" id="sim-next" style="width:100%;" onclick="proximaQ()">Próxima Questão</button>
         </div>
     </div>
 </main>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('mike_db')) || [];
-    let hist = JSON.parse(localStorage.getItem('mike_hist')) || [0,0,0,0,0,0,0];
-    let isDarkMode = localStorage.getItem('mike_dark') === 'true';
-    let matAtiva, assAtivo, qIndex, timerInterval, seconds = 0, questoesSessao = [];
+    let db = JSON.parse(localStorage.getItem('sge_u_db')) || [];
+    let histAcertos = JSON.parse(localStorage.getItem('sge_u_hist')) || [0,0,0,0,0,0,0];
+    let logsEstudo = JSON.parse(localStorage.getItem('sge_u_logs')) || {};
+    let isDarkMode = localStorage.getItem('sge_u_dark') === 'true';
+    let matAtiva, assAtivo, qIndex, timerInterval, seconds = 0, questoesSessao = [], modoErro = false;
 
-    // --- REVISÃO ---
-    function calcRevisoes(data) {
+    // --- REVISÃO ESPAÇADA ---
+    function calcRev(data) {
         if(!data) return [];
-        return [1, 7, 30].map(d => {
+        return [1, 3, 7, 15, 30].map(d => {
             let dt = new Date(data); dt.setDate(dt.getDate() + d);
             return dt.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
         });
     }
 
-    // --- SISTEMA ---
-    function salvar() { 
-        localStorage.setItem('mike_db', JSON.stringify(db)); 
-        localStorage.setItem('mike_hist', JSON.stringify(hist)); 
-        renderMenu(); 
-    }
+    // --- GRIFAR ---
+    document.addEventListener('mouseup', () => {
+        const sel = window.getSelection();
+        const txt = sel.toString().trim();
+        if (txt && document.getElementById('sim-txt').contains(sel.anchorNode)) {
+            const range = sel.getRangeAt(0);
+            const rect = range.getBoundingClientRect();
+            const btn = document.createElement('button');
+            btn.className = 'highlight-tool'; btn.innerText = 'Grifar';
+            btn.style.top = (window.scrollY + rect.top - 35) + 'px';
+            btn.style.left = rect.left + 'px';
+            btn.onclick = () => { const m = document.createElement('mark'); range.surroundContents(m); btn.remove(); };
+            document.body.appendChild(btn);
+            setTimeout(() => btn.remove(), 3000);
+        }
+    });
 
-    function navegar(id) {
+    // --- LOGICA ---
+    function navegar(id) { 
         document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
         document.getElementById('secao-' + id).classList.remove('hidden');
         if(id === 'dashboard') renderDash();
     }
 
-    function toggleDarkMode() {
-        isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode);
-        localStorage.setItem('mike_dark', isDarkMode);
-    }
+    function toggleDarkMode() { isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode); localStorage.setItem('sge_u_dark', isDarkMode); }
     if(isDarkMode) document.body.classList.add('dark-mode');
 
-    function renderMenu() {
-        document.getElementById('lista-materias-menu').innerHTML = db.map(m => 
-            `<button class="nav-btn" onclick="abrirMat(${m.id})">📚 ${m.nome}</button>`).join('');
-    }
+    function salvar() { localStorage.setItem('sge_u_db', JSON.stringify(db)); localStorage.setItem('sge_u_hist', JSON.stringify(histAcertos)); localStorage.setItem('sge_u_logs', JSON.stringify(logsEstudo)); renderMenu(); }
 
-    function novaMateria() { const n = prompt("Nome da Disciplina:"); if(n) { db.push({id: Date.now(), nome: n, assuntos: []}); salvar(); } }
-    function novoAssunto() { const n = prompt("Nome do Tópico:"); if(n) { matAtiva.assuntos.push({id: Date.now(), nome: n, check: false, data: null, a: 0, e: 0, questoes: []}); salvar(); abrirMat(matAtiva.id); } }
+    function renderMenu() { document.getElementById('lista-materias-menu').innerHTML = db.map(m => `<button class="nav-btn" onclick="abrirMat(${m.id})">📚 ${m.nome}</button>`).join(''); }
+
+    function novaMateria() { const n = prompt("Matéria:"); if(n) { db.push({id:Date.now(), nome:n, assuntos:[]}); salvar(); } }
+    function novoAssunto() { const n = prompt("Tópico:"); if(n) { matAtiva.assuntos.push({id:Date.now(), nome:n, check:false, dataEstudo:null, a:0, e:0, questoes:[]}); salvar(); abrirMat(matAtiva.id); } }
 
     function abrirMat(id) {
         matAtiva = db.find(m => m.id === id); navegar('materia');
         document.getElementById('materia-nome-txt').innerText = matAtiva.nome;
-        document.getElementById('tabela-assuntos').innerHTML = matAtiva.assuntos.map(a => `
-            <tr>
-                <td><input type="checkbox" ${a.check?'checked':''} onchange="marcarVisto(${a.id})"></td>
-                <td><b>${a.nome}</b></td>
-                <td>${a.data ? calcRevisoes(a.data).map(r => `<span class="revision-tag">${r}</span>`).join('') : '--'}</td>
+        document.getElementById('tabela-assuntos').innerHTML = matAtiva.assuntos.map(a => {
+            const revs = a.dataEstudo ? calcRev(a.dataEstudo).map(r => `<span class="revision-tag">${r}</span>`).join('') : '--';
+            return `<tr>
+                <td><input type="checkbox" ${a.check?'checked':''} onchange="marcar(${a.id})"></td>
+                <td>${a.nome}</td><td>${revs}</td>
+                <td>${(a.a+a.e)>0?((a.a/(a.a+a.e))*100).toFixed(0):0}%</td>
                 <td>
-                    <button class="btn btn-accent" onclick="abrirModalJson(${a.id})">{}</button>
+                    <button class="btn btn-primary" onclick="irManual(${a.id})">✏️</button>
+                    <button class="btn btn-accent" onclick="abrirJson(${a.id})">{}</button>
                     <button class="btn btn-success" onclick="irSim(${a.id})">📝</button>
-                </td>
-            </tr>`).join('');
+                </td></tr>`;
+        }).join('');
     }
 
-    function marcarVisto(id) {
+    function marcar(id) {
         const a = matAtiva.assuntos.find(x => x.id === id);
-        a.check = !a.check; a.data = a.check ? new Date().toISOString().split('T')[0] : null;
+        a.check = !a.check; a.dataEstudo = a.check ? new Date().toISOString() : null;
         salvar(); abrirMat(matAtiva.id);
     }
 
     // --- JSON ---
-    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
+    function abrirJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
     function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
     function processarJsonInjetado() {
         try {
             const data = JSON.parse(document.getElementById('json-input').value);
             (data.questoes || data).forEach(q => {
-                assAtivo.questoes.push({ p: q.p, a: q.a, b: q.b, c: q.c, d: q.d, r: q.r, coment: q.coment||"", erro: false });
+                assAtivo.questoes.push({ p: q.p||q.pergunta, a: q.a||q.opcoes[0], b: q.b||q.opcoes[1], c: q.c||q.opcoes[2], d: q.d||q.opcoes[3], r: q.r||q.resposta_correta, coment: q.coment||q.explicacao||"", erro: false });
             });
             salvar(); fecharModalJson(); abrirMat(matAtiva.id);
-        } catch(e) { alert("Erro no JSON!"); }
+        } catch(e) { alert("JSON Inválido"); }
+    }
+
+    function irManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); navegar('cadastro'); }
+    function salvarQuestaoManual() {
+        assAtivo.questoes.push({ p: document.getElementById('q-enun').value, a: document.getElementById('q-a').value, b: document.getElementById('q-b').value, c: document.getElementById('q-c').value, d: document.getElementById('q-d').value, r: document.getElementById('q-gab').value, coment: document.getElementById('q-coment').value, erro: false });
+        salvar(); abrirMat(matAtiva.id);
     }
 
     // --- SIMULADO E ELIMINAR ---
     function irSim(id) {
-        assAtivo = matAtiva.assuntos.find(a => a.id === id);
+        modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id);
         if(!assAtivo.questoes.length) return alert("Sem questões!");
         questoesSessao = [...assAtivo.questoes].sort(() => Math.random() - 0.5);
+        qIndex = 0; navegar('simulado'); renderQ();
+    }
+
+    function irSimuladoErros() {
+        modoErro = true; questoesSessao = [];
+        db.forEach(m => m.assuntos.forEach(a => { questoesSessao = questoesSessao.concat(a.questoes.filter(q => q.erro)); }));
+        if(!questoesSessao.length) return alert("Sem erros!");
         qIndex = 0; navegar('simulado'); renderQ();
     }
 
     function renderQ() {
         const q = questoesSessao[qIndex];
         document.getElementById('sim-status').innerText = `Questão ${qIndex+1}/${questoesSessao.length}`;
-        document.getElementById('sim-txt').innerText = q.p;
+        document.getElementById('sim-txt').innerHTML = q.p;
         document.getElementById('sim-next').classList.add('hidden');
         document.getElementById('sim-feedback').classList.add('hidden');
         document.getElementById('sim-opcs').innerHTML = ['A','B','C','D'].map(l => `
-            <div class="option-container" id="cont-${l}">
-                <button class="btn-x-eliminar" onclick="eliminar('${l}')">X</button>
+            <div class="question-option-container" id="cont-${l}">
+                <button class="btn-eliminar" onclick="eliminar('${l}')">X</button>
                 <button class="alt-btn" id="btn-${l}" onclick="validar('${l}')"><b>${l})</b> ${q[l.toLowerCase()]}</button>
             </div>`).join('');
     }
@@ -257,14 +283,14 @@
 
     function validar(l) {
         const q = questoesSessao[qIndex];
-        document.querySelectorAll('.alt-btn, .btn-x-eliminar').forEach(b => b.disabled = true);
+        document.querySelectorAll('.alt-btn, .btn-eliminar').forEach(b => b.disabled = true);
         if(l === q.r) {
             document.getElementById('btn-'+l).classList.add('correta');
-            assAtivo.a++; hist[new Date().getDay()]++; q.erro = false;
+            if(!modoErro) assAtivo.a++; q.erro = false; histAcertos[new Date().getDay()]++;
         } else {
             document.getElementById('btn-'+l).classList.add('errada');
             document.getElementById('btn-'+q.r).classList.add('correta');
-            assAtivo.e++; q.erro = true;
+            if(!modoErro) assAtivo.e++; q.erro = true;
         }
         if(q.coment) { document.getElementById('sim-coment-txt').innerText = q.coment; document.getElementById('sim-feedback').classList.remove('hidden'); }
         document.getElementById('sim-next').classList.remove('hidden');
@@ -273,47 +299,22 @@
 
     function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else navegar('dashboard'); }
 
-    // --- DASH E TIMER ---
+    // --- DASH ---
     function renderDash() {
-        let tA=0, tQ=0, tV=0;
+        let tQ=0, tA=0, tV=0;
         db.forEach(m => m.assuntos.forEach(a => { tA+=a.a; tQ+=(a.a+a.e); if(a.check) tV++; }));
-        document.getElementById('total-a').innerText = tA;
         document.getElementById('total-q').innerText = tQ;
-        document.getElementById('total-v').innerText = tV;
-        
+        document.getElementById('total-a').innerText = tA;
+        document.getElementById('total-vistos').innerText = tV;
         const ctx = document.getElementById('graficoEvolucao').getContext('2d');
-        if(window.myC) window.myC.destroy();
-        window.myC = new Chart(ctx, { type:'line', data:{ labels:['D','S','T','Q','Q','S','S'], datasets:[{label:'Acertos', data:hist, borderColor:'#2563eb', tension:0.4}] } });
+        if(window.myChart) window.myChart.destroy();
+        window.myChart = new Chart(ctx, { type:'line', data:{ labels:['D','S','T','Q','Q','S','S'], datasets:[{label:'Acertos', data:histAcertos, borderColor:'#2563eb'}] } });
     }
 
     function toggleTimer() {
-        const btn = document.getElementById('btn-timer-toggle');
-        if(timerInterval) { clearInterval(timerInterval); timerInterval=null; btn.innerText="Iniciar Cronômetro"; }
-        else { timerInterval = setInterval(() => { seconds++; let h=Math.floor(seconds/3600), m=Math.floor((seconds%3600)/60), s=seconds%60; document.getElementById('display-timer').innerText=`${String(h).padStart(2,0)}:${String(m).padStart(2,0)}:${String(s).padStart(2,0)}`; }, 1000); btn.innerText="Pausar Cronômetro"; }
+        if(timerInterval) { clearInterval(timerInterval); timerInterval=null; document.getElementById('btn-timer-toggle').innerText="Iniciar"; }
+        else { timerInterval = setInterval(() => { seconds++; let h=Math.floor(seconds/3600), m=Math.floor((seconds%3600)/60), s=seconds%60; document.getElementById('display-timer').innerText=`${String(h).padStart(2,0)}:${String(m).padStart(2,0)}:${String(s).padStart(2,0)}`; }, 1000); document.getElementById('btn-timer-toggle').innerText="Pausar"; }
     }
-
-    function irSimuladoErros() {
-        questoesSessao = [];
-        db.forEach(m => m.assuntos.forEach(a => { 
-            questoesSessao = questoesSessao.concat(a.questoes.filter(q => q.erro === true)); 
-        }));
-        if(!questoesSessao.length) return alert("Nenhum erro registrado!");
-        qIndex = 0; navegar('simulado'); renderQ();
-    }
-
-    // GRIFAR
-    document.addEventListener('mouseup', () => {
-        const s = window.getSelection();
-        if(s.toString() && document.getElementById('sim-txt').contains(s.anchorNode)) {
-            const r = s.getRangeAt(0).getBoundingClientRect();
-            const b = document.createElement('button');
-            b.className='highlight-tool'; b.innerText='Grifar';
-            b.style.top=(window.scrollY+r.top-35)+'px'; b.style.left=r.left+'px';
-            b.onclick=()=>{ const m=document.createElement('mark'); s.getRangeAt(0).surroundContents(m); b.remove(); };
-            document.body.appendChild(b);
-            setTimeout(()=>b.remove(), 2500);
-        }
-    });
 
     renderMenu(); renderDash();
 </script>
