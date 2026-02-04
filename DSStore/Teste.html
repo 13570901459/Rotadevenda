@@ -30,6 +30,7 @@
         .logo { font-size: 1.4rem; font-weight: 800; color: var(--success); margin-bottom: 10px; border-bottom: 1px solid #334155; padding-bottom: 10px; }
         .theme-toggle { background: #334155; color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 15px; font-size: 0.8rem; width: 100%; font-weight: bold; border: 1px solid #475569; }
         .user-rank { background: linear-gradient(45deg, #1e293b, #334155); padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; border: 1px solid var(--accent); }
+        .rank-medal { font-size: 2rem; display: block; margin-bottom: 5px; }
         .timer-box { background: #1e293b; padding: 15px; border-radius: 12px; margin-bottom: 15px; text-align: center; border: 1px solid var(--primary); }
         .timer-display { font-size: 1.5rem; font-family: monospace; color: var(--primary); font-weight: bold; margin: 5px 0; }
         .nav-group { overflow-y: auto; flex: 1; margin-bottom: 10px; }
@@ -46,21 +47,22 @@
         .grid-2 { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 20px; margin-bottom: 20px; }
         .card { background: var(--white); border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 20px; border: 1px solid var(--card-border); overflow-x: auto; }
         
+        .table-container { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
-
+        
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; margin-top: 10px; }
         .cal-day { padding: 10px; border-radius: 8px; background: rgba(100,100,100,0.1); font-size: 0.75rem; cursor: pointer; }
         .cal-day.active-day { background: var(--success); color: white; font-weight: bold; }
-        .cal-day.rev-day { border: 2px solid var(--warning); }
 
         .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
-        .btn-warning { background: var(--warning); color: white; }
+        .btn-accent { background: var(--accent); color: white; }
 
-        .rev-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; background: var(--warning); color: white; margin-left: 5px; }
+        .rev-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-radius: 8px; background: var(--bg); margin-bottom: 8px; border: 1px solid var(--card-border); }
+        .rev-info { display: flex; flex-direction: column; gap: 2px; }
 
         .hidden { display: none !important; }
         #menu-toggle { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); justify-content: center; align-items: center; font-size: 1.5rem; }
@@ -72,6 +74,13 @@
             .grid-2 { grid-template-columns: 1fr; }
             #menu-toggle { display: flex; }
         }
+
+        .alt-btn { display: block; width: 100%; text-align: left; padding: 15px; margin: 10px 0; border: 2px solid var(--card-border); border-radius: 8px; background: var(--white); cursor: pointer; color: var(--text); font-size: 1rem; transition: 0.2s; }
+        .correta { border-color: var(--success) !important; background: rgba(16, 185, 129, 0.15) !important; font-weight: bold; }
+        .errada { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
+        
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
+        .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
 <body>
@@ -111,8 +120,12 @@
 
 <main onclick="document.querySelector('aside').classList.remove('active')">
     <div id="secao-dashboard">
-        <div id="alerta-revisao" class="card hidden" style="background: var(--warning); color: white; border: none;">
-            <strong>⚠️ Atenção:</strong> Você tem tópicos para revisar hoje (1, 7, 15 ou 30 dias)!
+        <div id="alerta-revisao" class="card hidden" style="border-left: 5px solid var(--accent); background: linear-gradient(to right, rgba(139, 92, 246, 0.1), transparent);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <h3 style="margin:0">🔔 Revisões para Hoje</h3>
+                <span class="btn-accent" style="padding: 2px 8px; border-radius: 20px; font-size: 0.7rem;" id="count-rev">0 Pendentes</span>
+            </div>
+            <div id="lista-revisoes-hoje"></div>
         </div>
 
         <div class="stats-grid">
@@ -128,7 +141,7 @@
                 <canvas id="graficoEvolucao" height="160"></canvas>
             </div>
             <div class="card">
-                <h3>🗓️ Histórico</h3>
+                <h3>🗓️ Histórico de Estudos</h3>
                 <div class="calendar-grid" id="cal-grid"></div>
                 <div id="cal-detalhes" style="margin-top:15px; font-size:0.8rem; color:var(--primary); font-weight:bold;"></div>
             </div>
@@ -154,7 +167,7 @@
         <div class="card">
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Visto</th><th>Tópico</th><th>Último Estudo</th><th>Próxima Revisão</th><th>%</th><th>Ações</th></tr></thead>
+                    <thead><tr><th>Visto</th><th>Tópico</th><th>Estudo</th><th>Revisões</th><th>%</th><th>Ações</th></tr></thead>
                     <tbody id="tabela-assuntos"></tbody>
                 </table>
             </div>
@@ -210,16 +223,14 @@
 </main>
 
 <script>
-    // DADOS
+    // DADOS E ESTADO
     let db = JSON.parse(localStorage.getItem('sge_u_db')) || [];
     let histAcertos = JSON.parse(localStorage.getItem('sge_u_hist')) || [0,0,0,0,0,0,0];
     let logsEstudo = JSON.parse(localStorage.getItem('sge_u_logs')) || {};
     let isDarkMode = localStorage.getItem('sge_u_dark') === 'true';
-    let matAtiva = null; let assAtivo = null; let qIndex = 0; let timerInterval; let seconds = 0; let questoesSessao = []; let modoErro = false;
+    let matAtiva = null, assAtivo = null, qIndex = 0, timerInterval, seconds = 0, questoesSessao = [], modoErro = false;
 
-    // INICIALIZAÇÃO TEMA
-    if(isDarkMode) { document.body.classList.add('dark-mode'); document.getElementById('btn-theme').innerText = "☀️ Modo Claro"; }
-
+    // INTERFACE BÁSICA
     function navegar(id) { document.querySelector('aside').classList.remove('active'); mostrarSecao(id); }
     function mostrarSecao(id) {
         document.querySelectorAll('main > div').forEach(d => d.classList.add('hidden'));
@@ -227,12 +238,12 @@
         if(target) target.classList.remove('hidden');
         if(id === 'dashboard') renderDashboard();
     }
-
     function toggleDarkMode() {
         isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode);
         localStorage.setItem('sge_u_dark', isDarkMode);
         document.getElementById('btn-theme').innerText = isDarkMode ? "☀️ Modo Claro" : "🌙 Modo Noturno";
     }
+    if(isDarkMode) { document.body.classList.add('dark-mode'); document.getElementById('btn-theme').innerText = "☀️ Modo Claro"; }
 
     function salvar() {
         localStorage.setItem('sge_u_db', JSON.stringify(db));
@@ -247,29 +258,22 @@
         ).join('');
     }
 
-    // DISCIPLINAS
+    // MATERIAS E ASSUNTOS
     function novaMateria() { const n = prompt("Nome da Matéria:"); if(n) { db.push({id: Date.now(), nome: n, assuntos: []}); salvar(); } }
     function removerMateriaAtiva() { if(confirm("Excluir matéria?")) { db = db.filter(m => m.id !== matAtiva.id); salvar(); navegar('dashboard'); } }
-    function novoAssunto() { const n = prompt("Nome do Tópico:"); if(n && matAtiva) { matAtiva.assuntos.push({id: Date.now(), nome: n, check: false, dataEstudo: null, revDates: [], a: 0, e: 0, questoes: []}); salvar(); abrirMateria(matAtiva.id); } }
-    
+    function novoAssunto() { const n = prompt("Nome do Tópico:"); if(n && matAtiva) { matAtiva.assuntos.push({id: Date.now(), nome: n, check: false, dataEstudo: null, a: 0, e: 0, questoes: [], revisoes: []}); salvar(); abrirMateria(matAtiva.id); } }
+
     function abrirMateria(id) {
         matAtiva = db.find(m => m.id === id); navegar('materia');
         document.getElementById('materia-nome-txt').innerText = matAtiva.nome;
-        renderTabelaAssuntos();
-    }
-
-    function renderTabelaAssuntos() {
-        const hoje = new Date().toISOString().split('T')[0];
         document.getElementById('tabela-assuntos').innerHTML = matAtiva.assuntos.map(a => {
             const pct = (a.a+a.e)>0?((a.a/(a.a+a.e))*100).toFixed(0):0;
-            const proxima = a.revDates ? a.revDates.find(d => d >= hoje) : null;
-            const temRevisaoHoje = a.revDates ? a.revDates.includes(hoje) : false;
-
+            const revConcluidas = a.revisoes ? a.revisoes.filter(r => r.concluida).length : 0;
             return `<tr>
                 <td><input type="checkbox" ${a.check?'checked':''} onchange="marcarVisto(${a.id})"></td>
-                <td><b>${a.nome}</b> ${temRevisaoHoje ? '<span class="rev-badge">REVISAR HOJE</span>' : ''}</td>
+                <td><b>${a.nome}</b></td>
                 <td>${a.dataEstudo ? new Date(a.dataEstudo).toLocaleDateString() : '--'}</td>
-                <td>${proxima ? new Date(proxima).toLocaleDateString() : 'Concluído'}</td>
+                <td><small>${revConcluidas}/5 fases</small></td>
                 <td><b style="color:${pct>=70?'var(--success)':'var(--danger)'}">${pct}%</b></td>
                 <td>
                     <button class="btn btn-primary" onclick="irCadManual(${a.id})">✏️</button>
@@ -279,32 +283,103 @@
         }).join('');
     }
 
-    // LÓGICA DE REVISÃO (1, 7, 15, 30)
+    // MODIFICAÇÃO: LÓGICA DE REVISÃO ESPAÇADA
     function marcarVisto(id) {
         const a = matAtiva.assuntos.find(x => x.id === id);
         a.check = !a.check;
         const hoje = new Date();
-        const hojeStr = hoje.toISOString().split('T')[0];
-
+        const dataStr = hoje.toISOString().split('T')[0];
+        
         if(a.check) {
-            a.dataEstudo = hojeStr;
-            // Gera as datas de revisão
-            a.revDates = [1, 7, 15, 30].map(days => {
-                const d = new Date();
-                d.setDate(hoje.getDate() + days);
-                return d.toISOString().split('T')[0];
+            a.dataEstudo = dataStr;
+            // Gera as 5 revisões
+            a.revisoes = [1, 3, 7, 15, 30].map(dias => {
+                const dataRev = new Date(hoje);
+                dataRev.setDate(hoje.getDate() + dias);
+                return { data: dataRev.toISOString().split('T')[0], concluida: false };
             });
-            // Log de calendário
-            if(!logsEstudo[hojeStr]) logsEstudo[hojeStr] = [];
-            if(!logsEstudo[hojeStr].includes(matAtiva.nome)) logsEstudo[hojeStr].push(matAtiva.nome);
+            if(!logsEstudo[dataStr]) logsEstudo[dataStr] = [];
+            if(!logsEstudo[dataStr].includes(matAtiva.nome)) logsEstudo[dataStr].push(matAtiva.nome);
         } else {
             a.dataEstudo = null;
-            a.revDates = [];
+            a.revisoes = [];
         }
         salvar(); abrirMateria(matAtiva.id);
     }
 
-    // CADASTROS
+    // DASHBOARD E REVISÕES
+    function renderDashboard() {
+        let tA=0, tE=0, tV=0, revHoje = [];
+        const hojeStr = new Date().toISOString().split('T')[0];
+
+        db.forEach(m => m.assuntos.forEach(a => { 
+            tA+=a.a; tE+=a.e; if(a.check) tV++; 
+            // Checar revisões pendentes
+            if(a.revisoes) {
+                a.revisoes.forEach((rev, idx) => {
+                    if(rev.data === hojeStr && !rev.concluida) {
+                        revHoje.push({ mId: m.id, aId: a.id, mNome: m.nome, aNome: a.nome, fase: idx+1 });
+                    }
+                });
+            }
+        }));
+
+        document.getElementById('total-q').innerText = tA+tE;
+        document.getElementById('total-a').innerText = tA;
+        document.getElementById('total-pct').innerText = (tA+tE)>0?((tA/(tA+tE))*100).toFixed(1)+'%':'0%';
+        document.getElementById('total-vistos').innerText = tV;
+
+        // Renderizar Alertas de Revisão
+        const alertaBox = document.getElementById('alerta-revisao');
+        if(revHoje.length > 0) {
+            alertaBox.classList.remove('hidden');
+            document.getElementById('count-rev').innerText = `${revHoje.length} Pendentes`;
+            document.getElementById('btn-dash').innerText = `🏠 Dashboard (${revHoje.length})`;
+            document.getElementById('lista-revisoes-hoje').innerHTML = revHoje.map((rev, i) => `
+                <div class="rev-item">
+                    <div class="rev-info">
+                        <strong>${rev.mNome}</strong>
+                        <small>${rev.aNome} (${rev.fase}ª Revisão)</small>
+                    </div>
+                    <button class="btn btn-success" onclick="concluirRev(${rev.mId}, ${rev.aId}, ${rev.fase-1})">Concluir</button>
+                </div>
+            `).join('');
+        } else {
+            alertaBox.classList.add('hidden');
+            document.getElementById('btn-dash').innerText = `🏠 Dashboard Inicial`;
+        }
+
+        renderCalendario(); renderGrafico();
+    }
+
+    function concluirRev(mId, aId, revIdx) {
+        const m = db.find(x => x.id === mId);
+        const a = m.assuntos.find(y => y.id === aId);
+        a.revisoes[revIdx].concluida = true;
+        salvar(); renderDashboard();
+    }
+
+    // CALENDARIO E GRAFICO
+    function renderCalendario() {
+        const grid = document.getElementById('cal-grid');
+        const hoje = new Date();
+        const diasMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+        grid.innerHTML = ['D','S','T','Q','Q','S','S'].map(d => `<small>${d}</small>`).join('');
+        for(let i=1; i<=diasMes; i++) {
+            const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            const temLog = logsEstudo[dataStr];
+            grid.innerHTML += `<div class="cal-day ${temLog?'active-day':''}" onclick="verLog('${dataStr}')">${i}</div>`;
+        }
+    }
+    function verLog(d) { const log = logsEstudo[d]; document.getElementById('cal-detalhes').innerText = log ? `Estudado: ${log.join(', ')}` : "Sem registros."; }
+    
+    function renderGrafico() {
+        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
+        if(window.myChart) window.myChart.destroy();
+        window.myChart = new Chart(ctx, { type: 'line', data: { labels: ['D','S','T','Q','Q','S','S'], datasets: [{ label: 'Acertos', data: histAcertos, borderColor: '#2563eb', tension: 0.4, fill: true, backgroundColor: 'rgba(37, 99, 235, 0.1)' }] }, options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+    }
+
+    // SIMULADOS E CADASTRO (Lógica original mantida)
     function irCadManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); mostrarSecao('cadastro'); }
     function salvarQuestaoManual() {
         assAtivo.questoes.push({
@@ -331,7 +406,6 @@
         } catch(e) { alert("JSON Inválido"); }
     }
 
-    // SIMULADO
     function irSimulado(id) {
         modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id);
         if(!assAtivo.questoes.length) return alert("Sem questões!");
@@ -375,73 +449,11 @@
         document.getElementById('sim-next').classList.remove('hidden');
         salvar();
     }
-    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Sessão finalizada!"); navegar('dashboard'); } }
+    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Fim da Sessão!"); navegar('dashboard'); } }
 
-    // DASHBOARD
-    function renderDashboard() {
-        let tA=0, tE=0, tV=0, temRevHoje = false;
-        const hojeStr = new Date().toISOString().split('T')[0];
-
-        db.forEach(m => m.assuntos.forEach(a => { 
-            tA+=a.a; tE+=a.e; if(a.check) tV++; 
-            if(a.revDates && a.revDates.includes(hojeStr)) temRevHoje = true;
-        }));
-
-        document.getElementById('total-q').innerText = tA+tE;
-        document.getElementById('total-a').innerText = tA;
-        document.getElementById('total-pct').innerText = (tA+tE)>0?((tA/(tA+tE))*100).toFixed(1)+'%':'0%';
-        document.getElementById('total-vistos').innerText = tV;
-        
-        document.getElementById('alerta-revisao').classList.toggle('hidden', !temRevHoje);
-
-        renderCalendario(); renderGrafico();
-    }
-
-    function renderCalendario() {
-        const grid = document.getElementById('cal-grid');
-        const hoje = new Date();
-        const hojeStr = hoje.toISOString().split('T')[0];
-        const diasMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
-        
-        grid.innerHTML = ['D','S','T','Q','Q','S','S'].map(d => `<small>${d}</small>`).join('');
-        
-        // Coleta todas as datas de revisão do DB para destacar no calendário
-        let todasRevDates = [];
-        db.forEach(m => m.assuntos.forEach(a => { if(a.revDates) todasRevDates = todasRevDates.concat(a.revDates); }));
-
-        for(let i=1; i<=diasMes; i++) {
-            const dataStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-            const temLog = logsEstudo[dataStr];
-            const temRev = todasRevDates.includes(dataStr);
-            grid.innerHTML += `<div class="cal-day ${temLog?'active-day':''} ${temRev?'rev-day':''}" onclick="verLog('${dataStr}')">${i}</div>`;
-        }
-    }
-
-    function verLog(d) { 
-        const log = logsEstudo[d]; 
-        let txt = log ? `Estudado: ${log.join(', ')}` : "Sem registros de estudo.";
-        
-        // Verifica revisões para esse dia
-        let revsParaDia = [];
-        db.forEach(m => m.assuntos.forEach(a => {
-            if(a.revDates && a.revDates.includes(d)) revsParaDia.push(a.nome);
-        }));
-        if(revsParaDia.length > 0) txt += `<br><span style="color:var(--warning)">Revisões: ${revsParaDia.join(', ')}</span>`;
-        
-        document.getElementById('cal-detalhes').innerHTML = txt; 
-    }
-
-    function renderGrafico() {
-        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
-        if(window.myChart) window.myChart.destroy();
-        window.myChart = new Chart(ctx, { type: 'line', data: { labels: ['D','S','T','Q','Q','S','S'], datasets: [{ label: 'Acertos', data: histAcertos, borderColor: '#2563eb', tension: 0.4 }] }, options: { plugins: { legend: { display: false } } } });
-    }
-
-    // BACKUP
     function exportarDados() { const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_Mike.json`; a.click(); }
     function importarDados(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); salvar(); location.reload(); }; r.readAsText(e.target.files[0]); }
 
-    // TIMER
     function toggleTimer() {
         const btn = document.getElementById('btn-timer-toggle');
         if (timerInterval) { clearInterval(timerInterval); timerInterval = null; btn.innerText = "Iniciar"; }
