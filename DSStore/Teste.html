@@ -76,12 +76,18 @@
         .correta { border-color: var(--success) !important; background: rgba(16, 185, 129, 0.15) !important; font-weight: bold; }
         .errada { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
         
-        /* ESTILOS NOVOS: GRIFAR E ELIMINAR */
+        /* GRIFAR E ELIMINAR */
         mark { background-color: #fef08a; color: #000; border-radius: 2px; }
         .eliminada { opacity: 0.4; text-decoration: line-through; filter: grayscale(1); pointer-events: none; }
         .btn-eliminar { background: #cbd5e1; border: none; color: #475569; width: 28px; height: 28px; border-radius: 50%; margin-right: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0; }
         .btn-eliminar:hover { background: #94a3b8; }
         #floating-grifar { position: fixed; background: #1e293b; color: white; border: none; padding: 8px 15px; border-radius: 20px; font-size: 12px; cursor: pointer; z-index: 9999; display: none; box-shadow: 0 4px 10px rgba(0,0,0,0.3); font-weight: bold; }
+
+        /* REVISÕES */
+        .rev-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid var(--card-border); }
+        .rev-item:last-child { border: none; }
+        .badge-rev { padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; background: var(--accent); color: white; }
+        .pendencia-alert { background: var(--danger); color: white; padding: 2px 6px; border-radius: 50%; font-size: 0.7rem; margin-left: 5px; }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
         .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
@@ -110,7 +116,7 @@
     </div>
 
     <div class="nav-group">
-        <button class="nav-btn active" id="btn-dash" onclick="navegar('dashboard')">🏠 Dashboard Inicial</button>
+        <button class="nav-btn active" id="btn-dash" onclick="navegar('dashboard')">🏠 Dashboard <span id="cont-pendencia"></span></button>
         <div id="lista-materias-menu"></div>
     </div>
     
@@ -125,6 +131,11 @@
 
 <main onclick="document.querySelector('aside').classList.remove('active')">
     <div id="secao-dashboard">
+        <div id="card-revisoes-hoje" class="card hidden" style="border-left: 5px solid var(--accent);">
+            <h3 style="margin-top:0">📅 Revisões para Hoje</h3>
+            <div id="lista-revisoes-hoje"></div>
+        </div>
+
         <div class="stats-grid">
             <div class="card-stat"><small>Questões Realizadas</small><h2 id="total-q">0</h2></div>
             <div class="card-stat"><small>Acertos Totais</small><h2 id="total-a" style="color:var(--success)">0</h2></div>
@@ -164,7 +175,7 @@
         <div class="card">
             <div class="table-container">
                 <table>
-                    <thead><tr><th>Visto</th><th>Tópico</th><th>Estudo</th><th>%</th><th>Ações</th></tr></thead>
+                    <thead><tr><th>Visto</th><th>Tópico</th><th>Ciclo</th><th>%</th><th>Ações</th></tr></thead>
                     <tbody id="tabela-assuntos"></tbody>
                 </table>
             </div>
@@ -248,6 +259,7 @@
         localStorage.setItem('sge_u_hist', JSON.stringify(histAcertos));
         localStorage.setItem('sge_u_logs', JSON.stringify(logsEstudo));
         renderMenu();
+        renderDashboard(); // Atualiza contador de pendências
     }
     function renderMenu() {
         document.getElementById('lista-materias-menu').innerHTML = db.map(m => 
@@ -258,128 +270,106 @@
     // MATERIAS E ASSUNTOS
     function novaMateria() { const n = prompt("Nome da Matéria:"); if(n) { db.push({id: Date.now(), nome: n, assuntos: []}); salvar(); } }
     function removerMateriaAtiva() { if(confirm("Excluir matéria?")) { db = db.filter(m => m.id !== matAtiva.id); salvar(); navegar('dashboard'); } }
-    function novoAssunto() { const n = prompt("Nome do Tópico:"); if(n && matAtiva) { matAtiva.assuntos.push({id: Date.now(), nome: n, check: false, dataEstudo: null, a: 0, e: 0, questoes: []}); salvar(); abrirMateria(matAtiva.id); } }
+    function novoAssunto() { const n = prompt("Nome do Tópico:"); if(n && matAtiva) { matAtiva.assuntos.push({id: Date.now(), nome: n, check: false, dataEstudo: null, a: 0, e: 0, questoes: [], revisoes: []}); salvar(); abrirMateria(matAtiva.id); } }
     
     function abrirMateria(id) {
         matAtiva = db.find(m => m.id === id); navegar('materia');
         document.getElementById('materia-nome-txt').innerText = matAtiva.nome;
         document.getElementById('tabela-assuntos').innerHTML = matAtiva.assuntos.map(a => {
             const pct = (a.a+a.e)>0?((a.a/(a.a+a.e))*100).toFixed(0):0;
+            const revConcluidas = a.revisoes ? a.revisoes.filter(r => r.done).length : 0;
             return `<tr>
                 <td><input type="checkbox" ${a.check?'checked':''} onchange="marcarVisto(${a.id})"></td>
                 <td><b>${a.nome}</b></td>
-                <td>${a.dataEstudo ? new Date(a.dataEstudo).toLocaleDateString() : '--'}</td>
+                <td><small>${revConcluidas}/5 Revisões</small></td>
                 <td><b style="color:${pct>=70?'var(--success)':'var(--danger)'}">${pct}%</b></td>
                 <td>
-                    <button class="btn btn-primary" onclick="irCadManual(${a.id})">✏️</button>
-                    <button class="btn btn-accent" onclick="abrirModalJson(${a.id})">{}</button>
-                    <button class="btn btn-success" onclick="irSimulado(${a.id})">📝</button>
+                    <button class="btn btn-primary" style="padding:5px" onclick="irCadManual(${a.id})">✏️</button>
+                    <button class="btn btn-success" style="padding:5px" onclick="irSimulado(${a.id})">📝</button>
                 </td></tr>`;
         }).join('');
     }
 
-    // MARCAR VISTO E HISTÓRICO (CORREÇÃO)
+    // GESTÃO DE REVISÕES (NOVO)
     function marcarVisto(id) {
         const a = matAtiva.assuntos.find(x => x.id === id);
         a.check = !a.check;
-        const hoje = new Date().toISOString().split('T')[0];
-        a.dataEstudo = a.check ? hoje : null;
+        const hoje = new Date();
+        const hojeStr = hoje.toISOString().split('T')[0];
+        a.dataEstudo = a.check ? hojeStr : null;
+
         if(a.check) {
-            if(!logsEstudo[hoje]) logsEstudo[hoje] = [];
-            if(!logsEstudo[hoje].includes(matAtiva.nome)) logsEstudo[hoje].push(matAtiva.nome);
+            // Gerar 1, 3, 7, 15, 30 dias
+            const intervalos = [1, 3, 7, 15, 30];
+            a.revisoes = intervalos.map(dias => {
+                const dataRev = new Date();
+                dataRev.setDate(hoje.getDate() + dias);
+                return { data: dataRev.toISOString().split('T')[0], label: `R${dias}`, done: false };
+            });
+            if(!logsEstudo[hojeStr]) logsEstudo[hojeStr] = [];
+            if(!logsEstudo[hojeStr].includes(matAtiva.nome)) logsEstudo[hojeStr].push(matAtiva.nome);
+        } else {
+            a.revisoes = [];
         }
         salvar(); abrirMateria(matAtiva.id);
     }
 
-    // CADASTROS (MANUAL E JSON)
-    function irCadManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); mostrarSecao('cadastro'); }
-    function salvarQuestaoManual() {
-        assAtivo.questoes.push({
-            p: document.getElementById('q-enun').value, a: document.getElementById('q-a').value,
-            b: document.getElementById('q-b').value, c: document.getElementById('q-c').value,
-            d: document.getElementById('q-d').value, r: document.getElementById('q-gab').value,
-            coment: document.getElementById('q-coment').value, erro: false
-        });
-        salvar(); alert("Salvo!"); abrirMateria(matAtiva.id);
-    }
-    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
-    function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
-    function processarJsonInjetado() {
-        try {
-            const data = JSON.parse(document.getElementById('json-input').value);
-            const lista = data.questoes || data;
-            lista.forEach(q => {
-                assAtivo.questoes.push({
-                    p: q.p||q.pergunta, a: q.a||q.opcoes[0], b: q.b||q.opcoes[1], c: q.c||q.opcoes[2], d: q.d||q.opcoes[3],
-                    r: q.r||q.resposta_correta, coment: q.coment||q.explicacao||"", erro: false
-                });
-            });
-            salvar(); fecharModalJson(); abrirMateria(matAtiva.id);
-        } catch(e) { alert("JSON Inválido"); }
-    }
-
-    // SIMULADO E RECUPERAÇÃO DE ERROS
-    function irSimulado(id) {
-        modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id);
-        if(!assAtivo.questoes.length) return alert("Sem questões!");
-        questoesSessao = [...assAtivo.questoes].sort(() => Math.random() - 0.5);
-        qIndex = 0; mostrarSecao('simulado'); renderQ();
-    }
-    function irSimuladoErros() {
-        modoErro = true; questoesSessao = [];
-        db.forEach(m => m.assuntos.forEach(a => {
-            const erradas = a.questoes.filter(q => q.erro === true);
-            questoesSessao = questoesSessao.concat(erradas);
-        }));
-        if(!questoesSessao.length) return alert("Não há erros para praticar!");
-        qIndex = 0; mostrarSecao('simulado'); renderQ();
-    }
-    
-    function renderQ() {
-        const q = questoesSessao[qIndex];
-        document.getElementById('sim-status').innerText = `Questão ${qIndex+1}/${questoesSessao.length}`;
-        document.getElementById('sim-txt').innerHTML = q.p; // Alterado para innerHTML para permitir o <mark>
-        document.getElementById('sim-next').classList.add('hidden');
-        document.getElementById('sim-feedback').classList.add('hidden');
-        document.getElementById('sim-opcs').innerHTML = ['A','B','C','D'].map(l => 
-            `<div style="display:flex; align-items:center">
-                <button class="btn-eliminar" onclick="event.stopPropagation(); this.parentElement.classList.toggle('eliminada')">×</button>
-                <button class="alt-btn" id="btn-${l}" onclick="validar('${l}')"><b>${l})</b> ${q[l.toLowerCase()]}</button>
-            </div>`
-        ).join('');
-    }
-
-    function validar(l) {
-        const q = questoesSessao[qIndex];
-        document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true);
-        document.querySelectorAll('.btn-eliminar').forEach(b => b.style.display = 'none');
-        const dia = new Date().getDay();
-        if(l === q.r) {
-            document.getElementById('btn-'+l).classList.add('correta');
-            if(!modoErro) assAtivo.a++;
-            q.erro = false; histAcertos[dia]++;
-        } else {
-            document.getElementById('btn-'+l).classList.add('errada');
-            document.getElementById('btn-'+q.r).classList.add('correta');
-            if(!modoErro) assAtivo.e++;
-            q.erro = true;
-        }
-        if(q.coment) { document.getElementById('sim-coment-txt').innerText = q.coment; document.getElementById('sim-feedback').classList.remove('hidden'); }
-        document.getElementById('sim-next').classList.remove('hidden');
+    function concluirRevisao(matId, assId, index) {
+        const m = db.find(x => x.id === matId);
+        const a = m.assuntos.find(x => x.id === assId);
+        a.revisoes[index].done = true;
         salvar();
     }
-    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Fim!"); navegar('dashboard'); } }
 
     // DASHBOARD E CALENDÁRIO
     function renderDashboard() {
-        let tA=0, tE=0, tV=0;
-        db.forEach(m => m.assuntos.forEach(a => { tA+=a.a; tE+=a.e; if(a.check) tV++; }));
+        let tA=0, tE=0, tV=0, pendentes = 0;
+        const hojeStr = new Date().toISOString().split('T')[0];
+        let htmlRevisoes = "";
+
+        db.forEach(m => m.assuntos.forEach(a => { 
+            tA+=a.a; tE+=a.e; if(a.check) tV++; 
+            
+            if(a.revisoes) {
+                a.revisoes.forEach((rev, idx) => {
+                    if(!rev.done && rev.data <= hojeStr) {
+                        pendentes++;
+                        htmlRevisoes += `
+                            <div class="rev-item">
+                                <div>
+                                    <span class="badge-rev">${rev.label}</span> 
+                                    <strong>${m.nome}</strong>: ${a.nome}
+                                </div>
+                                <button class="btn btn-success" style="padding:4px 10px; font-size:0.7rem" 
+                                    onclick="concluirRevisao(${m.id}, ${a.id}, ${idx})">Concluir</button>
+                            </div>`;
+                    }
+                });
+            }
+        }));
+
+        // Alerta de Pendências no Menu
+        const alertSpan = document.getElementById('cont-pendencia');
+        if(pendentes > 0) alertSpan.innerHTML = `<span class="pendencia-alert">${pendentes}</span>`;
+        else alertSpan.innerHTML = "";
+
+        // Quadro de Revisões
+        const cardRev = document.getElementById('card-revisoes-hoje');
+        if(htmlRevisoes) {
+            cardRev.classList.remove('hidden');
+            document.getElementById('lista-revisoes-hoje').innerHTML = htmlRevisoes;
+        } else {
+            cardRev.classList.add('hidden');
+        }
+
         document.getElementById('total-q').innerText = tA+tE;
         document.getElementById('total-a').innerText = tA;
         document.getElementById('total-pct').innerText = (tA+tE)>0?((tA/(tA+tE))*100).toFixed(1)+'%':'0%';
         document.getElementById('total-vistos').innerText = tV;
         renderCalendario(); renderGrafico();
     }
+
+    // RESTANTE DAS FUNÇÕES (IGUAL AO ANTERIOR)
     function renderCalendario() {
         const grid = document.getElementById('cal-grid');
         const hoje = new Date();
@@ -398,37 +388,19 @@
         window.myChart = new Chart(ctx, { type: 'line', data: { labels: ['D','S','T','Q','Q','S','S'], datasets: [{ label: 'Acertos', data: histAcertos, borderColor: '#2563eb', tension: 0.4 }] }, options: { plugins: { legend: { display: false } } } });
     }
 
-    // BACKUP
-    function exportarDados() { const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_Mike.json`; a.click(); }
-    function importarDados(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); salvar(); location.reload(); }; r.readAsText(e.target.files[0]); }
-
-    // TIMER
-    function toggleTimer() {
-        const btn = document.getElementById('btn-timer-toggle');
-        if (timerInterval) { clearInterval(timerInterval); timerInterval = null; btn.innerText = "Iniciar"; }
-        else {
-            timerInterval = setInterval(() => { seconds++; const hrs = String(Math.floor(seconds/3600)).padStart(2,'0'); const mins = String(Math.floor((seconds%3600)/60)).padStart(2,'0'); const secs = String(seconds%60).padStart(2,'0'); document.getElementById('display-timer').innerText = `${hrs}:${mins}:${secs}`; }, 1000);
-            btn.innerText = "Pausar";
-        }
-    }
-    function resetTimer() { seconds = 0; document.getElementById('display-timer').innerText = "00:00:00"; }
-
-    // LOGICA DE GRIFAR
+    // GRIFAR E ELIMINAR (SISTEMA ANTERIOR)
     const btnGrifar = document.getElementById('floating-grifar');
     document.addEventListener('selectionchange', () => {
         const selection = window.getSelection();
         const text = selection.toString().trim();
         const simTxtElement = document.getElementById('sim-txt');
-        
-        if (text && simTxtElement.contains(selection.anchorNode)) {
+        if (text && simTxtElement && simTxtElement.contains(selection.anchorNode)) {
             const range = selection.getRangeAt(0);
             const rect = range.getBoundingClientRect();
             btnGrifar.style.display = 'block';
             btnGrifar.style.top = (rect.top + window.scrollY - 40) + 'px';
             btnGrifar.style.left = (rect.left + window.scrollX) + 'px';
-        } else {
-            btnGrifar.style.display = 'none';
-        }
+        } else { btnGrifar.style.display = 'none'; }
     });
 
     btnGrifar.addEventListener('mousedown', (e) => {
@@ -441,6 +413,22 @@
         window.getSelection().removeAllRanges();
         btnGrifar.style.display = 'none';
     });
+
+    // SIMULADO, BACKUP, TIMER (CÓDIGO ORIGINAL CONTINUA AQUI...)
+    function irSimulado(id) { modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id); if(!assAtivo.questoes.length) return alert("Sem questões!"); questoesSessao = [...assAtivo.questoes].sort(() => Math.random() - 0.5); qIndex = 0; mostrarSecao('simulado'); renderQ(); }
+    function irSimuladoErros() { modoErro = true; questoesSessao = []; db.forEach(m => m.assuntos.forEach(a => { const erradas = a.questoes.filter(q => q.erro === true); questoesSessao = questoesSessao.concat(erradas); })); if(!questoesSessao.length) return alert("Não há erros!"); qIndex = 0; mostrarSecao('simulado'); renderQ(); }
+    function renderQ() { const q = questoesSessao[qIndex]; document.getElementById('sim-status').innerText = `Questão ${qIndex+1}/${questoesSessao.length}`; document.getElementById('sim-txt').innerHTML = q.p; document.getElementById('sim-next').classList.add('hidden'); document.getElementById('sim-feedback').classList.add('hidden'); document.getElementById('sim-opcs').innerHTML = ['A','B','C','D'].map(l => `<div style="display:flex; align-items:center"><button class="btn-eliminar" onclick="this.parentElement.classList.toggle('eliminada')">×</button><button class="alt-btn" id="btn-${l}" onclick="validar('${l}')"><b>${l})</b> ${q[l.toLowerCase()]}</button></div>`).join(''); }
+    function validar(l) { const q = questoesSessao[qIndex]; document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true); const dia = new Date().getDay(); if(l === q.r) { document.getElementById('btn-'+l).classList.add('correta'); if(!modoErro) assAtivo.a++; q.erro = false; histAcertos[dia]++; } else { document.getElementById('btn-'+l).classList.add('errada'); document.getElementById('btn-'+q.r).classList.add('correta'); if(!modoErro) assAtivo.e++; q.erro = true; } if(q.coment) { document.getElementById('sim-coment-txt').innerText = q.coment; document.getElementById('sim-feedback').classList.remove('hidden'); } document.getElementById('sim-next').classList.remove('hidden'); salvar(); }
+    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Fim!"); navegar('dashboard'); } }
+    function toggleTimer() { const btn = document.getElementById('btn-timer-toggle'); if (timerInterval) { clearInterval(timerInterval); timerInterval = null; btn.innerText = "Iniciar"; } else { timerInterval = setInterval(() => { seconds++; const hrs = String(Math.floor(seconds/3600)).padStart(2,'0'); const mins = String(Math.floor((seconds%3600)/60)).padStart(2,'0'); const secs = String(seconds%60).padStart(2,'0'); document.getElementById('display-timer').innerText = `${hrs}:${mins}:${secs}`; }, 1000); btn.innerText = "Pausar"; } }
+    function resetTimer() { seconds = 0; document.getElementById('display-timer').innerText = "00:00:00"; }
+    function irCadManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); mostrarSecao('cadastro'); }
+    function salvarQuestaoManual() { assAtivo.questoes.push({ p: document.getElementById('q-enun').value, a: document.getElementById('q-a').value, b: document.getElementById('q-b').value, c: document.getElementById('q-c').value, d: document.getElementById('q-d').value, r: document.getElementById('q-gab').value, coment: document.getElementById('q-coment').value, erro: false }); salvar(); alert("Salvo!"); abrirMateria(matAtiva.id); }
+    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
+    function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
+    function processarJsonInjetado() { try { const data = JSON.parse(document.getElementById('json-input').value); const lista = data.questoes || data; lista.forEach(q => { assAtivo.questoes.push({ p: q.p||q.pergunta, a: q.a||q.opcoes[0], b: q.b||q.opcoes[1], c: q.c||q.opcoes[2], d: q.d||q.opcoes[3], r: q.r||q.resposta_correta, coment: q.coment||q.explicacao||"", erro: false }); }); salvar(); fecharModalJson(); abrirMateria(matAtiva.id); } catch(e) { alert("JSON Inválido"); } }
+    function exportarDados() { const b = new Blob([JSON.stringify(db)], {type:'application/json'}); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `Backup_Mike.json`; a.click(); }
+    function importarDados(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); salvar(); location.reload(); }; r.readAsText(e.target.files[0]); }
 
     renderMenu(); renderDashboard();
 </script>
