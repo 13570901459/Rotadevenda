@@ -231,10 +231,10 @@
     let isDarkMode = localStorage.getItem('sge_u_dark') === 'true';
     let matAtiva = null; let assAtivo = null; let qIndex = 0; let timerInterval; let seconds = 0; let questoesSessao = []; let modoErro = false;
 
-    // UPGRADE: CICLO DE REVISÃO (1, 7, 30 DIAS)
+    // UPGRADE: CICLO DE REVISÃO (1, 3, 7, 15, 30 DIAS)
     function calcRevisoes(dataBase) {
         if(!dataBase) return [];
-        return [1, 7, 30].map(d => {
+        return [1, 3, 7, 15, 30].map(d => {
             let dt = new Date(dataBase);
             dt.setDate(dt.getDate() + d);
             return dt.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
