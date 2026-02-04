@@ -49,35 +49,23 @@
         
         .table-container { width: 100%; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--card-border); }
-        
-        /* UPGRADE REVISÃO */
-        .rev-tag { font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; background: var(--warning); color: white; margin-right: 3px; white-space: nowrap; font-weight: bold; }
-        .rev-hoje { background: var(--danger) !important; animation: blink 1s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+        th, td { padding: 12px; border-bottom: 1px solid var(--card-border); text-align: left; }
 
-        .alert-card { background: #fffbeb; border-left: 5px solid var(--warning); padding: 15px; border-radius: 12px; margin-bottom: 20px; color: #92400e; display: flex; align-items: center; gap: 15px; border: 1px solid #fde68a; }
+        /* UPGRADE: ALERTAS VISUAIS */
+        .alert-revisao { background: #fffbeb; border-left: 5px solid var(--warning); padding: 15px; border-radius: 12px; margin-bottom: 20px; color: #92400e; display: flex; align-items: center; gap: 15px; border: 1px solid #fde68a; }
+        .rev-tag { font-size: 0.65rem; padding: 2px 5px; border-radius: 4px; background: var(--warning); color: white; margin-right: 3px; white-space: nowrap; font-weight: bold; }
+        .rev-hoje { background: var(--danger) !important; animation: blink 1.2s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; margin-top: 10px; }
         .cal-day { padding: 10px; border-radius: 8px; background: rgba(100,100,100,0.1); font-size: 0.75rem; cursor: pointer; }
         .cal-day.active-day { background: var(--success); color: white; font-weight: bold; }
 
-        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+        .btn { padding: 10px 18px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 8px; }
         .btn-primary { background: var(--primary); color: white; }
         .btn-success { background: var(--success); color: white; }
         .btn-danger { background: var(--danger); color: white; }
         .btn-accent { background: var(--accent); color: white; }
-
-        .hidden { display: none !important; }
-        #menu-toggle { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); justify-content: center; align-items: center; font-size: 1.5rem; }
-
-        @media (max-width: 850px) {
-            aside { position: fixed; left: -280px; height: 100%; }
-            aside.active { left: 0; }
-            main { padding: 15px; padding-top: 60px; }
-            .grid-2 { grid-template-columns: 1fr; }
-            #menu-toggle { display: flex; }
-        }
 
         .option-container { display: flex; align-items: stretch; gap: 10px; margin: 10px 0; }
         .btn-eliminar { background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; padding: 0 15px; border-radius: 8px; cursor: pointer; font-weight: bold; }
@@ -85,6 +73,18 @@
         .eliminada .alt-btn { opacity: 0.3; text-decoration: line-through; pointer-events: none; background: #f1f5f9; }
         .correta { border-color: var(--success) !important; background: rgba(16, 185, 129, 0.15) !important; }
         .errada { border-color: var(--danger) !important; background: rgba(239, 68, 68, 0.15) !important; }
+
+        mark { background: #fef08a; color: black; }
+        .highlight-tool { position: absolute; background: var(--dark); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; z-index: 500; border: 1px solid var(--primary); }
+
+        .hidden { display: none !important; }
+        #menu-toggle { display: none; position: fixed; bottom: 20px; right: 20px; z-index: 1000; width: 60px; height: 60px; border-radius: 50%; box-shadow: 0 4px 15px rgba(0,0,0,0.3); justify-content: center; align-items: center; font-size: 1.5rem; }
+
+        @media (max-width: 850px) {
+            aside { position: fixed; left: -280px; height: 100%; }
+            aside.active { left: 0; }
+            #menu-toggle { display: flex; }
+        }
 
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
         .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
@@ -111,7 +111,13 @@
         <button class="nav-btn active" onclick="navegar('dashboard')">🏠 Dashboard</button>
         <div id="lista-materias-menu"></div>
     </div>
-    <button class="btn btn-primary" onclick="novaMateria()">+ Nova Disciplina</button>
+    <button class="btn btn-primary" onclick="novaMateria()" style="margin-bottom:10px">+ Nova Disciplina</button>
+
+    <div style="border-top: 1px solid #334155; padding-top: 10px;">
+        <button class="nav-btn" style="font-size: 0.75rem;" onclick="exportarDados()">📥 Salvar Backup</button>
+        <input type="file" id="file-import" class="hidden" onchange="importarDados(event)">
+        <button class="nav-btn" style="font-size: 0.75rem;" onclick="document.getElementById('file-import').click()">📤 Carregar Backup</button>
+    </div>
 </aside>
 
 <main>
@@ -126,14 +132,24 @@
         </div>
 
         <div class="grid-2">
-            <div class="card"><h3>📈 Evolução</h3><canvas id="graficoEvolucao" height="160"></canvas></div>
-            <div class="card"><h3>🗓️ Histórico</h3><div class="calendar-grid" id="cal-grid"></div></div>
+            <div class="card">
+                <h3>📈 Evolução</h3>
+                <canvas id="graficoEvolucao" height="160"></canvas>
+            </div>
+            <div class="card">
+                <h3>🗓️ Histórico</h3>
+                <div class="calendar-grid" id="cal-grid"></div>
+                <div id="cal-detalhes" style="margin-top:15px; font-size:0.8rem; color:var(--primary); font-weight:bold;"></div>
+            </div>
         </div>
         <button class="btn btn-danger" style="width:100%; padding:15px" onclick="irSimuladoErros()">🎯 PRATICAR ERROS</button>
     </div>
 
     <div id="secao-materia" class="hidden">
-        <div class="header-page"><h1 id="materia-nome-txt">Disciplina</h1><button class="btn btn-primary" onclick="novoAssunto()">+ Tópico</button></div>
+        <div class="header-page">
+            <h1 id="materia-nome-txt">Disciplina</h1>
+            <button class="btn btn-primary" onclick="novoAssunto()">+ Tópico</button>
+        </div>
         <div class="card">
             <div class="table-container">
                 <table>
@@ -170,42 +186,34 @@
     let isDarkMode = localStorage.getItem('sge_u_dark') === 'true';
     let matAtiva, assAtivo, qIndex, timerInterval, seconds = 0, questoesSessao = [];
 
-    // --- UPGRADE: LÓGICA DE REVISÃO ---
+    // --- LÓGICA DE REVISÃO (1, 3, 7, 15, 30) ---
     function calcRevisoes(dataBase) {
         if(!dataBase) return [];
         const hoje = new Date().toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
         return [1, 3, 7, 15, 30].map(d => {
             let dt = new Date(dataBase);
             dt.setDate(dt.getDate() + d);
-            const dataFormatada = dt.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
-            return { data: dataFormatada, hoje: dataFormatada === hoje };
+            const dataF = dt.toLocaleDateString('pt-BR', {day:'2-digit', month:'2-digit'});
+            return { data: dataF, hoje: dataF === hoje };
         });
     }
 
     function verificarRevisoesGeral() {
         let pendentes = [];
         db.forEach(m => m.assuntos.forEach(a => {
-            if(a.dataEstudo) {
-                const revs = calcRevisoes(a.dataEstudo);
-                if(revs.some(r => r.hoje)) pendentes.push(`${m.nome}: ${a.nome}`);
-            }
+            if(a.dataEstudo && calcRevisoes(a.dataEstudo).some(r => r.hoje)) pendentes.push(a.nome);
         }));
-        
         const container = document.getElementById('alerta-revisao-container');
-        if(pendentes.length > 0) {
-            container.innerHTML = `
-                <div class="alert-card">
-                    <span style="font-size:1.5rem">⏰</span>
-                    <div>
-                        <strong>Você tem revisões para hoje!</strong><br>
-                        <small>${pendentes.join(' | ')}</small>
-                    </div>
-                </div>`;
-        } else { container.innerHTML = ''; }
+        container.innerHTML = pendentes.length > 0 ? `<div class="alert-revisao">⚠️ <strong>Revisão pendente hoje:</strong> ${pendentes.join(', ')}</div>` : '';
     }
 
-    // --- FUNÇÕES ORIGINAIS ---
-    function salvar() { localStorage.setItem('sge_u_db', JSON.stringify(db)); localStorage.setItem('sge_u_hist', JSON.stringify(histAcertos)); renderMenu(); }
+    // --- CORE ---
+    function salvar() { 
+        localStorage.setItem('sge_u_db', JSON.stringify(db)); 
+        localStorage.setItem('sge_u_hist', JSON.stringify(histAcertos));
+        localStorage.setItem('sge_u_logs', JSON.stringify(logsEstudo));
+        renderMenu(); 
+    }
     
     function renderMenu() {
         document.getElementById('lista-materias-menu').innerHTML = db.map(m => 
@@ -225,7 +233,6 @@
             const pct = (a.a+a.e)>0?((a.a/(a.a+a.e))*100).toFixed(0):0;
             const revs = calcRevisoes(a.dataEstudo);
             const htmlRevs = revs.map(r => `<span class="rev-tag ${r.hoje?'rev-hoje':''}">${r.data}</span>`).join('');
-            
             return `<tr>
                 <td><input type="checkbox" ${a.check?'checked':''} onchange="marcarVisto(${a.id})"></td>
                 <td><b>${a.nome}</b></td>
@@ -241,10 +248,16 @@
     function marcarVisto(id) {
         const a = matAtiva.assuntos.find(x => x.id === id);
         a.check = !a.check;
-        a.dataEstudo = a.check ? new Date().toISOString().split('T')[0] : null;
+        const hoje = new Date().toISOString().split('T')[0];
+        a.dataEstudo = a.check ? hoje : null;
+        if(a.check) {
+            if(!logsEstudo[hoje]) logsEstudo[hoje] = [];
+            if(!logsEstudo[hoje].includes(matAtiva.nome)) logsEstudo[hoje].push(matAtiva.nome);
+        }
         salvar(); abrirMateria(matAtiva.id);
     }
 
+    // --- DASHBOARD & HISTÓRICO ---
     function renderDashboard() {
         verificarRevisoesGeral();
         let tA=0, tE=0, tV=0;
@@ -253,10 +266,43 @@
         document.getElementById('total-a').innerText = tA;
         document.getElementById('total-pct').innerText = (tA+tE)>0?((tA/(tA+tE))*100).toFixed(1)+'%':'0%';
         document.getElementById('total-vistos').innerText = tV;
-        renderGrafico();
+        renderCalendario(); renderGrafico();
     }
 
-    // --- AUXILIARES (SIMULADO, TIMER, GRAFICO) ---
+    function renderCalendario() {
+        const grid = document.getElementById('cal-grid');
+        const hoje = new Date();
+        const diasMes = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0).getDate();
+        grid.innerHTML = ['D','S','T','Q','Q','S','S'].map(d => `<small>${d}</small>`).join('');
+        for(let i=1; i<=diasMes; i++) {
+            const dStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            grid.innerHTML += `<div class="cal-day ${logsEstudo[dStr]?'active-day':''}" onclick="verLog('${dStr}')">${i}</div>`;
+        }
+    }
+    function verLog(d) { document.getElementById('cal-detalhes').innerText = logsEstudo[d] ? `Estudado: ${logsEstudo[d].join(', ')}` : "Sem registros."; }
+
+    function renderGrafico() {
+        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
+        if(window.mC) window.mC.destroy();
+        window.mC = new Chart(ctx, { type:'line', data:{ labels:['D','S','T','Q','Q','S','S'], datasets:[{label:'Acertos', data:histAcertos, borderColor:'#2563eb', tension:0.4}] } });
+    }
+
+    // --- BACKUP ---
+    function exportarDados() { 
+        const blob = new Blob([JSON.stringify({db, hist:histAcertos, logs:logsEstudo})], {type:'application/json'});
+        const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'Backup_Mike.json'; a.click(); 
+    }
+    function importarDados(e) { 
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+            const data = JSON.parse(ev.target.result);
+            db = data.db || []; histAcertos = data.hist || [0,0,0,0,0,0,0]; logsEstudo = data.logs || {};
+            salvar(); location.reload();
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    // --- SIMULADO & GRIFADOR ---
     function irSimulado(id) {
         assAtivo = matAtiva.assuntos.find(a => a.id === id);
         if(!assAtivo.questoes.length) return alert("Sem questões!");
@@ -286,21 +332,7 @@
 
     function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else navegar('dashboard'); }
 
-    function novaMateria() { const n = prompt("Matéria:"); if(n) { db.push({id:Date.now(), nome:n, assuntos:[]}); salvar(); } }
-    function novoAssunto() { const n = prompt("Tópico:"); if(n) { matAtiva.assuntos.push({id:Date.now(), nome:n, check:false, a:0, e:0, questoes:[]}); salvar(); abrirMateria(matAtiva.id); } }
-    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
-    function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
-    function processarJsonInjetado() {
-        try {
-            const data = JSON.parse(document.getElementById('json-input').value);
-            (data.questoes || data).forEach(q => assAtivo.questoes.push({p:q.p, a:q.a, b:q.b, c:q.c, d:q.d, r:q.r, erro:false}));
-            salvar(); fecharModalJson(); alert("Importado!");
-        } catch(e) { alert("Erro JSON"); }
-    }
-
-    function toggleDarkMode() { isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode); localStorage.setItem('sge_u_dark', isDarkMode); }
-    if(isDarkMode) document.body.classList.add('dark-mode');
-
+    // --- TIMER ---
     function toggleTimer() {
         const btn = document.getElementById('btn-timer-toggle');
         if(timerInterval) { clearInterval(timerInterval); timerInterval=null; btn.innerText="Iniciar"; }
@@ -308,13 +340,23 @@
     }
     function resetTimer() { seconds=0; document.getElementById('display-timer').innerText="00:00:00"; }
 
-    function renderGrafico() {
-        const ctx = document.getElementById('graficoEvolucao').getContext('2d');
-        if(window.mC) window.mC.destroy();
-        window.mC = new Chart(ctx, { type:'line', data:{ labels:['D','S','T','Q','Q','S','S'], datasets:[{label:'Acertos', data:histAcertos, borderColor:'#2563eb'}] } });
+    // --- OUTROS ---
+    function toggleDarkMode() { isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode); localStorage.setItem('sge_u_dark', isDarkMode); }
+    if(isDarkMode) document.body.classList.add('dark-mode');
+    function novaMateria() { const n = prompt("Matéria:"); if(n) { db.push({id:Date.now(), nome:n, assuntos:[]}); salvar(); } }
+    function novoAssunto() { const n = prompt("Tópico:"); if(n) { matAtiva.assuntos.push({id:Date.now(), nome:n, check:false, a:0, e:0, questoes:[]}); salvar(); abrirMateria(matAtiva.id); } }
+    function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
+    function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
+    function processarJsonInjetado() {
+        try {
+            const d = JSON.parse(document.getElementById('json-input').value);
+            (d.questoes || d).forEach(q => assAtivo.questoes.push({p:q.p, a:q.a, b:q.b, c:q.c, d:q.d, r:q.r, erro:false}));
+            salvar(); fecharModalJson(); alert("Importado!");
+        } catch(e) { alert("Erro JSON"); }
     }
 
     renderMenu(); renderDashboard();
 </script>
 </body>
 </html>
+
