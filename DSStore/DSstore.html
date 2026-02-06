@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DS Store | Marketplace Profissional</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <title>DS Store | Oficial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #bc00ff;
-            --secondary: #00d4ff;
             --bg: #0a0a0a;
             --card-bg: #151515;
             --text: #ffffff;
@@ -19,71 +18,100 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: var(--bg); color: var(--text); overflow-x: hidden; }
 
-        /* LOGO & HEADER */
-        header { padding: 15px 5%; background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
+        /* HEADER & LOGO DINAMICO */
+        header { padding: 15px 5%; background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #222; position: sticky; top: 0; z-index: 1000; }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .logo { font-size: 26px; font-weight: 900; text-transform: uppercase; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
+        
+        .logo { 
+            font-size: 28px; font-weight: 900; text-transform: uppercase; letter-spacing: -1.5px;
+            background: linear-gradient(45deg, #bc00ff, #7000ff, #00d4ff, #bc00ff);
+            background-size: 300% 300%; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            animation: gradient-flow 5s ease infinite; filter: drop-shadow(0 0 8px rgba(188, 0, 255, 0.3));
+        }
+        @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
-        /* BUSCA */
-        .search-container { width: 100%; max-width: 600px; margin: 0 auto; }
-        #search-input { width: 100%; padding: 12px 25px; background: #1a1a1a; border: 1px solid #333; border-radius: 50px; color: white; outline: none; transition: 0.3s; }
-        #search-input:focus { border-color: var(--primary); box-shadow: 0 0 15px rgba(188, 0, 255, 0.3); }
+        /* BANNER OFERTA RELAMPAGO (ESTILO SHOPEE) */
+        .flash-deal {
+            background: linear-gradient(90deg, #ff0055, #bc00ff);
+            margin: 15px 5%; padding: 12px 20px; border-radius: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.3);
+        }
+        #countdown { font-family: monospace; font-size: 20px; font-weight: 900; background: rgba(0,0,0,0.2); padding: 5px 10px; border-radius: 8px; }
 
-        /* CARRINHO ICONE */
-        .cart-glass { background: rgba(188, 0, 255, 0.1); border: 1px solid var(--primary); padding: 8px 15px; border-radius: 12px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; }
-        .cart-glass:hover { background: rgba(188, 0, 255, 0.2); }
-        #cart-count { background: var(--primary); padding: 2px 7px; border-radius: 5px; font-size: 12px; font-weight: 800; }
-
-        /* OFERTA RELAMPAGO */
-        .flash-deal { background: linear-gradient(90deg, #ff0055, #bc00ff); margin: 20px 5%; padding: 15px 25px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(255, 0, 85, 0.2); }
-        #countdown { font-family: monospace; font-size: 22px; font-weight: 900; background: rgba(0,0,0,0.3); padding: 5px 15px; border-radius: 10px; }
-
-        /* CATEGORIAS */
-        .categories-nav { display: flex; gap: 10px; overflow-x: auto; padding: 10px 5%; scrollbar-width: none; }
-        .cat-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 700; white-space: nowrap; transition: 0.3s; }
+        /* BUSCA E CATEGORIAS */
+        .search-container { width: 100%; max-width: 600px; margin: 0 auto; position: relative; }
+        #search-input { width: 100%; padding: 12px 20px; background: #1a1a1a; border: 1px solid #333; border-radius: 50px; color: white; outline: none; transition: 0.3s; }
+        #search-input:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(188, 0, 255, 0.2); }
+        
+        .categories-nav { display: flex; gap: 10px; overflow-x: auto; padding: 15px 5%; scrollbar-width: none; }
+        .categories-nav::-webkit-scrollbar { display: none; }
+        .cat-btn { background: #1a1a1a; border: 1px solid #333; color: #888; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 700; white-space: nowrap; }
         .cat-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* GRID PRODUTOS */
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; }
-        .product-card { background: var(--card-bg); border: 1px solid #222; border-radius: 15px; overflow: hidden; position: relative; transition: 0.3s; display: flex; flex-direction: column; }
-        .product-card:hover { border-color: var(--primary); transform: translateY(-8px); }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .product-card { 
+            background: var(--card-bg); border: 1px solid #222; border-radius: 15px; 
+            overflow: hidden; position: relative; transition: 0.3s; display: flex; flex-direction: column; 
+        }
+        .product-card:hover { border-color: var(--primary); transform: translateY(-5px); }
         
-        .badge { position: absolute; top: 12px; left: 12px; padding: 5px 10px; border-radius: 6px; font-size: 10px; font-weight: 900; z-index: 5; color: white; }
-        .badge-digital { background: var(--primary); }
-        .badge-fisico { background: var(--secondary); }
+        /* SELOS (BADGES) AUTOMÁTICOS */
+        .badge-container { position: absolute; top: 10px; left: 10px; z-index: 5; display: flex; flex-direction: column; gap: 4px; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: 900; color: white; text-transform: uppercase; }
+        .badge-digital { background: var(--primary); box-shadow: 0 0 10px var(--primary); }
+        .badge-fisico { background: #00d4ff; }
+        .badge-frete { background: #25d366; color: #000; }
 
         .product-img { width: 100%; aspect-ratio: 1/1; object-fit: cover; }
         .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .stars { color: #ffbb00; font-size: 12px; margin-bottom: 5px; }
-        .product-title { font-size: 15px; font-weight: 600; color: #ddd; height: 42px; overflow: hidden; margin-bottom: 10px; }
-        
-        .price-old { text-decoration: line-through; color: #555; font-size: 12px; }
-        .price-new { color: var(--primary); font-size: 24px; font-weight: 900; }
-        
-        .add-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: auto; transition: 0.3s; }
-        .add-btn:hover { filter: brightness(1.2); }
+        .price-new { color: var(--primary); font-size: 22px; font-weight: 900; margin: 10px 0; }
+        .add-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: 800; cursor: pointer; margin-top: auto; }
 
-        /* SIDEBAR CARRINHO */
-        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 100%; max-width: 400px; height: 100%; background: #0f0f0f; z-index: 2000; padding: 30px; transition: 0.4s; border-left: 1px solid #222; overflow-y: auto; }
+        /* CARRINHO SIDEBAR */
+        .cart-glass { background: rgba(188, 0, 255, 0.15); backdrop-filter: blur(10px); border: 2px solid rgba(188, 0, 255, 0.5); padding: 10px 15px; border-radius: 15px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.3s; }
+        #cart-sidebar { position: fixed; right: -100%; top: 0; width: 100%; max-width: 380px; height: 100%; background: #0f0f0f; z-index: 2000; padding: 30px; transition: 0.4s; border-left: 1px solid #222; overflow-y: auto; }
         #cart-sidebar.active { right: 0; }
         .cart-item { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding: 15px 0; }
 
-        /* BENEFICIOS */
-        .benefits-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; padding: 60px 5%; background: #111; margin-top: 50px; text-align: center; }
-        .benefit-item span { font-size: 40px; }
+        /* CUPOM */
+        .coupon-section { margin: 20px 0; padding: 15px; background: #1a1a1a; border-radius: 10px; border: 1px dashed #444; }
+        .coupon-input-group { display: flex; gap: 5px; margin-top: 8px; }
+        .coupon-input-group input { flex: 1; background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 5px; }
 
-        /* RODAPÉ */
-        footer { padding: 50px 5%; background: #000; border-top: 1px solid #222; text-align: center; }
-        .author-name { color: var(--primary); text-decoration: none; font-weight: 800; }
+        /* DEPOIMENTOS & PRINTS (SEU DESIGN RECOUPERADO) */
+        .testimonials { padding: 60px 5%; background: #0f0f0f; }
+        .section-title { text-align: center; font-size: 24px; font-weight: 900; margin-bottom: 40px; color: var(--primary); text-transform: uppercase; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .testimonial-card { background: var(--card-bg); padding: 20px; border-radius: 15px; border: 1px solid #222; }
+        .user-info { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .user-img { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .stars { color: #ffbb00; font-size: 14px; }
 
-        /* MODAL */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; align-items: center; justify-content: center; padding: 20px; }
+        .prints-container { display: flex; gap: 15px; overflow-x: auto; padding: 20px 0; scrollbar-width: none; }
+        .print-card { min-width: 200px; max-width: 200px; height: 350px; border-radius: 15px; border: 2px solid #222; overflow: hidden; transition: 0.3s; cursor: pointer; box-shadow: 0 5px 15px rgba(188, 0, 255, 0.1); }
+        .print-card:hover { border-color: var(--primary); transform: scale(1.05); }
+        .print-card img { width: 100%; height: 100%; object-fit: cover; }
 
-        @media (max-width: 600px) {
-            .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .flash-deal { flex-direction: column; text-align: center; gap: 15px; }
-        }
+        /* FAQ */
+        .faq { padding: 60px 5%; max-width: 800px; margin: 0 auto; }
+        .faq-item { background: #1a1a1a; margin-bottom: 10px; border-radius: 10px; overflow: hidden; border: 1px solid #333; }
+        .faq-question { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 700; transition: 0.3s; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: 0.3s ease-out; color: #888; font-size: 14px; }
+        .faq-item.active .faq-answer { padding: 0 20px 20px 20px; max-height: 200px; }
+
+        /* FOOTER & SEGURANÇA */
+        .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 40px 5%; background: #111; margin-top: 50px; text-align: center; border-top: 1px solid #222; }
+        footer { background: #000; padding: 40px 5%; border-top: 1px solid #222; text-align: center; }
+        .author-name { color: var(--primary); font-weight: 800; text-decoration: none; }
+
+        /* MODAIS */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 5000; align-items: center; justify-content: center; }
+        .whatsapp-float { position: fixed; width: 60px; height: 60px; bottom: 20px; right: 20px; background: #25d366; border-radius: 50px; display: flex; align-items: center; justify-content: center; z-index: 3000; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+
+        @media (max-width: 600px) { .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; } #cart-sidebar { max-width: 100%; } }
     </style>
 </head>
 <body>
@@ -97,23 +125,24 @@
         </div>
     </div>
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="O que você deseja comprar hoje?" onkeyup="filterProducts()">
+        <input type="text" id="search-input" placeholder="O que você procura?" onkeyup="filterProducts()">
     </div>
 </header>
 
 <div class="flash-deal">
     <div>
-        <h3 style="margin:0;">⚡ OFERTA RELÂMPAGO</h3>
-        <p style="margin:0; font-size:12px; opacity:0.8;">Os melhores preços expiram em:</p>
+        <h4 style="margin:0;">⚡ OFERTA RELÂMPAGO</h4>
+        <p style="margin:0; font-size:11px; opacity:0.8;">Os preços voltam ao normal em:</p>
     </div>
     <div id="countdown">02:00:00</div>
 </div>
 
 <div class="categories-nav">
     <button class="cat-btn active" onclick="filterCategory('TODOS', this)">TODOS</button>
-    <button class="cat-btn" onclick="filterCategory('DIGITAL', this)">PRODUTOS DIGITAIS</button>
-    <button class="cat-btn" onclick="filterCategory('HARDWARE', this)">HARDWARE / FÍSICO</button>
-    <button class="cat-btn" onclick="filterCategory('ACESSORIOS', this)">ACESSÓRIOS</button>
+    <button class="cat-btn" onclick="filterCategory('JOGOS E CHEATS', this)">JOGOS E CHEATS</button>
+    <button class="cat-btn" onclick="filterCategory('PROGRAMAS', this)">PROGRAMAS</button>
+    <button class="cat-btn" onclick="filterCategory('FÍSICO', this)">HARDWARE</button>
+    <button class="cat-btn" onclick="filterCategory('CONTAS', this)">CONTAS</button>
 </div>
 
 <div class="container">
@@ -121,84 +150,102 @@
 </div>
 
 <div id="cart-sidebar">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h2>Meu Carrinho</h2>
-        <button onclick="toggleCart()" style="background:none; border:none; color:white; font-size:30px;">&times;</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3>🛍️ Meu Carrinho</h3>
+        <button onclick="toggleCart()" style="background:none; border:none; color:white; font-size:30px; cursor:pointer;">&times;</button>
     </div>
     
     <div id="cart-items-list"></div>
 
-    <div style="margin-top:20px; background:#1a1a1a; padding:15px; border-radius:12px;">
-        <p style="font-size:12px; color:#888;">Cupom de Desconto</p>
-        <div style="display:flex; gap:10px; margin-top:5px;">
-            <input type="text" id="coupon-input" placeholder="Código" style="flex:1; background:#000; border:1px solid #333; color:white; padding:8px; border-radius:5px;">
-            <button onclick="applyCoupon()" style="background:var(--primary); border:none; color:white; padding:0 15px; border-radius:5px; font-weight:700;">OK</button>
+    <div class="coupon-section">
+        <p style="font-size: 12px; color: #888;">Possui um cupom?</p>
+        <div class="coupon-input-group">
+            <input type="text" id="coupon-input" placeholder="Ex: DS10">
+            <button onclick="applyCoupon()" style="background:var(--primary); border:none; color:white; padding:0 10px; border-radius:5px; cursor:pointer;">Aplicar</button>
         </div>
-        <div id="coupon-msg" style="font-size:11px; margin-top:5px;"></div>
+        <div id="coupon-msg" style="font-size: 11px; margin-top: 5px;"></div>
     </div>
 
-    <div style="margin-top:30px; border-top:1px solid #222; padding-top:20px;">
-        <div id="discount-area" style="display:none; justify-content:space-between; color:var(--whatsapp); margin-bottom:10px;">
-            <span>Desconto Aplicado:</span>
+    <div style="margin-top: 20px; border-top: 1px solid #222; padding-top: 15px;">
+        <div id="discount-area" style="display: none; justify-content: space-between; color: #25d366; margin-bottom: 10px;">
+            <span>Desconto:</span>
             <span>- R$ <span id="cart-discount">0,00</span></span>
         </div>
-        <div style="display:flex; justify-content:space-between; font-size:22px; font-weight:900;">
+        <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 900;">
             <span>Total:</span>
-            <span style="color:var(--primary);">R$ <span id="cart-total">0,00</span></span>
+            <span style="color: var(--primary);">R$ <span id="cart-total">0,00</span></span>
         </div>
-        <button class="checkout-btn" onclick="sendWhatsApp()">FINALIZAR NO WHATSAPP</button>
+        <button class="add-btn" style="background:var(--whatsapp); margin-top:15px; padding:18px;" onclick="sendWhatsApp()">FINALIZAR NO WHATSAPP</button>
     </div>
 </div>
 
-<div class="benefits-bar">
-    <div class="benefit-item">
-        <span>🛡️</span>
-        <h4>Compra Garantida</h4>
-        <p style="color:#666; font-size:12px;">Receba seu produto ou seu dinheiro de volta.</p>
+<section class="testimonials">
+    <h2 class="section-title">O que nossos clientes dizem</h2>
+    <div class="testimonial-grid">
+        <div class="testimonial-card">
+            <div class="user-info">
+                <div class="user-img">R</div>
+                <div><p>Ricardo Silva</p><div class="stars">★★★★★</div></div>
+            </div>
+            <p style="color: #bbb; font-style: italic;">"O Cheat de Warzone é sensacional! Suporte me ajudou na instalação."</p>
+        </div>
+        <div class="testimonial-card">
+            <div class="user-info">
+                <div class="user-img">M</div>
+                <div><p>Mariana Costa</p><div class="stars">★★★★★</div></div>
+            </div>
+            <p style="color: #bbb; font-style: italic;">"Comprei a conta de Netflix e recebi em menos de 5 minutos."</p>
+        </div>
     </div>
-    <div class="benefit-item">
-        <span>🚀</span>
-        <h4>Entrega Rápida</h4>
-        <p style="color:#666; font-size:12px;">Produtos digitais enviados em segundos.</p>
-    </div>
-    <div class="benefit-item">
-        <span>💎</span>
-        <h4>Qualidade Premium</h4>
-        <p style="color:#666; font-size:12px;">Produtos testados e aprovados por especialistas.</p>
-    </div>
-</div>
+</section>
 
-<div id="success-modal" class="modal">
-    <div style="background:#151515; padding:40px; border-radius:20px; text-align:center; border:1px solid var(--primary); max-width:400px;">
-        <div style="font-size:60px; margin-bottom:20px;">✅</div>
-        <h2>Pedido Processado!</h2>
-        <p style="color:#888; margin:20px 0;">Estamos te levando ao WhatsApp para finalizar o pagamento e combinar a entrega.</p>
-        <button onclick="closeModal()" style="background:var(--primary); color:white; border:none; padding:12px 30px; border-radius:10px; font-weight:800;">OK, VAMOS LÁ!</button>
+<section class="testimonials" style="background: #050505;">
+    <h2 class="section-title">Resultados Reais 📸</h2>
+    <div class="prints-container">
+        <div class="print-card" onclick="openFullPrint('print1.jpg')"><img src="print1.jpg" alt="Feedback"></div>
+        <div class="print-card" onclick="openFullPrint('print2.jpg')"><img src="print2.jpg" alt="Feedback"></div>
+        <div class="print-card" onclick="openFullPrint('print3.jpg')"><img src="print3.jpg" alt="Feedback"></div>
     </div>
+</section>
+
+<section class="faq">
+    <h2 class="section-title">Dúvidas Frequentes</h2>
+    <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">Como recebo meu produto? <span>+</span></div>
+        <div class="faq-answer">Produtos digitais são entregues via WhatsApp ou E-mail imediatamente após o PIX.</div>
+    </div>
+    <div class="faq-item">
+        <div class="faq-question" onclick="this.parentElement.classList.toggle('active')">Os produtos têm garantia? <span>+</span></div>
+        <div class="faq-answer">Sim! Todos os nossos produtos possuem garantia total de funcionamento.</div>
+    </div>
+</section>
+
+<div class="security-grid">
+    <div><span>🛡️</span><h4>Compra Segura</h4><p style="font-size:12px; color:#666;">Dados protegidos</p></div>
+    <div><span>⚡</span><h4>Entrega Express</h4><p style="font-size:12px; color:#666;">Imediata ou Correios</p></div>
+    <div><span>💬</span><h4>Suporte VIP</h4><p style="font-size:12px; color:#666;">Atendimento Direto</p></div>
 </div>
 
 <footer>
-    <div class="footer-content">
-        <p style="font-weight:900; margin-bottom:10px;">DS STORE</p>
-        <p style="font-size:13px; color:#666;">
-            Desenvolvido por <a href="#" class="author-name">SEU NOME / DS STORE</a>
-        </p>
-        <p style="font-size:11px; color:#444; margin-top:20px;">&copy; 2026 DS Store Marketplace. Todos os direitos reservados.</p>
-    </div>
+    <div class="footer-logo">DS STORE</div>
+    <p style="font-size:14px; color:#666;">Desenvolvido com ⚡ por <a href="#" class="author-name">LEANDRO SILVA</a></p>
+    <div style="font-size:12px; color:#444; margin-top:20px;">&copy; 2026 DS Store - Todos os direitos reservados.</div>
 </footer>
+
+<div id="full-print-modal" class="modal" onclick="this.style.display='none'"><img id="img-full" src="" style="max-height: 90vh; max-width: 90vw; border-radius: 10px; border: 2px solid var(--primary);"></div>
+<a href="https://wa.me/5581991152441" class="whatsapp-float" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="35"></a>
 
 <script>
     const products = [
-        { id: 1, name: "Cheat Warzone VIP [30 Dias]", price: 49.90, cat: "DIGITAL", type: "Digital", img: "https://via.placeholder.com/400x400/800080/FFFFFF?text=Warzone+Cheat" },
-        { id: 2, name: "Mouse Gamer RGB 12800DPI", price: 129.90, cat: "ACESSORIOS", type: "Físico", img: "https://via.placeholder.com/400x400/222222/FFFFFF?text=Mouse+Gamer" },
-        { id: 3, name: "Netflix 4K Ultra Premium", price: 19.90, cat: "DIGITAL", type: "Digital", img: "https://via.placeholder.com/400x400/E50914/FFFFFF?text=Netflix" },
-        { id: 4, name: "Teclado Mecânico RGB Blue Switch", price: 249.90, cat: "HARDWARE", type: "Físico", img: "https://via.placeholder.com/400x400/00d4ff/FFFFFF?text=Teclado+Mecanico" },
-        { id: 5, name: "Pack 50.000 Artes Canva Editáveis", price: 29.90, cat: "DIGITAL", type: "Digital", img: "https://via.placeholder.com/400x400/00C4CC/FFFFFF?text=Canva+Pack" }
+        { id: 1, name: "Cheat Warzone VIP", price: 49.90, cat: "JOGOS E CHEATS", type: "Digital", img: "https://via.placeholder.com/300?text=Warzone" },
+        { id: 2, name: "Mouse Gamer Pro RGB", price: 159.90, cat: "FÍSICO", type: "Fisico", img: "https://via.placeholder.com/300?text=Mouse" },
+        { id: 3, name: "Netflix 4K Premium", price: 15.90, cat: "CONTAS", type: "Digital", img: "https://via.placeholder.com/300?text=Netflix" },
+        { id: 4, name: "Adobe Pack 2024", price: 29.90, cat: "PROGRAMAS", type: "Digital", img: "https://via.placeholder.com/300?text=Adobe" }
     ];
 
-    let cart = JSON.parse(localStorage.getItem('ds_cart_v2')) || [];
+    const availableCoupons = { 'DS10': 0.10, 'PROMO20': 0.20 };
+    let cart = JSON.parse(localStorage.getItem('ds_cart_v5')) || [];
     let activeDiscount = 0;
-    let currentCategory = "TODOS";
 
     function formatMoney(v) { return v.toLocaleString('pt-br', { minimumFractionDigits: 2 }); }
 
@@ -206,16 +253,17 @@
         const list = document.getElementById('product-list');
         list.innerHTML = data.map(p => `
             <div class="product-card">
-                <span class="badge ${p.type === 'Digital' ? 'badge-digital' : 'badge-fisico'}">
-                    ${p.type === 'Digital' ? '⚡ DIGITAL' : '📦 FÍSICO'}
-                </span>
+                <div class="badge-container">
+                    <span class="badge ${p.type === 'Digital' ? 'badge-digital' : 'badge-fisico'}">
+                        ${p.type === 'Digital' ? '⚡ Entrega Imediata' : '📦 Produto Físico'}
+                    </span>
+                    ${p.type === 'Fisico' ? '<span class="badge badge-frete">🚚 Frete Grátis</span>' : ''}
+                </div>
                 <img src="${p.img}" class="product-img">
                 <div class="product-info">
-                    <div class="stars">★★★★★ <span style="color:#555; font-size:10px;">(48)</span></div>
-                    <div class="product-title">${p.name}</div>
-                    <div class="price-old">R$ ${formatMoney(p.price * 1.4)}</div>
+                    <p style="font-size:14px; font-weight:600; height:40px;">${p.name}</p>
                     <div class="price-new">R$ ${formatMoney(p.price)}</div>
-                    <button class="add-btn" onclick="addToCart(${p.id})">ADICIONAR AO CARRINHO</button>
+                    <button class="add-btn" onclick="addToCart(${p.id})">ADICIONAR</button>
                 </div>
             </div>
         `).join('');
@@ -231,108 +279,87 @@
     }
 
     function updateCart() {
-        localStorage.setItem('ds_cart_v2', JSON.stringify(cart));
+        localStorage.setItem('ds_cart_v5', JSON.stringify(cart));
         const list = document.getElementById('cart-items-list');
-        const count = document.getElementById('cart-count');
         let subtotal = 0;
-        let itemsCount = 0;
+        let totalItems = 0;
 
         if (cart.length === 0) {
-            list.innerHTML = "<p style='text-align:center; padding:30px; color:#555;'>Seu carrinho está vazio.</p>";
+            list.innerHTML = "<p style='text-align:center; color:#666;'>Carrinho vazio</p>";
         } else {
             list.innerHTML = cart.map((item, index) => {
                 subtotal += (item.price * item.quantity);
-                itemsCount += item.quantity;
-                return `
-                    <div class="cart-item">
-                        <div>
-                            <p style="font-weight:700; font-size:14px;">${item.quantity}x ${item.name}</p>
-                            <p style="color:var(--primary); font-size:13px;">R$ ${formatMoney(item.price * item.quantity)}</p>
-                        </div>
-                        <button onclick="removeItem(${index})" style="background:none; border:none; color:#ff4d4d; cursor:pointer;">🗑️</button>
-                    </div>
-                `;
+                totalItems += item.quantity;
+                return `<div class="cart-item">
+                    <div><b>${item.quantity}x ${item.name}</b><br><small>R$ ${formatMoney(item.price)}</small></div>
+                    <button onclick="removeItem(${index})" style="background:none; border:none; color:red; cursor:pointer;">🗑️</button>
+                </div>`;
             }).join('');
         }
 
-        let discValue = subtotal * activeDiscount;
+        let discountValue = subtotal * activeDiscount;
         document.getElementById('discount-area').style.display = activeDiscount > 0 ? 'flex' : 'none';
-        document.getElementById('cart-discount').innerText = formatMoney(discValue);
-        document.getElementById('cart-total').innerText = formatMoney(subtotal - discValue);
-        count.innerText = itemsCount;
+        document.getElementById('cart-discount').innerText = formatMoney(discountValue);
+        document.getElementById('cart-total').innerText = formatMoney(subtotal - discountValue);
+        document.getElementById('cart-count').innerText = totalItems;
     }
 
     function applyCoupon() {
-        const input = document.getElementById('coupon-input').value.toUpperCase();
-        if(input === 'DS10') {
-            activeDiscount = 0.10;
-            document.getElementById('coupon-msg').innerHTML = "Cupom aplicado! 10% OFF";
-            document.getElementById('coupon-msg').style.color = "var(--whatsapp)";
+        const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+        if (availableCoupons[code]) {
+            activeDiscount = availableCoupons[code];
+            document.getElementById('coupon-msg').innerText = "Cupom Aplicado!";
+            document.getElementById('coupon-msg').style.color = "#25d366";
         } else {
             activeDiscount = 0;
-            document.getElementById('coupon-msg').innerHTML = "Cupom inválido.";
+            document.getElementById('coupon-msg').innerText = "Inválido";
             document.getElementById('coupon-msg').style.color = "#ff4d4d";
         }
         updateCart();
     }
 
     function removeItem(index) {
-        if(cart[index].quantity > 1) cart[index].quantity--;
+        if (cart[index].quantity > 1) cart[index].quantity--;
         else cart.splice(index, 1);
         updateCart();
     }
 
     function toggleCart(open = false) {
         const s = document.getElementById('cart-sidebar');
-        if(open) s.classList.add('active');
+        if (open) s.classList.add('active');
         else s.classList.toggle('active');
     }
 
     function filterCategory(cat, btn) {
-        currentCategory = cat;
         document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        filterProducts();
+        const filtered = cat === 'TODOS' ? products : products.filter(p => p.cat === cat);
+        renderProducts(filtered);
     }
 
     function filterProducts() {
         const term = document.getElementById('search-input').value.toLowerCase();
-        const filtered = products.filter(p => (currentCategory === "TODOS" || p.cat === currentCategory) && p.name.toLowerCase().includes(term));
+        const filtered = products.filter(p => p.name.toLowerCase().includes(term));
         renderProducts(filtered);
     }
 
     function sendWhatsApp() {
-        if(cart.length === 0) return alert("Carrinho vazio!");
-        const total = document.getElementById('cart-total').innerText;
-        let msg = "*NOVO PEDIDO - DS STORE*%0A--------------------------%0A";
-        
-        cart.forEach(i => msg += `✅ *${i.quantity}x* ${i.name} (${i.type})%0A`);
-        
-        if(activeDiscount > 0) msg += `%0A🎁 *DESCONTO:* R$ ${document.getElementById('cart-discount').innerText}`;
-        
-        msg += `%0A%0A*TOTAL: R$ ${total}*%0A--------------------------%0A`;
-        
-        if(cart.some(i => i.type === 'Físico')) {
-            msg += "📍 _Contém produto físico. Aguardando cálculo de frete._";
-        }
-
-        document.getElementById('success-modal').style.display = 'flex';
-        setTimeout(() => {
-            window.open(`https://wa.me/5581991152441?text=${msg}`);
-        }, 2000);
+        if (cart.length === 0) return;
+        let msg = "*NOVO PEDIDO - DS STORE*%0A%0A";
+        cart.forEach(i => msg += `• *${i.quantity}x* ${i.name} (${i.type})%0A`);
+        if(activeDiscount > 0) msg += `%0A🎁 Cupom aplicado!`;
+        msg += `%0A*TOTAL: R$ ${document.getElementById('cart-total').innerText}*`;
+        window.open(`https://wa.me/5581991152441?text=${msg}`);
     }
 
-    function closeModal() {
-        document.getElementById('success-modal').style.display = 'none';
-        cart = [];
-        activeDiscount = 0;
-        updateCart();
-        toggleCart(false);
+    function openFullPrint(src) {
+        document.getElementById('img-full').src = src;
+        document.getElementById('full-print-modal').style.display = 'flex';
     }
 
-    // Cronômetro de 2 horas
+    // Cronômetro 2h
     function startTimer(duration) {
-        var timer = duration, hours, minutes, seconds;
+        let timer = duration, hours, minutes, seconds;
         setInterval(() => {
             hours = parseInt(timer / 3600, 10);
             minutes = parseInt((timer % 3600) / 60, 10);
@@ -346,6 +373,5 @@
     renderProducts(products);
     updateCart();
 </script>
-
 </body>
 </html>
