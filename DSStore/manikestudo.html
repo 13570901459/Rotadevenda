@@ -89,6 +89,10 @@
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; padding: 15px; }
         .modal-content { background: var(--white); padding: 25px; border-radius: 12px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; }
 
+        /* LISTA DE QUESTÕES PARA EXCLUSÃO */
+        .q-item-admin { padding: 10px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; }
+        .q-item-admin:last-child { border: none; }
+
         /* GRIFADOR */
         mark { background: #fef08a; color: black; border-radius: 2px; }
         .highlight-tool { position: absolute; background: var(--dark); color: white; padding: 5px 10px; border-radius: 4px; font-size: 12px; cursor: pointer; z-index: 500; border: 1px solid var(--primary); }
@@ -181,24 +185,32 @@
 
     <div id="secao-cadastro" class="hidden">
         <div class="card">
-            <h2>Nova Questão Manual</h2>
-            <textarea id="q-enun" rows="4" style="width:100%; padding:10px; background:var(--bg); color:var(--text); border:1px solid var(--card-border); border-radius:8px" placeholder="Enunciado..."></textarea>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                <input type="text" id="q-a" placeholder="Alternativa A" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
-                <input type="text" id="q-b" placeholder="Alternativa B" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
-                <input type="text" id="q-c" placeholder="Alternativa C" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
-                <input type="text" id="q-d" placeholder="Alternativa D" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
+            <h2>Gerenciar Questões</h2>
+            <div style="margin-bottom: 20px; padding-bottom: 20px; border-bottom: 2px solid var(--bg);">
+                <h3>Adicionar Nova</h3>
+                <textarea id="q-enun" rows="4" style="width:100%; padding:10px; background:var(--bg); color:var(--text); border:1px solid var(--card-border); border-radius:8px" placeholder="Enunciado..."></textarea>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
+                    <input type="text" id="q-a" placeholder="Alternativa A" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
+                    <input type="text" id="q-b" placeholder="Alternativa B" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
+                    <input type="text" id="q-c" placeholder="Alternativa C" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
+                    <input type="text" id="q-d" placeholder="Alternativa D" style="padding:10px; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; color: var(--text);">
+                </div>
+                <div style="margin-top:15px">
+                    <label>Gabarito:</label>
+                    <select id="q-gab" style="padding:8px; border-radius:6px; margin-left:10px">
+                        <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
+                    </select>
+                </div>
+                <textarea id="q-coment" rows="2" style="margin-top:15px; width:100%; padding:10px; background:var(--bg); color:var(--text); border:1px solid var(--card-border); border-radius:8px" placeholder="Comentário..."></textarea>
+                <div style="margin-top:20px; display:flex; gap:10px">
+                    <button class="btn btn-success" onclick="salvarQuestaoManual()">Salvar</button>
+                    <button class="btn" onclick="mostrarSecao('materia')">Voltar</button>
+                </div>
             </div>
-            <div style="margin-top:15px">
-                <label>Gabarito:</label>
-                <select id="q-gab" style="padding:8px; border-radius:6px; margin-left:10px">
-                    <option value="A">A</option><option value="B">B</option><option value="C">C</option><option value="D">D</option>
-                </select>
-            </div>
-            <textarea id="q-coment" rows="2" style="margin-top:15px; width:100%; padding:10px; background:var(--bg); color:var(--text); border:1px solid var(--card-border); border-radius:8px" placeholder="Comentário..."></textarea>
-            <div style="margin-top:20px; display:flex; gap:10px">
-                <button class="btn btn-success" onclick="salvarQuestaoManual()">Salvar</button>
-                <button class="btn" onclick="mostrarSecao('materia')">Cancelar</button>
+
+            <div id="container-lista-questoes">
+                <h3>Questões Cadastradas</h3>
+                <div id="lista-questoes-existentes" style="max-height: 300px; overflow-y: auto; background: var(--bg); border-radius: 8px;"></div>
             </div>
         </div>
     </div>
@@ -215,14 +227,34 @@
     </div>
 
     <div id="secao-simulado" class="hidden">
-        <div class="card" style="max-width: 850px; margin: auto;">
-            <div id="sim-status" style="font-weight:bold; color:var(--primary); margin-bottom:15px; border-bottom:1px solid var(--card-border); padding-bottom:10px;"></div>
-            <p id="sim-txt" style="font-size: 1.1rem; line-height: 1.5;" onmouseup="handleSelection(event)"></p>
-            <div id="sim-opcs"></div>
-            <div id="sim-feedback" class="card hidden" style="margin-top:15px; background:rgba(37, 99, 235, 0.1); border-left:5px solid var(--primary)">
-                <strong>💡 Comentário:</strong> <p id="sim-coment-txt" style="margin:5px 0 0 0"></p>
+        <div id="sim-container-questoes">
+            <div class="card" style="max-width: 850px; margin: auto;">
+                <div id="sim-status" style="font-weight:bold; color:var(--primary); margin-bottom:15px; border-bottom:1px solid var(--card-border); padding-bottom:10px;"></div>
+                <p id="sim-txt" style="font-size: 1.1rem; line-height: 1.5;" onmouseup="handleSelection(event)"></p>
+                <div id="sim-opcs"></div>
+                <div id="sim-feedback" class="card hidden" style="margin-top:15px; background:rgba(37, 99, 235, 0.1); border-left:5px solid var(--primary)">
+                    <strong>💡 Comentário:</strong> <p id="sim-coment-txt" style="margin:5px 0 0 0"></p>
+                </div>
+                <button class="btn btn-primary hidden" id="sim-next" style="margin-top:20px; width:100%; justify-content:center" onclick="proximaQ()">Próxima Questão</button>
             </div>
-            <button class="btn btn-primary hidden" id="sim-next" style="margin-top:20px; width:100%; justify-content:center" onclick="proximaQ()">Próxima Questão</button>
+        </div>
+
+        <div id="sim-resultado" class="hidden" style="max-width: 500px; margin: auto; text-align: center;">
+            <div class="card">
+                <span style="font-size: 4rem;">🏆</span>
+                <h2>Sessão Finalizada!</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div class="card-stat" style="border-top: 4px solid var(--success);">
+                        <small>Acertos</small><h2 id="res-acertos" style="color:var(--success)">0</h2>
+                    </div>
+                    <div class="card-stat" style="border-top: 4px solid var(--danger);">
+                        <small>Erros</small><h2 id="res-erros" style="color:var(--danger)">0</h2>
+                    </div>
+                </div>
+                <h1 id="res-porcentagem" style="font-size: 3rem; margin: 10px 0;">0%</h1>
+                <p>Aproveitamento nesta sessão</p>
+                <button class="btn btn-primary" style="width:100%; margin-top:20px; justify-content:center" onclick="navegar('dashboard')">Voltar ao Início</button>
+            </div>
         </div>
     </div>
 </main>
@@ -232,7 +264,9 @@
     let histAcertos = JSON.parse(localStorage.getItem('sge_u_hist')) || [0,0,0,0,0,0,0];
     let logsEstudo = JSON.parse(localStorage.getItem('sge_u_logs')) || {};
     let isDarkMode = localStorage.getItem('sge_u_dark') === 'true';
-    let matAtiva = null; let assAtivo = null; let qIndex = 0; let timerInterval; let seconds = 0; let questoesSessao = []; let modoErro = false;
+    let matAtiva = null; let assAtivo = null; let qIndex = 0; let timerInterval; let seconds = 0; 
+    let questoesSessao = []; let modoErro = false;
+    let sessaoA = 0; let sessaoE = 0;
 
     // REVISÃO
     function calcRevisoes(dataBase) {
@@ -262,6 +296,10 @@
         const target = document.getElementById('secao-' + id);
         if(target) target.classList.remove('hidden');
         if(id === 'dashboard') renderDashboard();
+        if(id === 'simulado') {
+            document.getElementById('sim-container-questoes').classList.remove('hidden');
+            document.getElementById('sim-resultado').classList.add('hidden');
+        }
     }
     function toggleDarkMode() {
         isDarkMode = !isDarkMode; document.body.classList.toggle('dark-mode', isDarkMode);
@@ -318,16 +356,52 @@
         salvar(); abrirMateria(matAtiva.id);
     }
 
-    function irCadManual(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); mostrarSecao('cadastro'); }
+    // GERENCIAMENTO DE QUESTÕES (EXCLUIR)
+    function irCadManual(id) { 
+        assAtivo = matAtiva.assuntos.find(a => a.id === id); 
+        mostrarSecao('cadastro'); 
+        renderListaQuestoes();
+    }
+
+    function renderListaQuestoes() {
+        const lista = document.getElementById('lista-questoes-existentes');
+        if(!assAtivo.questoes || assAtivo.questoes.length === 0) {
+            lista.innerHTML = "<p style='padding:15px; opacity:0.6'>Nenhuma questão cadastrada.</p>";
+            return;
+        }
+        lista.innerHTML = assAtivo.questoes.map((q, idx) => `
+            <div class="q-item-admin">
+                <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%;">
+                    ${idx+1}. ${q.p.substring(0, 60)}...
+                </span>
+                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.7rem;" onclick="removerQuestao(${idx})">Excluir</button>
+            </div>
+        `).join('');
+    }
+
+    function removerQuestao(idx) {
+        if(confirm("Deseja realmente excluir esta questão?")) {
+            assAtivo.questoes.splice(idx, 1);
+            salvar();
+            renderListaQuestoes();
+        }
+    }
+
     function salvarQuestaoManual() {
+        const enun = document.getElementById('q-enun').value;
+        if(!enun) return alert("Preencha o enunciado!");
         assAtivo.questoes.push({
-            p: document.getElementById('q-enun').value, a: document.getElementById('q-a').value,
+            p: enun, a: document.getElementById('q-a').value,
             b: document.getElementById('q-b').value, c: document.getElementById('q-c').value,
             d: document.getElementById('q-d').value, r: document.getElementById('q-gab').value,
             coment: document.getElementById('q-coment').value, erro: false
         });
-        salvar(); alert("Salvo!"); abrirMateria(matAtiva.id);
+        salvar(); 
+        document.getElementById('q-enun').value = '';
+        renderListaQuestoes();
+        alert("Questão adicionada!");
     }
+
     function abrirModalJson(id) { assAtivo = matAtiva.assuntos.find(a => a.id === id); document.getElementById('modal-json').classList.remove('hidden'); }
     function fecharModalJson() { document.getElementById('modal-json').classList.add('hidden'); }
     function processarJsonInjetado() {
@@ -344,12 +418,12 @@
         } catch(e) { alert("JSON Inválido"); }
     }
 
-    // SIMULADO
+    // SIMULADO E RESULTADO
     function irSimulado(id) {
         modoErro = false; assAtivo = matAtiva.assuntos.find(a => a.id === id);
         if(!assAtivo.questoes.length) return alert("Sem questões!");
         questoesSessao = [...assAtivo.questoes].sort(() => Math.random() - 0.5);
-        qIndex = 0; mostrarSecao('simulado'); renderQ();
+        iniciarSessao();
     }
     function irSimuladoErros() {
         modoErro = true; questoesSessao = [];
@@ -359,8 +433,14 @@
         }));
         if(!questoesSessao.length) return alert("Não há erros!");
         questoesSessao = questoesSessao.sort(() => Math.random() - 0.5);
-        qIndex = 0; mostrarSecao('simulado'); renderQ();
+        iniciarSessao();
     }
+
+    function iniciarSessao() {
+        qIndex = 0; sessaoA = 0; sessaoE = 0;
+        mostrarSecao('simulado'); renderQ();
+    }
+
     function renderQ() {
         const q = questoesSessao[qIndex];
         document.getElementById('sim-status').innerText = `Questão ${qIndex+1}/${questoesSessao.length}`;
@@ -373,6 +453,7 @@
                 <button class="alt-btn" id="btn-${l}" onclick="validar('${l}')"><b>${l})</b> ${q[l.toLowerCase()]}</button>
             </div>`).join('');
     }
+
     function validar(l) {
         const q = questoesSessao[qIndex];
         document.querySelectorAll('.alt-btn').forEach(b => b.disabled = true);
@@ -381,18 +462,40 @@
             document.getElementById('btn-'+l).classList.add('correta');
             if(!modoErro && assAtivo) assAtivo.a++;
             q.erro = false; histAcertos[dia]++;
+            sessaoA++;
         } else {
             document.getElementById('btn-'+l).classList.add('errada');
             document.getElementById('btn-'+q.r).classList.add('correta');
             if(!modoErro && assAtivo) assAtivo.e++;
             q.erro = true;
+            sessaoE++;
         }
         if(q.coment) { document.getElementById('sim-coment-txt').innerText = q.coment; document.getElementById('sim-feedback').classList.remove('hidden'); }
         document.getElementById('sim-next').classList.remove('hidden');
         salvar();
     }
-    function proximaQ() { qIndex++; if(qIndex < questoesSessao.length) renderQ(); else { alert("Fim!"); navegar('dashboard'); } }
 
+    function proximaQ() { 
+        qIndex++; 
+        if(qIndex < questoesSessao.length) {
+            renderQ();
+        } else {
+            finalizarSessao();
+        }
+    }
+
+    function finalizarSessao() {
+        document.getElementById('sim-container-questoes').classList.add('hidden');
+        document.getElementById('sim-resultado').classList.remove('hidden');
+        
+        document.getElementById('res-acertos').innerText = sessaoA;
+        document.getElementById('res-erros').innerText = sessaoE;
+        const total = sessaoA + sessaoE;
+        const pct = total > 0 ? ((sessaoA / total) * 100).toFixed(1) : 0;
+        document.getElementById('res-porcentagem').innerText = pct + "%";
+    }
+
+    // DASHBOARD E OUTROS
     function renderDashboard() {
         verificarRevisoesGeral();
         let tA=0, tE=0, tV=0;
