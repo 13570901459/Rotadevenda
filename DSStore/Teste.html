@@ -3,244 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EstudoPro - Gestão de Concursos</title>
+    <title>SistemAprovação - Gestão de Alta Performance</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
-            --secondary: #64748b;
-            --success: #10b981;
-            --danger: #ef4444;
-            --bg: #f1f5f9;
-            --card: #ffffff;
-            --text-main: #1e293b;
+            --primary: #2563eb; --secondary: #64748b; --success: #10b981;
+            --danger: #ef4444; --bg: #f8fafc; --card: #ffffff;
         }
-
         * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
+        body { background-color: var(--bg); color: #1e293b; margin: 0; padding: 20px; }
+        .container { max-width: 1300px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 2px solid #e2e8f0; }
         
-        .dashboard { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        
-        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .full-width { grid-column: 1 / -1; }
+        .span-2 { grid-column: span 2; }
 
-        h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
-
-        /* Formulários */
-        .input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        input, select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; flex: 1; min-width: 150px; }
-        button { cursor: pointer; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; transition: 0.3s; }
-        .btn-add { background: var(--primary); color: white; }
-        .btn-gen { background: var(--success); color: white; width: 100%; }
-        button:hover { opacity: 0.8; transform: translateY(-1px); }
-
-        /* Tabela de Disciplinas */
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        th { text-align: left; color: var(--secondary); font-size: 0.8rem; text-transform: uppercase; padding: 10px; }
-        td { padding: 12px 10px; border-top: 1px solid #f1f5f9; }
+        /* Timer Estilizado */
+        .timer-section { background: #1e293b; color: white; text-align: center; grid-column: 1 / -1; padding: 30px; border-radius: 15px; }
+        #timer-display { font-size: 4rem; font-weight: 800; font-family: 'Courier New', Courier, monospace; color: var(--success); text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        
+        /* Badges e Tags */
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .bg-success { background: #dcfce7; color: #166534; }
+        
+        /* Edital Verticalizado */
+        .topic-item { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem; }
+        textarea { width: 100%; height: 80px; padding: 10px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 10px; }
 
         /* Cronograma */
-        .schedule-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; overflow-x: auto; }
-        .day-column { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; min-width: 140px; }
-        .day-header { background: #e2e8f0; padding: 8px; text-align: center; font-weight: bold; font-size: 0.9rem; }
-        .task { background: white; margin: 8px; padding: 8px; border-radius: 6px; font-size: 0.8rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--primary); }
-        
-        .stats-container { display: flex; justify-content: space-around; align-items: center; height: 100%; }
-        .chart-box { width: 250px; }
+        .schedule-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 15px; }
+        .day-box { background: white; border: 1px solid #e2e8f0; border-radius: 8px; min-height: 150px; }
+        .day-title { background: #f1f5f9; padding: 8px; text-align: center; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
+        .task-unit { font-size: 0.75rem; padding: 8px; margin: 5px; background: #eff6ff; border-left: 3px solid var(--primary); border-radius: 4px; }
 
-        @media (max-width: 900px) {
-            .dashboard { grid-template-columns: 1fr; }
-            .schedule-grid { grid-template-columns: 1fr; }
-        }
+        button { cursor: pointer; border: none; padding: 10px 15px; border-radius: 6px; font-weight: 600; transition: 0.2s; }
+        .btn-main { background: var(--primary); color: white; }
+        .btn-outline { background: transparent; border: 1px solid var(--secondary); color: var(--secondary); }
     </style>
 </head>
 <body>
 
-    <div class="dashboard">
-        <header>
-            <h1>📊 ConcursoMaster <small style="font-size: 0.9rem; font-weight: 400; color: var(--secondary);">v1.0</small></h1>
-            <button onclick="clearAll()" style="background: var(--danger); color: white; padding: 5px 10px;">Limpar Tudo</button>
-        </header>
+    <header>
+        <h1>🚀 SmartStudy <span style="font-weight: 400; color: var(--secondary);">AI Planner</span></h1>
+        <div id="countdown-prova" class="badge bg-success">Carregando data da prova...</div>
+    </header>
 
-        <section class="card">
-            <h2>⚙️ Configurar Disciplinas</h2>
-            <div class="input-group">
-                <input type="text" id="subjName" placeholder="Nome da Matéria">
-                <select id="subjWeight">
-                    <option value="1">Peso 1 (Pouco conteúdo)</option>
-                    <option value="2">Peso 2 (Médio)</option>
-                    <option value="3">Peso 3 (Muito conteúdo)</option>
-                </select>
-                <button onclick="addSubject()" class="btn-add">Adicionar</button>
+    <div class="container">
+        <section class="timer-section">
+            <h2 id="timer-label">HORAS LÍQUIDAS: SELECIONE UMA MATÉRIA</h2>
+            <div id="timer-display">00:00:00</div>
+            <div style="margin-top: 15px;">
+                <button onclick="toggleTimer()" id="btn-timer" class="btn-main" style="background: var(--success); width: 150px;">INICIAR</button>
+                <button onclick="stopTimer()" class="btn-outline" style="border-color: white; color: white;">FINALIZAR</button>
             </div>
-
-            <table>
-                <thead>
-                    <tr>
-                        <th>Disciplina</th>
-                        <th>Peso</th>
-                        <th>Questões</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="subjectsTable"></tbody>
-            </table>
         </section>
 
         <section class="card">
-            <h2>📈 Aproveitamento e Horas</h2>
-            <div class="stats-container">
-                <div class="chart-box">
-                    <canvas id="pieChart"></canvas>
-                </div>
+            <h2>📅 Configurações</h2>
+            <label>Data da Prova:</label>
+            <input type="date" id="examDate" onchange="updateExamDate()" style="width: 100%; margin-bottom: 15px;">
+            
+            <label>Metas Diárias (Horas):</label>
+            <input type="number" id="dailyGoal" value="4" style="width: 100%; margin-bottom: 15px;">
+            
+            <button onclick="generateAutoSchedule()" class="btn-main" style="width: 100%;">GERAR CRONOGRAMA AUTO</button>
+        </section>
+
+        <section class="card">
+            <h2>📑 Edital Verticalizado (JSON)</h2>
+            <p style="font-size: 0.8rem; color: var(--secondary);">Cole os tópicos do edital em formato lista JSON.</p>
+            <textarea id="jsonInput" placeholder='["Português", "Direito Adm", "Raciocínio Lógico"]'></textarea>
+            <button onclick="importEdital()" class="btn-outline" style="width: 100%;">VERTICALIZAR AGORA</button>
+            <div id="verticalizedList" style="margin-top: 15px; max-height: 200px; overflow-y: auto;"></div>
+        </section>
+
+        <section class="card">
+            <h2>📝 Simulados e Provas</h2>
+            <div style="display: flex; gap: 5px; margin-bottom: 10px;">
+                <input type="text" id="simuladoName" placeholder="Ex: Simulado 01" style="flex:2">
+                <input type="number" id="simuladoScore" placeholder="%" style="flex:1">
+            </div>
+            <button onclick="addSimulado()" class="btn-main" style="width: 100%; margin-bottom: 10px;">REGISTRAR</button>
+            <canvas id="simuladosChart" height="150"></canvas>
+        </section>
+
+        <section class="card span-2">
+            <h2>📊 Estatísticas de Desempenho Por Matéria</h2>
+            <div style="height: 300px;">
+                <canvas id="mainChart"></canvas>
             </div>
         </section>
 
         <section class="card full-width">
-            <h2>📅 Cronograma Semanal Inteligente</h2>
-            <div class="input-group" style="max-width: 400px;">
-                <label>Meta de Horas Diárias:</label>
-                <input type="number" id="hoursTarget" value="4">
-                <button onclick="generateSchedule()" class="btn-gen">Gerar Novo Plano</button>
-            </div>
-            <div id="scheduleOutput" class="schedule-grid">
-                </div>
+            <h2>📋 Quadro Semanal de Tarefas</h2>
+            <div id="weekGrid" class="schedule-grid"></div>
         </section>
     </div>
 
     <script>
-        let subjects = JSON.parse(localStorage.getItem('study_data')) || [];
-        let myChart = null;
+        // Estado Global
+        let data = JSON.parse(localStorage.getItem('study_v3')) || {
+            subjects: [],
+            simulados: [],
+            examDate: '',
+            history: []
+        };
 
-        function addSubject() {
-            const name = document.getElementById('subjName').value;
-            const weight = parseInt(document.getElementById('subjWeight').value);
-            
-            if (!name) return alert("Digite o nome da disciplina");
+        let timerRunning = false;
+        let seconds = 0;
+        let timerInterval;
+        let activeSubject = null;
 
-            subjects.push({
-                id: Date.now(),
-                name: name,
-                weight: weight,
-                questions: 0,
-                hours: weight * 2 // Inicialização baseada no peso
-            });
-
-            document.getElementById('subjName').value = '';
-            updateAll();
+        // Inicialização
+        function init() {
+            updateExamCountdown();
+            renderStats();
+            renderSimulados();
+            if(data.subjects.length > 0) renderEdital();
         }
 
-        function updateAll() {
-            renderTable();
-            renderChart();
-            localStorage.setItem('study_data', JSON.stringify(subjects));
+        // --- FUNCIONALIDADES DO EDITAL ---
+        function importEdital() {
+            try {
+                const raw = document.getElementById('jsonInput').value;
+                const topics = JSON.parse(raw);
+                topics.forEach(t => {
+                    if(!data.subjects.find(s => s.name === t)) {
+                        data.subjects.push({ name: t, weight: 2, minutes: 0, completed: false });
+                    }
+                });
+                save();
+                renderEdital();
+                alert("Edital Importado e Verticalizado com Sucesso!");
+            } catch(e) { alert("Erro no formato JSON. Use: ['Item 1', 'Item 2']"); }
         }
 
-        function renderTable() {
-            const tbody = document.getElementById('subjectsTable');
-            tbody.innerHTML = subjects.map(s => `
-                <tr>
-                    <td><strong>${s.name}</strong></td>
-                    <td>P${s.weight}</td>
-                    <td>
-                        <input type="number" value="${s.questions}" 
-                        onchange="updateQuestions(${s.id}, this.value)" 
-                        style="width: 60px; padding: 5px;">
-                    </td>
-                    <td><button onclick="removeSubj(${s.id})" style="color: var(--danger); background: none;">Excluir</button></td>
-                </tr>
+        function renderEdital() {
+            const list = document.getElementById('verticalizedList');
+            list.innerHTML = data.subjects.map((s, i) => `
+                <div class="topic-item">
+                    <span>${s.name}</span>
+                    <button onclick="selectForStudy(${i})" style="padding:2px 5px; font-size:0.7rem; background: var(--primary); color:white">Estudar</button>
+                </div>
             `).join('');
         }
 
-        function updateQuestions(id, val) {
-            const subj = subjects.find(s => s.id === id);
-            subj.questions = parseInt(val) || 0;
-            updateAll();
+        // --- CRONÔMETRO DE HORAS LÍQUIDAS ---
+        function selectForStudy(index) {
+            activeSubject = data.subjects[index];
+            document.getElementById('timer-label').innerText = "ESTUDANDO AGORA: " + activeSubject.name;
+            resetTimer();
         }
 
-        function removeSubj(id) {
-            subjects = subjects.filter(s => s.id !== id);
-            updateAll();
-        }
-
-        function generateSchedule() {
-            const container = document.getElementById('scheduleOutput');
-            const hoursTarget = document.getElementById('hoursTarget').value;
-            const days = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-            
-            if (subjects.length === 0) return alert("Adicione disciplinas primeiro!");
-
-            container.innerHTML = '';
-
-            // Distribuição lógica: Pesos maiores aparecem com mais blocos
-            days.forEach(day => {
-                let dayHtml = `<div class="day-column"><div class="day-header">${day}</div>`;
-                
-                // Embaralha disciplinas para não ficar sempre igual
-                let pool = [];
-                subjects.forEach(s => {
-                    for(let i=0; i < s.weight; i++) pool.push(s);
-                });
-                
-                // Seleciona disciplinas para o dia baseado na meta de horas (1.5h por bloco)
-                let blocks = Math.max(1, Math.floor(hoursTarget / 1.5));
-                for(let i=0; i < blocks; i++) {
-                    const randomSubj = pool[Math.floor(Math.random() * pool.length)];
-                    dayHtml += `
-                        <div class="task">
-                            <input type="checkbox"> 
-                            <strong>${randomSubj.name}</strong><br>
-                            <small>Sessão de ${ (hoursTarget/blocks).toFixed(1) }h</small>
-                        </div>`;
-                }
-                
-                dayHtml += `</div>`;
-                container.innerHTML += dayHtml;
-            });
-        }
-
-        function renderChart() {
-            const ctx = document.getElementById('pieChart').getContext('2d');
-            
-            const data = {
-                labels: subjects.map(s => s.name),
-                datasets: [{
-                    label: 'Questões por Disciplina',
-                    data: subjects.map(s => s.questions),
-                    backgroundColor: [
-                        '#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
-                    ],
-                    borderWidth: 1
-                }]
-            };
-
-            if (myChart) myChart.destroy();
-            
-            myChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        title: { display: true, text: 'Distribuição de Questões (%)' }
-                    }
-                }
-            });
-        }
-
-        function clearAll() {
-            if(confirm("Deseja apagar todos os dados?")) {
-                localStorage.removeItem('study_data');
-                subjects = [];
-                updateAll();
+        function toggleTimer() {
+            if(!activeSubject) return alert("Selecione uma matéria no edital primeiro!");
+            if(!timerRunning) {
+                timerRunning = true;
+                document.getElementById('btn-timer').innerText = "PAUSAR";
+                document.getElementById('btn-timer').style.background = "var(--danger)";
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            } else {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                document.getElementById('btn-timer').innerText = "RETOMAR";
+                document.getElementById('btn-timer').style.background = "var(--success)";
             }
         }
 
-        // Início
-        updateAll();
+        function stopTimer() {
+            if(!activeSubject) return;
+            clearInterval(timerInterval);
+            activeSubject.minutes += Math.floor(seconds / 60);
+            alert(`Sessão finalizada! ${Math.floor(seconds/60)} minutos líquidos contabilizados.`);
+            resetTimer();
+            save();
+            renderStats();
+        }
+
+        function resetTimer() {
+            seconds = 0;
+            timerRunning = false;
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+            document.getElementById('btn-timer').innerText = "INICIAR";
+        }
+
+        function updateTimerDisplay() {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            const s = seconds % 60;
+            document.getElementById('timer-display').innerText = 
+                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+
+        // --- CRONOGRAMA AUTOMÁTICO ---
+        function generateAutoSchedule() {
+            const grid = document.getElementById('weekGrid');
+            const days = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+            const goal = document.getElementById('dailyGoal').value;
+            grid.innerHTML = '';
+
+            days.forEach(day => {
+                let html = `<div class="day-box"><div class="day-title">${day}</div>`;
+                if(data.subjects.length > 0) {
+                    // Distribui 3 matérias por dia aleatoriamente do edital
+                    for(let i=0; i<3; i++) {
+                        const randomS = data.subjects[Math.floor(Math.random() * data.subjects.length)];
+                        html += `<div class="task-unit"><b>${randomS.name}</b><br>${(goal/3).toFixed(1)}h líquidas</div>`;
+                    }
+                }
+                grid.innerHTML += html + `</div>`;
+            });
+        }
+
+        // --- SIMULADOS E PROVAS ---
+        function addSimulado() {
+            const name = document.getElementById('simuladoName').value;
+            const score = document.getElementById('simuladoScore').value;
+            if(!name || !score) return;
+            data.simulados.push({ name, score: parseInt(score) });
+            save();
+            renderSimulados();
+        }
+
+        function updateExamDate() {
+            data.examDate = document.getElementById('examDate').value;
+            save();
+            updateExamCountdown();
+        }
+
+        function updateExamCountdown() {
+            if(!data.examDate) return;
+            const diff = new Date(data.examDate) - new Date();
+            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown-prova').innerText = `FALTAM ${days} DIAS PARA A PROVA`;
+        }
+
+        // --- GRÁFICOS ---
+        function renderStats() {
+            const ctx = document.getElementById('mainChart').getContext('2d');
+            if(window.chart1) window.chart1.destroy();
+            window.chart1 = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.subjects.map(s => s.name),
+                    datasets: [{
+                        label: 'Minutos Estudados',
+                        data: data.subjects.map(s => s.minutes),
+                        backgroundColor: '#2563eb'
+                    }]
+                },
+                options: { maintainAspectRatio: false }
+            });
+        }
+
+        function renderSimulados() {
+            const ctx = document.getElementById('simuladosChart').getContext('2d');
+            if(window.chart2) window.chart2.destroy();
+            window.chart2 = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.simulados.map(s => s.name),
+                    datasets: [{
+                        label: 'Desempenho %',
+                        data: data.simulados.map(s => s.score),
+                        borderColor: '#10b981',
+                        tension: 0.3
+                    }]
+                }
+            });
+        }
+
+        function save() { localStorage.setItem('study_v3', JSON.stringify(data)); }
+
+        init();
     </script>
 </body>
 </html>
