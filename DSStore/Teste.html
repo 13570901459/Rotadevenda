@@ -1,70 +1,246 @@
-let subjects = JSON.parse(localStorage.getItem('subjects')) || [];
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstudoPro - Gestão de Concursos</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #64748b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text-main: #1e293b;
+        }
 
-function addSubject() {
-    const name = document.getElementById('subjectName').value;
-    const weight = parseInt(document.getElementById('subjectWeight').value);
-    
-    if(name) {
-        subjects.push({ name, weight, questions: 0, hoursStudied: 0 });
-        updateUI();
-        save();
-    }
-}
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); margin: 0; padding: 20px; }
+        
+        .dashboard { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .card { background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .full-width { grid-column: 1 / -1; }
 
-function updateUI() {
-    const list = document.getElementById('subjectList');
-    list.innerHTML = subjects.map((s, i) => `
-        <li>${s.name} (Peso ${s.weight}) 
-            <button onclick="removeSubject(${i})">❌</button>
-        </li>
-    `).join('');
-    renderChart();
-}
+        h2 { margin-top: 0; font-size: 1.25rem; border-bottom: 2px solid var(--bg); padding-bottom: 10px; }
 
-function generateSchedule() {
-    const hoursDay = document.getElementById('hoursPerDay').value;
-    const days = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
-    const display = document.getElementById('scheduleDisplay');
-    display.innerHTML = '';
+        /* Formulários */
+        .input-group { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        input, select { padding: 12px; border: 1px solid #cbd5e1; border-radius: 8px; flex: 1; min-width: 150px; }
+        button { cursor: pointer; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; transition: 0.3s; }
+        .btn-add { background: var(--primary); color: white; }
+        .btn-gen { background: var(--success); color: white; width: 100%; }
+        button:hover { opacity: 0.8; transform: translateY(-1px); }
 
-    // Lógica simples de distribuição por peso
-    const totalWeight = subjects.reduce((acc, s) => acc + s.weight, 0);
-    
-    days.forEach(day => {
-        let html = `<div class="day-box"><strong>${day}</strong>`;
-        subjects.forEach(s => {
-            // Se o peso for alto, aparece mais vezes ou com mais tempo
-            const chance = (s.weight / totalWeight) * 10;
-            if (Math.random() * 10 < chance + 2) {
-                html += `<div class="subject-item">
-                            <input type="checkbox"> ${s.name}
-                         </div>`;
+        /* Tabela de Disciplinas */
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th { text-align: left; color: var(--secondary); font-size: 0.8rem; text-transform: uppercase; padding: 10px; }
+        td { padding: 12px 10px; border-top: 1px solid #f1f5f9; }
+
+        /* Cronograma */
+        .schedule-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; overflow-x: auto; }
+        .day-column { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; min-width: 140px; }
+        .day-header { background: #e2e8f0; padding: 8px; text-align: center; font-weight: bold; font-size: 0.9rem; }
+        .task { background: white; margin: 8px; padding: 8px; border-radius: 6px; font-size: 0.8rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border-left: 4px solid var(--primary); }
+        
+        .stats-container { display: flex; justify-content: space-around; align-items: center; height: 100%; }
+        .chart-box { width: 250px; }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .schedule-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <header>
+            <h1>📊 ConcursoMaster <small style="font-size: 0.9rem; font-weight: 400; color: var(--secondary);">v1.0</small></h1>
+            <button onclick="clearAll()" style="background: var(--danger); color: white; padding: 5px 10px;">Limpar Tudo</button>
+        </header>
+
+        <section class="card">
+            <h2>⚙️ Configurar Disciplinas</h2>
+            <div class="input-group">
+                <input type="text" id="subjName" placeholder="Nome da Matéria">
+                <select id="subjWeight">
+                    <option value="1">Peso 1 (Pouco conteúdo)</option>
+                    <option value="2">Peso 2 (Médio)</option>
+                    <option value="3">Peso 3 (Muito conteúdo)</option>
+                </select>
+                <button onclick="addSubject()" class="btn-add">Adicionar</button>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Disciplina</th>
+                        <th>Peso</th>
+                        <th>Questões</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="subjectsTable"></tbody>
+            </table>
+        </section>
+
+        <section class="card">
+            <h2>📈 Aproveitamento e Horas</h2>
+            <div class="stats-container">
+                <div class="chart-box">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="card full-width">
+            <h2>📅 Cronograma Semanal Inteligente</h2>
+            <div class="input-group" style="max-width: 400px;">
+                <label>Meta de Horas Diárias:</label>
+                <input type="number" id="hoursTarget" value="4">
+                <button onclick="generateSchedule()" class="btn-gen">Gerar Novo Plano</button>
+            </div>
+            <div id="scheduleOutput" class="schedule-grid">
+                </div>
+        </section>
+    </div>
+
+    <script>
+        let subjects = JSON.parse(localStorage.getItem('study_data')) || [];
+        let myChart = null;
+
+        function addSubject() {
+            const name = document.getElementById('subjName').value;
+            const weight = parseInt(document.getElementById('subjWeight').value);
+            
+            if (!name) return alert("Digite o nome da disciplina");
+
+            subjects.push({
+                id: Date.now(),
+                name: name,
+                weight: weight,
+                questions: 0,
+                hours: weight * 2 // Inicialização baseada no peso
+            });
+
+            document.getElementById('subjName').value = '';
+            updateAll();
+        }
+
+        function updateAll() {
+            renderTable();
+            renderChart();
+            localStorage.setItem('study_data', JSON.stringify(subjects));
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('subjectsTable');
+            tbody.innerHTML = subjects.map(s => `
+                <tr>
+                    <td><strong>${s.name}</strong></td>
+                    <td>P${s.weight}</td>
+                    <td>
+                        <input type="number" value="${s.questions}" 
+                        onchange="updateQuestions(${s.id}, this.value)" 
+                        style="width: 60px; padding: 5px;">
+                    </td>
+                    <td><button onclick="removeSubj(${s.id})" style="color: var(--danger); background: none;">Excluir</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function updateQuestions(id, val) {
+            const subj = subjects.find(s => s.id === id);
+            subj.questions = parseInt(val) || 0;
+            updateAll();
+        }
+
+        function removeSubj(id) {
+            subjects = subjects.filter(s => s.id !== id);
+            updateAll();
+        }
+
+        function generateSchedule() {
+            const container = document.getElementById('scheduleOutput');
+            const hoursTarget = document.getElementById('hoursTarget').value;
+            const days = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'];
+            
+            if (subjects.length === 0) return alert("Adicione disciplinas primeiro!");
+
+            container.innerHTML = '';
+
+            // Distribuição lógica: Pesos maiores aparecem com mais blocos
+            days.forEach(day => {
+                let dayHtml = `<div class="day-column"><div class="day-header">${day}</div>`;
+                
+                // Embaralha disciplinas para não ficar sempre igual
+                let pool = [];
+                subjects.forEach(s => {
+                    for(let i=0; i < s.weight; i++) pool.push(s);
+                });
+                
+                // Seleciona disciplinas para o dia baseado na meta de horas (1.5h por bloco)
+                let blocks = Math.max(1, Math.floor(hoursTarget / 1.5));
+                for(let i=0; i < blocks; i++) {
+                    const randomSubj = pool[Math.floor(Math.random() * pool.length)];
+                    dayHtml += `
+                        <div class="task">
+                            <input type="checkbox"> 
+                            <strong>${randomSubj.name}</strong><br>
+                            <small>Sessão de ${ (hoursTarget/blocks).toFixed(1) }h</small>
+                        </div>`;
+                }
+                
+                dayHtml += `</div>`;
+                container.innerHTML += dayHtml;
+            });
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('pieChart').getContext('2d');
+            
+            const data = {
+                labels: subjects.map(s => s.name),
+                datasets: [{
+                    label: 'Questões por Disciplina',
+                    data: subjects.map(s => s.questions),
+                    backgroundColor: [
+                        '#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'
+                    ],
+                    borderWidth: 1
+                }]
+            };
+
+            if (myChart) myChart.destroy();
+            
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        title: { display: true, text: 'Distribuição de Questões (%)' }
+                    }
+                }
+            });
+        }
+
+        function clearAll() {
+            if(confirm("Deseja apagar todos os dados?")) {
+                localStorage.removeItem('study_data');
+                subjects = [];
+                updateAll();
             }
-        });
-        html += `</div>`;
-        display.innerHTML += html;
-    });
-}
+        }
 
-function renderChart() {
-    const ctx = document.getElementById('chartQuestions').getContext('2d');
-    if (window.myChart) window.myChart.destroy();
-
-    window.myChart = new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: subjects.map(s => s.name),
-            datasets: [{
-                data: subjects.map(s => s.weight),
-                backgroundColor: ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
-            }]
-        },
-        options: { plugins: { title: { display: true, text: 'Distribuição de Carga Horária por Peso' } } }
-    });
-}
-
-function save() { localStorage.setItem('subjects', JSON.stringify(subjects)); }
-function removeSubject(i) { subjects.splice(i, 1); updateUI(); save(); }
-
-// Inicialização
-updateUI();
+        // Início
+        updateAll();
+    </script>
+</body>
+</html>
