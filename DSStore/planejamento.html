@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudei Pro - Gestão Dinâmica</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #f4f7f6; --primary: #47c1a8; --accent: #6c5ce7; --text: #2d3436; --danger: #ff7675; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; padding: 0; }
+        body { background: var(--bg); color: var(--text); display: flex; }
+        nav { width: 70px; background: #fff; border-right: 1px solid #e9ecef; height: 100vh; position: sticky; top: 0; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
+        .logo { width: 35px; height: 35px; background: var(--primary); border-radius: 8px; }
+        main { flex: 1; padding: 30px; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 1100px) { .grid { grid-template-columns: 2fr 1fr; } }
+        .card { background: #fff; padding: 25px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 10px; margin-top: 8px; margin-bottom: 10px; }
+        .btn { background: var(--primary); color: #fff; border: none; padding: 12px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; transition: 0.3s; margin-top: 5px; }
+        .btn-edit { background: #f1c40f; color: #000; font-size: 0.7rem; padding: 5px 10px; width: auto; }
+        .btn-danger { background: var(--danger); }
+        
+        /* Accordion e Itens */
+        .subj-card { border: 1px solid #f1f3f5; border-radius: 12px; margin-bottom: 10px; background: #fff; }
+        .subj-header { padding: 15px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .subj-body { padding: 0 15px 15px; display: none; border-top: 1px solid #f1f3f5; }
+        .active .subj-body { display: block; }
+        
+        .topic-item { background: #f8fafc; padding: 15px; border-radius: 10px; margin-top: 10px; border-left: 4px solid #ddd; position: relative; }
+        .topic-item.studied { border-left-color: var(--primary); }
+        .delete-topic { position: absolute; right: 10px; top: 10px; color: var(--danger); cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        
+        .rev-dates { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 5px; margin-top: 10px; font-size: 0.65rem; }
+        .date-tag { background: #eee; padding: 4px; border-radius: 4px; text-align: center; }
+        
+        .widgets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        .widget { background: #fff; padding: 20px; border-radius: 15px; text-align: center; }
+        .edit-panel { background: #fff9e6; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 1px dashed #f1c40f; }
+    </style>
+</head>
+<body>
+
+<nav><div class="logo"></div></nav>
+
+<main>
+    <button onclick="window.location.href='manikestudo.html'" 
+        style="padding: 10px 20px; background: #636e72; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+    ⬅ Voltar ao Início
+</button>
+    <div class="widgets">
+        <div class="widget"><span>Horas Totais</span><h2 id="total-h">0h</h2></div>
+        <div class="widget"><span>Tópicos Lidos</span><h2 id="total-t">0</h2></div>
+        <div class="widget"><span>Média Geral</span><h2 id="total-p" style="color:var(--primary)">0%</h2></div>
+    </div>
+
+    <div class="grid">
+        <div class="left">
+            <div id="editContainer" style="display:none;" class="edit-panel">
+                <h4 id="editTitle">Editando Disciplina</h4>
+                <input type="text" id="editSubjName" placeholder="Novo nome da disciplina">
+                <textarea id="editNewTopics" placeholder="Adicionar mais tópicos (um por linha)"></textarea>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn" onclick="saveEdit()">Salvar Alterações</button>
+                    <button class="btn btn-danger" onclick="closeEdit()">Cancelar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📚 Cadastrar Disciplina</h3>
+                <input type="text" id="name" placeholder="Nome (Ex: Português)">
+                <textarea id="topics" placeholder="Tópicos do edital (um por linha)"></textarea>
+                <button class="btn" onclick="addSubject()">Criar Edital</button>
+            </div>
+
+            <div id="subjectsList"></div>
+        </div>
+
+        <div class="right">
+            <div class="card">
+                <h3>📅 Próximas Inéditas</h3>
+                <button class="btn" onclick="generateSmartTasks()">Sugerir O que Estudar</button>
+                <div id="tasksOutput" style="margin-top: 15px;"></div>
+            </div>
+            
+            <div class="card">
+                <h3>📈 Evolução</h3>
+                <canvas id="chart"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    let db = JSON.parse(localStorage.getItem('estudei_v6')) || { subjects: [] };
+    let currentEditId = null;
+
+    function save() {
+        localStorage.setItem('estudei_v6', JSON.stringify(db));
+        render();
+    }
+
+    function addSubject() {
+        const name = document.getElementById('name').value;
+        const raw = document.getElementById('topics').value;
+        if(!name || !raw) return;
+
+        const topics = raw.split('\n').filter(t => t.trim()).map(t => ({
+            title: t.trim(),
+            studied: false,
+            dateStudied: null,
+            revisions: [],
+            timesStudied: 0
+        }));
+
+        db.subjects.push({ id: Date.now(), name, topics, totalMinutes: 0 });
+        document.getElementById('name').value = '';
+        document.getElementById('topics').value = '';
+        save();
+    }
+
+    // --- FUNÇÕES DE EDIÇÃO ---
+    function openEdit(id) {
+        currentEditId = id;
+        const subj = db.subjects.find(s => s.id === id);
+        document.getElementById('editSubjName').value = subj.name;
+        document.getElementById('editNewTopics').value = "";
+        document.getElementById('editContainer').style.display = "block";
+        window.scrollTo(0,0);
+    }
+
+    function saveEdit() {
+        const subj = db.subjects.find(s => s.id === currentEditId);
+        const newName = document.getElementById('editSubjName').value;
+        const moreTopicsRaw = document.getElementById('editNewTopics').value;
+
+        if(newName) subj.name = newName;
+
+        if(moreTopicsRaw) {
+            const newTopics = moreTopicsRaw.split('\n').filter(t => t.trim()).map(t => ({
+                title: t.trim(),
+                studied: false,
+                dateStudied: null,
+                revisions: [],
+                timesStudied: 0
+            }));
+            subj.topics = [...subj.topics, ...newTopics];
+        }
+
+        closeEdit();
+        save();
+    }
+
+    function closeEdit() {
+        document.getElementById('editContainer').style.display = "none";
+        currentEditId = null;
+    }
+
+    function deleteTopic(subjId, topicIdx) {
+        if(confirm("Excluir este tópico do edital?")) {
+            const subj = db.subjects.find(s => s.id === subjId);
+            subj.topics.splice(topicIdx, 1);
+            save();
+        }
+    }
+
+    function registerStudy(subjId, topicIdx) {
+        const mins = prompt("Minutos estudados agora?");
+        if(!mins) return;
+        const subj = db.subjects.find(s => s.id === subjId);
+        const topic = subj.topics[topicIdx];
+        
+        subj.totalMinutes += parseInt(mins);
+        const today = new Date();
+        topic.studied = true;
+        topic.dateStudied = today.toLocaleDateString();
+        topic.timesStudied += 1;
+        
+        const gaps = [1, 3, 7, 15, 30];
+        topic.revisions = gaps.map(g => {
+            const d = new Date();
+            d.setDate(today.getDate() + g);
+            return d.toLocaleDateString();
+        });
+        save();
+    }
+
+    function generateSmartTasks() {
+        const output = document.getElementById('tasksOutput');
+        output.innerHTML = '';
+        let count = 0;
+        db.subjects.forEach(s => {
+            const unstudied = s.topics.filter(t => t.timesStudied === 0);
+            if(unstudied.length > 0 && count < 5) {
+                const t = unstudied[0];
+                const idx = s.topics.indexOf(t);
+                output.innerHTML += `
+                    <div class="topic-item" style="border-left-color: var(--accent)">
+                        <strong>${s.name}</strong>: ${t.title}
+                        <button class="btn" style="padding:5px; font-size:0.7rem" onclick="registerStudy(${s.id}, ${idx})">Registrar Estudo</button>
+                    </div>`;
+                count++;
+            }
+        });
+    }
+
+    function render() {
+        const list = document.getElementById('subjectsList');
+        list.innerHTML = db.subjects.map(s => `
+            <div class="subj-card" id="s-${s.id}">
+                <div class="subj-header">
+                    <div onclick="this.parentElement.parentElement.classList.toggle('active')" style="flex:1">
+                        <strong>${s.name}</strong> <small>(${Math.floor(s.totalMinutes/60)}h)</small>
+                    </div>
+                    <button class="btn btn-edit" onclick="openEdit(${s.id})">⚙️ Editar/Add</button>
+                </div>
+                <div class="subj-body">
+                    ${s.topics.map((t, i) => `
+                        <div class="topic-item ${t.studied ? 'studied' : ''}">
+                            <span class="delete-topic" onclick="deleteTopic(${s.id}, ${i})">✖</span>
+                            <div style="display:flex; justify-content:space-between; align-items:center">
+                                <span>${t.title}</span>
+                                <button onclick="registerStudy(${s.id}, ${i})" style="border:none; background:var(--primary); color:white; padding:3px 8px; border-radius:5px; cursor:pointer; font-size:0.7rem">+ Estudar</button>
+                            </div>
+                            ${t.studied ? `
+                                <div class="rev-dates">
+                                    ${t.revisions.map((rd, ri) => `<div class="date-tag">R${[1,3,7,15,30][ri]}: ${rd}</div>`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `).join('')}
+                    <button onclick="removeSubj(${s.id})" style="color:red; background:none; border:none; font-size:0.7rem; margin-top:15px; cursor:pointer">Apagar Disciplina Toda</button>
+                </div>
+            </div>
+        `).join('');
+
+        const totalM = db.subjects.reduce((a,b) => a + b.totalMinutes, 0);
+        document.getElementById('total-h').innerText = Math.floor(totalM/60) + "h";
+        document.getElementById('total-t').innerText = db.subjects.reduce((a,b) => a + b.topics.filter(t=>t.studied).length, 0);
+        renderChart();
+    }
+
+    let myChart;
+    function renderChart() {
+        const ctx = document.getElementById('chart').getContext('2d');
+        if(myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: db.subjects.map(s => s.name),
+                datasets: [{ data: db.subjects.map(s => s.totalMinutes), backgroundColor: db.subjects.map((s,i) => `hsl(${i*60}, 70%, 60%)`) }]
+            },
+            options: { cutout: '70%', plugins: { legend: { position: 'bottom' } } }
+        });
+    }
+
+    function removeSubj(id) { if(confirm("Apagar tudo desta matéria?")) { db.subjects = db.subjects.filter(s => s.id !== id); save(); } }
+    render();
+</script>
+</body>
+</html>
