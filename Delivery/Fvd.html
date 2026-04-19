@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plataforma de Jogos Online</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .slot {
+    font-size: 3rem;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    text-align: center;
+    line-height: 60px;
+    border: 2px solid #000;
+    margin: 5px;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+  }
+</style>
+</head>
+<body class="bg-gray-100 flex flex-col items-center min-h-screen">
+
+<!-- Header -->
+<header class="w-full bg-red-500 text-white p-4 text-center text-2xl font-bold">
+  Plataforma de Jogos Online
+</header>
+
+<!-- Login -->
+<section id="loginSection" class="mt-10 w-full max-w-md p-6 bg-white shadow-md rounded-md">
+  <h2 class="text-xl font-semibold mb-4">Login</h2>
+  <input type="text" id="username" placeholder="Nome de usuário" class="w-full p-2 mb-4 border rounded">
+  <button onclick="login()" class="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600">Entrar</button>
+</section>
+
+<!-- Game Section -->
+<section id="gameSection" class="hidden mt-10 w-full max-w-md p-6 bg-white shadow-md rounded-md">
+  <h2 class="text-xl font-semibold mb-4">Slot Machine</h2>
+
+  <!-- Saldo -->
+  <div class="mb-4">
+    <span class="font-bold">Saldo:</span> R$ <span id="balance">100</span>
+  </div>
+
+  <!-- Slot display -->
+  <div class="flex justify-center mb-4">
+    <div class="slot" id="slot1">🍒</div>
+    <div class="slot" id="slot2">🍋</div>
+    <div class="slot" id="slot3">🍊</div>
+  </div>
+
+  <!-- Aposta -->
+  <div class="mb-4">
+    <label class="font-bold">Aposta:</label>
+    <input type="number" id="bet" value="10" min="1" class="border p-1 rounded w-full">
+  </div>
+
+  <!-- Botão girar -->
+  <button onclick="spin()" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600 mb-4">Girar</button>
+
+  <!-- Resultado -->
+  <div id="result" class="text-center font-bold text-lg mb-4"></div>
+
+  <!-- Histórico -->
+  <div>
+    <h3 class="font-semibold mb-2">Histórico de Rodadas</h3>
+    <ul id="history" class="list-disc list-inside max-h-40 overflow-y-auto"></ul>
+  </div>
+</section>
+
+<script>
+  let balance = 100;
+  const symbols = ["🍒","🍋","🍊","🍉","⭐","7️⃣"];
+
+  function login() {
+    const username = document.getElementById("username").value;
+    if(username.trim() === "") {
+      alert("Digite um nome de usuário!");
+      return;
+    }
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("gameSection").classList.remove("hidden");
+    alert(`Bem-vindo(a), ${username}!`);
+  }
+
+  function spin() {
+    const bet = parseInt(document.getElementById("bet").value);
+    if(bet > balance) {
+      alert("Saldo insuficiente!");
+      return;
+    }
+
+    // Gerar slots aleatórios
+    const slot1 = symbols[Math.floor(Math.random() * symbols.length)];
+    const slot2 = symbols[Math.floor(Math.random() * symbols.length)];
+    const slot3 = symbols[Math.floor(Math.random() * symbols.length)];
+
+    document.getElementById("slot1").textContent = slot1;
+    document.getElementById("slot2").textContent = slot2;
+    document.getElementById("slot3").textContent = slot3;
+
+    let win = 0;
+    if(slot1 === slot2 && slot2 === slot3) {
+      win = bet * 5;
+      balance += win;
+      document.getElementById("result").textContent = `Parabéns! Você ganhou R$${win}`;
+    } else if(slot1 === slot2 || slot2 === slot3 || slot1 === slot3) {
+      win = bet * 2;
+      balance += win;
+      document.getElementById("result").textContent = `Você ganhou R$${win}`;
+    } else {
+      balance -= bet;
+      document.getElementById("result").textContent = `Você perdeu R$${bet}`;
+    }
+
+    document.getElementById("balance").textContent = balance;
+
+    // Atualizar histórico
+    const history = document.getElementById("history");
+    const li = document.createElement("li");
+    li.textContent = `Slots: ${slot1} ${slot2} ${slot3} | Resultado: ${win>0 ? "Ganhou R$"+win : "Perdeu R$"+bet}`;
+    history.prepend(li);
+  }
+</script>
+
+</body>
+</html>

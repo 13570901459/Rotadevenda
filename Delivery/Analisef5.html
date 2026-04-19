@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SINAL AO VIVO - TRADER PRO</title>
+    <style>
+        * { margin: 0; padding: 0; box-box-sizing: border-box; }
+        
+        body {
+            background-color: #050a0e; /* Fundo bem escuro para destacar na live */
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Container Principal do Sinal */
+        .display-sinal {
+            text-align: center;
+            background: linear-gradient(145deg, #13191f, #0d1216);
+            padding: 50px;
+            border-radius: 20px;
+            border: 2px solid #1f2933;
+            width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        }
+
+        .moeda-title {
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            color: #94a3b8;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .time-box {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        /* Alertas de Ação */
+        .status {
+            font-size: 3.5rem;
+            font-weight: 900;
+            padding: 20px;
+            border-radius: 15px;
+            text-transform: uppercase;
+            animation: pulse 1.5s infinite;
+        }
+
+        .compra {
+            background-color: #00c853;
+            color: #000;
+            box-shadow: 0 0 40px rgba(0, 200, 83, 0.4);
+        }
+
+        .venda {
+            background-color: #ff3d00;
+            color: #fff;
+            box-shadow: 0 0 40px rgba(255, 61, 0, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Painel de Controle (Escondido para a live) */
+        .admin-panel {
+            position: fixed;
+            bottom: 20px;
+            background: #1e293b;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            gap: 10px;
+            opacity: 0.1; /* Quase invisível para não atrapalhar o visual */
+            transition: opacity 0.3s;
+        }
+        .admin-panel:hover { opacity: 1; } /* Aparece ao passar o mouse */
+
+        input, select, button {
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+
+        button {
+            background: #3b82f6;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="display-sinal">
+        <div id="view-moeda" class="moeda-title">EUR/USD</div>
+        <div id="view-horario" class="time-box">14:30</div>
+        <div id="view-alerta" class="status compra">COMPRA</div>
+    </div>
+
+    <div class="admin-panel">
+        <input type="text" id="in-moeda" placeholder="Par (Ex: OTC)">
+        <input type="time" id="in-horario">
+        <select id="in-direcao">
+            <option value="compra">COMPRA</option>
+            <option value="venda">VENDA</option>
+        </select>
+        <button onclick="mudarSinal()">ENVIAR SINAL</button>
+    </div>
+
+    <script>
+        function mudarSinal() {
+            const moeda = document.getElementById('in-moeda').value;
+            const horario = document.getElementById('in-horario').value;
+            const direcao = document.getElementById('in-direcao').value;
+
+            const boxAlerta = document.getElementById('view-alerta');
+
+            if(moeda) document.getElementById('view-moeda').innerText = moeda.toUpperCase();
+            if(horario) document.getElementById('view-horario').innerText = horario;
+
+            if(direcao === 'compra') {
+                boxAlerta.innerText = "COMPRA";
+                boxAlerta.className = "status compra";
+            } else {
+                boxAlerta.innerText = "VENDA";
+                boxAlerta.className = "status venda";
+            }
+        }
+    </script>
+</body>
+</html>

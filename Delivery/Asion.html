@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>L.S QUANTUM | TERMINAL DE ELITE</title>
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --deep-green: #003b00;
+            --alert-gold: #f1c40f;
+            --bg-black: #020502;
+            --call: #00ff88;
+            --put: #ff3131;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 350px 1fr 300px;
+            grid-template-rows: 50px 1fr 200px;
+            gap: 10px;
+            padding: 10px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* EFEITO DE SCANLINE (TV ANTIGA) */
+        body::before {
+            content: " ";
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* CABEÇALHO */
+        header { 
+            grid-column: 1 / 4; 
+            border: 1px solid var(--neon-green);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 15px; background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 15px var(--deep-green);
+        }
+
+        #secret-trigger {
+            cursor: pointer; color: var(--alert-gold);
+            font-weight: bold; font-size: 1.2em;
+            text-shadow: 0 0 10px var(--alert-gold);
+        }
+
+        /* JANELAS ESTILO HACKER */
+        .window {
+            border: 1px solid var(--neon-green);
+            background: rgba(0, 15, 0, 0.8);
+            position: relative;
+            padding: 15px;
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .window-header {
+            position: absolute; top: -10px; left: 10px;
+            background: var(--bg-black); padding: 0 5px;
+            font-size: 0.7em; color: var(--alert-gold);
+        }
+
+        /* GRÁFICO DINÂMICO (ANIMAÇÃO) */
+        .visualizer {
+            display: flex; align-items: flex-end; gap: 3px;
+            height: 80px; width: 100%;
+        }
+
+        .bar {
+            flex: 1; background: var(--neon-green);
+            animation: barHeight 1.5s infinite ease-in-out;
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        @keyframes barHeight {
+            0%, 100% { height: 10%; }
+            50% { height: 90%; }
+        }
+
+        /* SINAL CENTRAL */
+        .main-display {
+            grid-column: 2; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            border: 2px solid var(--neon-green);
+            background: radial-gradient(circle, var(--deep-green) 0%, transparent 70%);
+        }
+
+        #signal-text {
+            font-size: 8em; font-weight: 900; display: none;
+            filter: drop-shadow(0 0 20px currentColor);
+        }
+
+        /* CHUVA DE CÓDIGOS SIMULADA */
+        .matrix-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0.1; font-size: 10px; overflow: hidden; pointer-events: none;
+        }
+
+        /* LOGS DINÂMICOS */
+        .log-container {
+            grid-column: 1 / 4; grid-row: 3;
+            font-size: 11px; line-height: 1.5; overflow: hidden;
+        }
+
+        .highlight { color: var(--alert-gold); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div id="secret-trigger">● LEANDRO DAY TRADER</div>
+        <div style="letter-spacing: 5px;">EUR/USD OTC <span id="price-live">1.08542</span></div>
+        <div id="clock">00:00:00</div>
+    </header>
+
+    <aside class="window">
+        <div class="window-header">ANALISADOR_FLUXO</div>
+        <div class="visualizer" id="bars"></div>
+        <p style="font-size: 10px; margin-top: 15px;">
+            ESTRATÉGIA: <span class="highlight">ROMPIMENTO M5</span><br>
+            MÉDIA SMA 50: <span style="color: #bc13fe;">ATIVO</span><br>
+            MÉDIA EMA 14: <span style="color: #00d4ff;">ATIVO</span><br>
+            FORÇA VELA: <span id="candle-strength">92%</span>
+        </p>
+    </aside>
+
+    <main class="window main-display">
+        <div class="matrix-bg" id="matrix"></div>
+        <div id="status-label">SISTEMA AGUARDANDO COMANDO...</div>
+        
+        <div id="processing" style="display:none;">
+            <div style="text-align: center;">PROCESSANDO ALGORITMO L.S...</div>
+            <div style="width: 300px; height: 2px; background: #333; margin-top: 10px;">
+                <div id="progress-bar" style="width: 0%; height: 100%; background: var(--neon-green); box-shadow: 0 0 15px var(--neon-green);"></div>
+            </div>
+        </div>
+
+        <div id="signal-text">CALL</div>
+    </main>
+
+    <aside class="window">
+        <div class="window-header">ESTATÍSTICAS_LIVE</div>
+        <table style="width: 100%; font-size: 11px; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid var(--deep-green);">
+                <td>WIN RATE:</td><td class="highlight">88.4%</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--deep-green);">
+                <td>VOLATILIDADE:</td><td class="highlight">ALTA</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--deep-green);">
+                <td>TENDÊNCIA:</td><td class="highlight">QUEDA</td>
+            </tr>
+        </table>
+    </aside>
+
+    <footer class="window log-container" id="logs">
+        [SYSTEM] Terminal L.S Quantum pronto para análise de mercado...<br>
+    </footer>
+
+    <script>
+        // Relógio e Preço Realista
+        setInterval(() => {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+            document.getElementById('price-live').innerText = (1.08500 + Math.random() * 0.001).toFixed(5);
+        }, 1000);
+
+        // Gerar Barras Animadas
+        const barsContainer = document.getElementById('bars');
+        for(let i=0; i<20; i++) {
+            const bar = document.createElement('div');
+            bar.className = 'bar';
+            bar.style.animationDelay = `${Math.random() * 2}s`;
+            barsContainer.appendChild(bar);
+        }
+
+        // Chuva de código simulada no fundo
+        const matrix = document.getElementById('matrix');
+        setInterval(() => {
+            matrix.innerHTML += Math.random().toString(36).substring(2, 15) + " ";
+            if(matrix.innerHTML.length > 1000) matrix.innerHTML = "";
+        }, 100);
+
+        // GATILHO SECRETO
+        const trigger = document.getElementById('secret-trigger');
+        trigger.addEventListener('click', startAnalysis);
+
+        function startAnalysis() {
+            const signalText = document.getElementById('signal-text');
+            const processing = document.getElementById('processing');
+            const statusLabel = document.getElementById('status-label');
+            const progressBar = document.getElementById('progress-bar');
+            
+            signalText.style.display = 'none';
+            processing.style.display = 'block';
+            statusLabel.innerText = "EXECUTANDO PARÂMETROS LEANDRO...";
+            
+            addLog("Verificando cruzamento de médias SMA/EMA...");
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                width += 2;
+                progressBar.style.width = width + '%';
+                
+                if(width === 40) addLog("Rompimento de suporte detectado em OTC...");
+                if(width === 80) addLog("Volume confirmado. Analisando pavio da vela...");
+
+                if(width >= 100) {
+                    clearInterval(interval);
+                    processing.style.display = 'none';
+                    showSignal();
+                }
+            }, 30);
+        }
+
+        function showSignal() {
+            const signalText = document.getElementById('signal-text');
+            const isCall = Math.random() > 0.5;
+            
+            signalText.innerText = isCall ? "CALL" : "PUT";
+            signalText.style.color = isCall ? "var(--call)" : "var(--put)";
+            signalText.style.display = 'block';
+            
+            document.getElementById('status-label').innerText = "ANÁLISE FINALIZADA [M5]";
+            addLog(`SINAL GERADO: ${isCall ? 'CALL' : 'PUT'} - SUCESSO PROBABILÍSTICO ALTO.`);
+        }
+
+        function addLog(msg) {
+            const time = new Date().toLocaleTimeString();
+            const logs = document.getElementById('logs');
+            logs.innerHTML = `[${time}] <span class="highlight">LS_ALGO:</span> ${msg}<br>` + logs.innerHTML;
+        }
+    </script>
+</body>
+</html>
