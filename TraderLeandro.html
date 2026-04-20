@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL DE GESTÃO | ALTA PERFORMANCE</title>
+    <style>
+        :root {
+            --neon-green: #00ff41;
+            --dark-bg: #0a0a0a;
+            --card-bg: #161616;
+            --border-color: #333;
+            --text-gray: #b5b5b5;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--dark-bg);
+            color: white;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            text-align: center;
+            font-size: 1.5rem;
+        }
+
+        .dashboard {
+            width: 100%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            border-left: 4px solid var(--neon-green);
+        }
+
+        .stat-card span { color: var(--text-gray); font-size: 0.8rem; display: block; margin-bottom: 5px; }
+        .stat-card strong { font-size: 1.2rem; color: var(--neon-green); }
+
+        .table-wrapper {
+            width: 100%;
+            max-width: 1000px;
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .scroll-area {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        thead {
+            background: #111;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th { color: var(--neon-green); text-transform: uppercase; font-size: 0.75rem; }
+
+        tr.completed { background: rgba(0, 255, 65, 0.05); }
+        tr.completed td { color: var(--text-gray); }
+
+        .check-btn {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+
+        .check-btn.active {
+            background: var(--neon-green);
+            color: black;
+            font-weight: bold;
+        }
+
+        input[type="date"] {
+            background: #222;
+            border: 1px solid #444;
+            color: white;
+            padding: 3px;
+            border-radius: 3px;
+            font-family: inherit;
+        }
+
+        @media (max-width: 600px) {
+            th:nth-child(2), td:nth-child(2) { display: none; } /* Esconde saldo inicial no mobile */
+            body { padding: 10px; }
+        }
+
+        /* Estilização da Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--neon-green); }
+    </style>
+</head>
+<body>
+
+    <h1>Financial Robot Console v1.0</h1>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <span>SALDO ATUAL</span>
+            <strong id="display-saldo">R$ 60,00</strong>
+        </div>
+        <div class="stat-card">
+            <span>PROGRESSO</span>
+            <strong id="display-progresso">0 / 90</strong>
+        </div>
+        <div class="stat-card">
+            <span>META TOTAL (90D)</span>
+            <strong id="display-final">Calculando...</strong>
+        </div>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>DIA</th>
+                    <th>INICIAL</th>
+                    <th>META (13%)</th>
+                    <th>FINAL</th>
+                    <th>DATA</th>
+                    <th>STATUS</th>
+                </tr>
+            </thead>
+        </table>
+        <div class="scroll-area">
+            <table id="main-table">
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG = {
+            bancaInicial: 60.00,
+            taxa: 0.13,
+            dias: 90,
+            storageKey: 'banca_robot_90'
+        };
+
+        let userData = JSON.parse(localStorage.getItem(CONFIG.storageKey)) || {};
+
+        function save(dia, completed, data) {
+            userData[dia] = { completed, data };
+            localStorage.setItem(CONFIG.storageKey, JSON.stringify(userData));
+            render();
+        }
+
+        function format(val) {
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function render() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            
+            let saldoAcumulado = CONFIG.bancaInicial;
+            let concluidos = 0;
+
+            for (let i = 1; i <= CONFIG.dias; i++) {
+                const metaDia = saldoAcumulado * CONFIG.taxa;
+                const saldoFinal = saldoAcumulado + metaDia;
+                const info = userData[i] || { completed: false, data: '' };
+                
+                const tr = document.createElement('tr');
+                if (info.completed) {
+                    tr.classList.add('completed');
+                    concluidos++;
+                }
+
+                tr.innerHTML = `
+                    <td style="width:60px">#${i}</td>
+                    <td>${format(saldoAcumulado)}</td>
+                    <td style="color:var(--neon-green)">${format(metaDia)}</td>
+                    <td><strong>${format(saldoFinal)}</strong></td>
+                    <td><input type="date" value="${info.data}" onchange="save(${i}, ${info.completed}, this.value)"></td>
+                    <td>
+                        <button class="check-btn ${info.completed ? 'active' : ''}" 
+                                onclick="save(${i}, ${!info.completed}, '${info.data}')">
+                            ${info.completed ? '✓ OK' : 'CHECK'}
+                        </button>
+                    </td>
+                `;
+
+                tbody.appendChild(tr);
+                
+                // Se o dia foi completado, o saldo inicial do próximo dia é o final deste.
+                // Se não foi, o cálculo continua teórico para planejamento.
+                saldoAcumulado = saldoFinal;
+            }
+
+            // Atualiza Dashboard
+            document.getElementById('display-progresso').innerText = `${concluidos} / ${CONFIG.dias}`;
+            
+            // Saldo atual baseado no último dia completado
+            let saldoReal = CONFIG.bancaInicial;
+            for(let j=1; j<=CONFIG.dias; j++) {
+                if(userData[j] && userData[j].completed) {
+                    saldoReal += (saldoReal * CONFIG.taxa);
+                } else { break; }
+            }
+            document.getElementById('display-saldo').innerText = format(saldoReal);
+            document.getElementById('display-final').innerText = format(saldoAcumulado);
+        }
+
+        render();
+    </script>
+</body>
+</html>
