@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyApp - Dashboard</title>
+    <title>StudyApp - PM PE Edition</title>
     <style>
         :root {
             --sidebar-width: 260px;
@@ -45,7 +45,7 @@
         }
         .nav-item:hover { background: #1f2937; }
         .nav-item.active { background: var(--primary); color: white; }
-        .nav-item .del-btn { opacity: 0; color: #9ca3af; transition: 0.2s; }
+        .nav-item .del-btn { opacity: 0; color: #9ca3af; transition: 0.2s; padding: 0 5px; }
         .nav-item:hover .del-btn { opacity: 1; }
 
         .add-disc-btn { margin: 10px 20px; padding: 10px; border: 1px dashed #4b5563; background: transparent; color: #d1d5db; border-radius: 6px; cursor: pointer; }
@@ -69,7 +69,6 @@
         .subject-card:hover { border-color: var(--primary); transform: translateY(-2px); }
 
         /* Quiz UI */
-        .quiz-area { max-width: 700px; margin: auto; }
         .option { 
             display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; 
             border-radius: 10px; background: white; text-align: left; cursor: pointer; font-size: 1rem;
@@ -80,7 +79,7 @@
         
         #commentary { margin-top: 20px; padding: 20px; background: #eef2ff; border-left: 4px solid var(--primary); border-radius: 4px; }
         
-        .revision-badge { font-size: 0.75rem; padding: 2px 8px; background: #d1d5db; border-radius: 99px; }
+        .revision-badge { font-size: 0.75rem; padding: 4px 10px; background: #e2e8f0; border-radius: 99px; font-weight: bold; }
 
         .hidden { display: none; }
     </style>
@@ -100,7 +99,7 @@
             <div class="header-actions">
                 <div>
                     <h1 id="view-title">Selecione uma Disciplina</h1>
-                    <p id="view-subtitle" style="color: var(--text-muted)">Gerencie seus tópicos de estudo</p>
+                    <p id="view-subtitle" style="color: var(--text-muted)">Organização e Revisão Espaçada</p>
                 </div>
                 <button id="btn-new-subject" class="btn btn-primary hidden" onclick="addSubject()">+ Novo Assunto</button>
             </div>
@@ -108,38 +107,38 @@
         </div>
 
         <div id="view-details" class="hidden">
-            <button class="btn" style="margin-bottom: 20px;" onclick="showSubjects()">← Voltar aos Assuntos</button>
+            <button class="btn" style="margin-bottom: 20px;" onclick="showSubjects()">← Voltar</button>
             <div class="content-card">
                 <h2 id="subject-detail-name">Nome do Assunto</h2>
                 <div style="margin: 20px 0;">
-                    <textarea id="json-input" rows="6" placeholder='Cole o JSON da questão aqui...' style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
-                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveQuestion()">Salvar Questão</button>
+                    <textarea id="json-input" rows="6" placeholder='Cole seu JSON aqui (aceita o formato de lista ou individual)...' style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-family: monospace;"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveQuestion()">Importar Questões</button>
                 </div>
                 <div id="revision-panel" style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                    <h4>Cronograma de Revisão:</h4>
-                    <ul id="revision-list" style="list-style: none; margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;"></ul>
+                    <h4>Cronograma de Revisões:</h4>
+                    <ul id="revision-list" style="list-style: none; margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;"></ul>
                 </div>
                 <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-                <button class="btn btn-primary" style="width: 100%; padding: 15px;" onclick="startQuiz()">INICIAR QUIZ</button>
+                <button class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;" onclick="startQuiz()">INICIAR QUIZ</button>
             </div>
         </div>
 
         <div id="view-quiz" class="hidden">
-            <div class="content-card quiz-area">
+            <div class="content-card" id="quiz-content" style="max-width: 700px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <span id="quiz-progress">Questão 1</span>
+                    <span id="quiz-progress" style="font-weight: bold; color: var(--primary);"></span>
                     <button class="btn" onclick="showSubjects()">Sair</button>
                 </div>
-                <h3 id="q-text" style="margin-bottom: 20px; line-height: 1.5;"></h3>
+                <h3 id="q-text" style="margin-bottom: 25px; line-height: 1.5;"></h3>
                 <div id="options-container"></div>
                 <div id="commentary" class="hidden"></div>
-                <button class="btn btn-primary hidden" id="next-btn" style="margin-top: 20px; width: 100%;" onclick="nextQuestion()">Próxima Questão</button>
-                
-                <div id="quiz-result" class="hidden" style="text-align: center;">
-                    <h2 style="font-size: 2rem; color: var(--primary);">Fim do Quiz!</h2>
-                    <p id="score-text" style="font-size: 1.2rem; margin: 20px 0;"></p>
-                    <button class="btn btn-primary" onclick="showSubjects()">Voltar ao Início</button>
-                </div>
+                <button class="btn btn-primary hidden" id="next-btn" style="margin-top: 25px; width: 100%;" onclick="nextQuestion()">Próxima Questão</button>
+            </div>
+            
+            <div id="quiz-result" class="hidden" style="text-align: center; background: white; padding: 40px; border-radius: 12px;">
+                <h2 style="font-size: 2.5rem; color: var(--primary);">Simulado Concluído!</h2>
+                <p id="score-text" style="font-size: 1.4rem; margin: 20px 0;"></p>
+                <button class="btn btn-primary" onclick="showSubjects()">Voltar para Assuntos</button>
             </div>
         </div>
     </main>
@@ -158,13 +157,14 @@
 
     function renderSidebar() {
         const list = document.getElementById('sidebar-disciplines');
+        if(!list) return;
         list.innerHTML = '';
         db.disciplines.forEach((d, i) => {
-            list.innerHTML += `
-                <li class="nav-item ${curDiscIdx === i ? 'active' : ''}" onclick="selectDiscipline(${i})">
-                    <span>${d.name}</span>
-                    <span class="del-btn" onclick="deleteDiscipline(event, ${i})">✕</span>
-                </li>`;
+            const li = document.createElement('li');
+            li.className = `nav-item ${curDiscIdx === i ? 'active' : ''}`;
+            li.onclick = () => selectDiscipline(i);
+            li.innerHTML = `<span>${d.name}</span><span class="del-btn" onclick="deleteDiscipline(event, ${i})">✕</span>`;
+            list.appendChild(li);
         });
     }
 
@@ -175,7 +175,7 @@
 
     function deleteDiscipline(e, idx) {
         e.stopPropagation();
-        if(confirm("Excluir disciplina?")) {
+        if(confirm("Excluir disciplina e todos os dados dentro dela?")) {
             db.disciplines.splice(idx, 1);
             curDiscIdx = -1;
             save();
@@ -196,20 +196,21 @@
         document.getElementById('view-subjects').classList.remove('hidden');
         const list = document.getElementById('subject-list');
         list.innerHTML = '';
+        if(curDiscIdx === -1) return;
+        
         db.disciplines[curDiscIdx].subjects.forEach((s, i) => {
             list.innerHTML += `
                 <div class="subject-card" onclick="openSubjectDetail(${i})">
                     <div>
                         <strong>${s.name}</strong><br>
-                        <small style="color: var(--text-muted)">${s.questions.length} questões</small>
+                        <small style="color: var(--text-muted)">${s.questions.length} questões cadastradas</small>
                     </div>
-                    <span class="revision-badge">${s.questions.length > 0 ? 'Ativo' : 'Vazio'}</span>
                 </div>`;
         });
     }
 
     function addSubject() {
-        const name = prompt("Nome do Assunto:");
+        const name = prompt("Nome do Assunto (ex: Conjunções):");
         if (name) {
             db.disciplines[curDiscIdx].subjects.push({ name, questions: [], lastUpdate: null });
             save();
@@ -229,7 +230,7 @@
     function renderRevisions(dateStr) {
         const list = document.getElementById('revision-list');
         list.innerHTML = '';
-        if (!dateStr) return list.innerHTML = 'Sem revisões agendadas.';
+        if (!dateStr) return list.innerHTML = '<li>Cadastre questões para iniciar o cronograma.</li>';
         
         const base = new Date(dateStr);
         [1, 3, 7, 15, 30].forEach(d => {
@@ -242,30 +243,54 @@
     function saveQuestion() {
         const area = document.getElementById('json-input');
         try {
-            const q = JSON.parse(area.value);
+            const data = JSON.parse(area.value);
             const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
-            subj.questions.push(q);
+            
+            // Lógica para processar o JSON enviado (com suporte a 'p', 'r' e 'coment')
+            if (data.questoes && Array.isArray(data.questoes)) {
+                data.questoes.forEach(item => {
+                    subj.questions.push({
+                        q: item.p || item.q,
+                        a: item.a, b: item.b, c: item.c, d: item.d,
+                        e: item.e || "N.D.A",
+                        correct: (item.r || item.correct).toLowerCase(),
+                        comment: item.coment || item.comment
+                    });
+                });
+            } else {
+                subj.questions.push({
+                    q: data.p || data.q,
+                    a: data.a, b: data.b, c: data.c, d: data.d,
+                    e: data.e || "N.D.A",
+                    correct: (data.r || data.correct).toLowerCase(),
+                    comment: data.coment || data.comment
+                });
+            }
+
             subj.lastUpdate = new Date().toISOString();
             save();
             area.value = '';
-            alert("Questão adicionada!");
+            alert("Questões importadas com sucesso!");
             renderRevisions(subj.lastUpdate);
-        } catch(e) { alert("JSON inválido!"); }
+        } catch(e) { 
+            alert("Erro no JSON! Verifique a formatação."); 
+        }
     }
 
     function startQuiz() {
         const qs = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions;
-        if (qs.length === 0) return alert("Sem questões!");
+        if (qs.length === 0) return alert("Não há questões neste assunto!");
         curQuestIdx = 0; score = 0;
         hideAll();
         document.getElementById('view-quiz').classList.remove('hidden');
         document.getElementById('quiz-result').classList.add('hidden');
+        document.getElementById('quiz-content').classList.remove('hidden');
         renderQuestion();
     }
 
     function renderQuestion() {
         const q = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions[curQuestIdx];
-        document.getElementById('quiz-progress').innerText = `Questão ${curQuestIdx + 1}`;
+        document.getElementById('quiz-progress').innerText = `QUESTÃO ${curQuestIdx + 1}`;
         document.getElementById('q-text').innerText = q.q;
         document.getElementById('commentary').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
@@ -289,14 +314,18 @@
         const opts = document.querySelectorAll('.option');
         opts.forEach(o => o.onclick = null);
 
-        if(choice === q.correct) { el.classList.add('correct'); score++; }
-        else { 
+        if(choice === q.correct) { 
+            el.classList.add('correct'); 
+            score++; 
+        } else { 
             el.classList.add('wrong');
-            opts.forEach(o => { if(o.innerText.startsWith(q.correct.toUpperCase())) o.classList.add('correct'); });
+            opts.forEach(o => { 
+                if(o.innerText.toLowerCase().startsWith(q.correct + ")")) o.classList.add('correct'); 
+            });
         }
 
         const comm = document.getElementById('commentary');
-        comm.innerHTML = `<strong>Resposta: ${q.correct.toUpperCase()}</strong><p>${q.comment}</p>`;
+        comm.innerHTML = `<strong>GABARITO: ${q.correct.toUpperCase()}</strong><p style="margin-top:10px">${q.comment}</p>`;
         comm.classList.remove('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
     }
@@ -309,19 +338,19 @@
     }
 
     function showResult() {
-        document.getElementById('options-container').innerHTML = '';
-        document.getElementById('q-text').innerText = '';
-        document.getElementById('commentary').classList.add('hidden');
-        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('quiz-content').classList.add('hidden');
         document.getElementById('quiz-result').classList.remove('hidden');
         document.getElementById('score-text').innerText = `Você acertou ${score} de ${curQuestIdx} questões!`;
     }
 
     function hideAll() {
-        ['view-subjects', 'view-details', 'view-quiz'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        ['view-subjects', 'view-details', 'view-quiz'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.classList.add('hidden');
+        });
     }
 
-    renderSidebar();
+    window.onload = renderSidebar;
 </script>
 </body>
 </html>
