@@ -3,279 +3,325 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Estudos - Revisão Espaçada</title>
+    <title>StudyApp - Dashboard</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --success: #22c55e;
+            --sidebar-width: 260px;
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --bg-body: #f3f4f6;
+            --bg-card: #ffffff;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --success: #10b981;
             --danger: #ef4444;
-            --dark: #1e293b;
-            --light: #f8fafc;
         }
 
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--light); margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
-        
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
-        
-        .btn { padding: 10px 15px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar */
+        aside {
+            width: var(--sidebar-width);
+            background: #111827;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            transition: all 0.3s;
+        }
+
+        .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #374151; margin-bottom: 20px; }
+        .sidebar-header h2 { font-size: 1.2rem; color: #fbbf24; }
+
+        .nav-list { flex-grow: 1; overflow-y: auto; list-style: none; }
+        .nav-item { 
+            padding: 12px 20px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            transition: 0.2s;
+        }
+        .nav-item:hover { background: #1f2937; }
+        .nav-item.active { background: var(--primary); color: white; }
+        .nav-item .del-btn { opacity: 0; color: #9ca3af; transition: 0.2s; }
+        .nav-item:hover .del-btn { opacity: 1; }
+
+        .add-disc-btn { margin: 10px 20px; padding: 10px; border: 1px dashed #4b5563; background: transparent; color: #d1d5db; border-radius: 6px; cursor: pointer; }
+        .add-disc-btn:hover { background: #1f2937; border-color: white; }
+
+        /* Main Content */
+        main { flex-grow: 1; overflow-y: auto; padding: 30px; position: relative; }
+        .content-card { background: var(--bg-card); border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; }
+
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-danger { background: var(--danger); color: white; }
-        .btn-back { background: #64748b; color: white; margin-bottom: 10px; }
+        .btn-primary:hover { background: var(--primary-hover); }
 
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
-        .card { background: #fff; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px; text-align: center; cursor: pointer; position: relative; }
-        .card:hover { border-color: var(--primary); transform: translateY(-2px); }
-        .delete-icon { position: absolute; top: 5px; right: 5px; color: var(--danger); font-size: 12px; }
+        /* Grid de Assuntos */
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+        .subject-card { 
+            background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; 
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+        }
+        .subject-card:hover { border-color: var(--primary); transform: translateY(-2px); }
 
-        .quiz-container { display: none; }
-        .option { display: block; width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #cbd5e1; border-radius: 6px; text-align: left; background: white; cursor: pointer; }
-        .option.correct { background: #dcfce7; border-color: var(--success); }
-        .option.wrong { background: #fee2e2; border-color: var(--danger); }
-        .option.eliminated { text-decoration: line-through; opacity: 0.5; }
-
-        #commentary { margin-top: 15px; padding: 15px; background: #f1f5f9; border-radius: 6px; display: none; }
-        .hidden { display: none; }
+        /* Quiz UI */
+        .quiz-area { max-width: 700px; margin: auto; }
+        .option { 
+            display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; 
+            border-radius: 10px; background: white; text-align: left; cursor: pointer; font-size: 1rem;
+        }
+        .option.correct { background: #ecfdf5; border-color: var(--success); color: #065f46; }
+        .option.wrong { background: #fef2f2; border-color: var(--danger); color: #991b1b; }
+        .option.eliminated { text-decoration: line-through; opacity: 0.4; background: #f3f4f6; }
         
-        .input-group { margin-bottom: 20px; display: flex; gap: 10px; }
-        input, select, textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; flex-grow: 1; }
+        #commentary { margin-top: 20px; padding: 20px; background: #eef2ff; border-left: 4px solid var(--primary); border-radius: 4px; }
+        
+        .revision-badge { font-size: 0.75rem; padding: 2px 8px; background: #d1d5db; border-radius: 99px; }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="view-disciplines">
-        <header>
-            <h1>Minhas Disciplinas</h1>
-            <button class="btn btn-primary" onclick="addDiscipline()">+ Disciplina</button>
-        </header>
-        <div class="card-grid" id="discipline-list"></div>
-    </div>
-
-    <div id="view-subjects" class="hidden">
-        <button class="btn btn-back" onclick="showView('disciplines')">← Voltar</button>
-        <header>
-            <h1 id="current-discipline-name">Assuntos</h1>
-            <button class="btn btn-primary" onclick="addSubject()">+ Assunto</button>
-        </header>
-        <div class="card-grid" id="subject-list"></div>
-    </div>
-
-    <div id="view-add-question" class="hidden">
-        <button class="btn btn-back" onclick="showView('subjects')">← Voltar</button>
-        <h2>Cadastrar Questão (JSON)</h2>
-        <textarea id="json-input" rows="10" placeholder='Cole o JSON aqui...' style="width: 100%;"></textarea>
-        <p><small>Formato esperado: {"q": "Pergunta", "a": "Opção A", "b": "Opção B", "c": "Opção C", "d": "Opção D", "e": "Opção E", "correct": "a", "comment": "Explicação"}</small></p>
-        <button class="btn btn-primary" onclick="saveQuestion()">Salvar Questão</button>
-        <button class="btn btn-success" style="background:var(--success); color:white" onclick="startQuiz()">Iniciar Quiz</button>
-        
-        <div id="revisions-info" style="margin-top: 20px;">
-            <h3>Próximas Revisões</h3>
-            <ul id="revision-dates"></ul>
+    <aside>
+        <div class="sidebar-header">
+            <h2>StudyManager v2</h2>
         </div>
-    </div>
+        <ul class="nav-list" id="sidebar-disciplines"></ul>
+        <button class="add-disc-btn" onclick="addDiscipline()">+ Nova Disciplina</button>
+    </aside>
 
-    <div id="view-quiz" class="hidden">
-        <div id="quiz-content">
-            <h3 id="q-text"></h3>
-            <div id="options-container"></div>
-            <div id="commentary"></div>
-            <br>
-            <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display:none">Próxima Questão</button>
+    <main>
+        <div id="view-subjects">
+            <div class="header-actions">
+                <div>
+                    <h1 id="view-title">Selecione uma Disciplina</h1>
+                    <p id="view-subtitle" style="color: var(--text-muted)">Gerencie seus tópicos de estudo</p>
+                </div>
+                <button id="btn-new-subject" class="btn btn-primary hidden" onclick="addSubject()">+ Novo Assunto</button>
+            </div>
+            <div class="subject-grid" id="subject-list"></div>
         </div>
-        <div id="quiz-result" class="hidden">
-            <h2>Resultado</h2>
-            <p id="score-text"></p>
-            <button class="btn btn-primary" onclick="showView('subjects')">Finalizar</button>
+
+        <div id="view-details" class="hidden">
+            <button class="btn" style="margin-bottom: 20px;" onclick="showSubjects()">← Voltar aos Assuntos</button>
+            <div class="content-card">
+                <h2 id="subject-detail-name">Nome do Assunto</h2>
+                <div style="margin: 20px 0;">
+                    <textarea id="json-input" rows="6" placeholder='Cole o JSON da questão aqui...' style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ddd;"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveQuestion()">Salvar Questão</button>
+                </div>
+                <div id="revision-panel" style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                    <h4>Cronograma de Revisão:</h4>
+                    <ul id="revision-list" style="list-style: none; margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;"></ul>
+                </div>
+                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+                <button class="btn btn-primary" style="width: 100%; padding: 15px;" onclick="startQuiz()">INICIAR QUIZ</button>
+            </div>
         </div>
-    </div>
-</div>
+
+        <div id="view-quiz" class="hidden">
+            <div class="content-card quiz-area">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <span id="quiz-progress">Questão 1</span>
+                    <button class="btn" onclick="showSubjects()">Sair</button>
+                </div>
+                <h3 id="q-text" style="margin-bottom: 20px; line-height: 1.5;"></h3>
+                <div id="options-container"></div>
+                <div id="commentary" class="hidden"></div>
+                <button class="btn btn-primary hidden" id="next-btn" style="margin-top: 20px; width: 100%;" onclick="nextQuestion()">Próxima Questão</button>
+                
+                <div id="quiz-result" class="hidden" style="text-align: center;">
+                    <h2 style="font-size: 2rem; color: var(--primary);">Fim do Quiz!</h2>
+                    <p id="score-text" style="font-size: 1.2rem; margin: 20px 0;"></p>
+                    <button class="btn btn-primary" onclick="showSubjects()">Voltar ao Início</button>
+                </div>
+            </div>
+        </div>
+    </main>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('studyDB')) || { disciplines: [] };
-    let currentDiscIndex = null;
-    let currentSubjIndex = null;
-    let currentQuestionIndex = 0;
+    let db = JSON.parse(localStorage.getItem('studyDB_v2')) || { disciplines: [] };
+    let curDiscIdx = -1;
+    let curSubjIdx = -1;
+    let curQuestIdx = 0;
     let score = 0;
 
-    function saveDB() {
-        localStorage.setItem('studyDB', JSON.stringify(db));
-        renderDisciplines();
+    function save() {
+        localStorage.setItem('studyDB_v2', JSON.stringify(db));
+        renderSidebar();
     }
 
-    function showView(view) {
-        document.querySelectorAll('.container > div').forEach(div => div.classList.add('hidden'));
-        document.getElementById(`view-${view}`).classList.remove('hidden');
-    }
-
-    // --- DISCIPLINAS ---
-    function addDiscipline() {
-        const name = prompt("Nome da Disciplina:");
-        if (name) {
-            db.disciplines.push({ name, subjects: [] });
-            saveDB();
-        }
-    }
-
-    function deleteDiscipline(e, index) {
-        e.stopPropagation();
-        if(confirm("Excluir disciplina e tudo dentro dela?")) {
-            db.disciplines.splice(index, 1);
-            saveDB();
-        }
-    }
-
-    function renderDisciplines() {
-        const list = document.getElementById('discipline-list');
+    function renderSidebar() {
+        const list = document.getElementById('sidebar-disciplines');
         list.innerHTML = '';
         db.disciplines.forEach((d, i) => {
             list.innerHTML += `
-                <div class="card" onclick="openDiscipline(${i})">
-                    <span class="delete-icon" onclick="deleteDiscipline(event, ${i})">✖</span>
-                    <h3>${d.name}</h3>
+                <li class="nav-item ${curDiscIdx === i ? 'active' : ''}" onclick="selectDiscipline(${i})">
+                    <span>${d.name}</span>
+                    <span class="del-btn" onclick="deleteDiscipline(event, ${i})">✕</span>
+                </li>`;
+        });
+    }
+
+    function addDiscipline() {
+        const name = prompt("Nome da Disciplina:");
+        if (name) { db.disciplines.push({ name, subjects: [] }); save(); }
+    }
+
+    function deleteDiscipline(e, idx) {
+        e.stopPropagation();
+        if(confirm("Excluir disciplina?")) {
+            db.disciplines.splice(idx, 1);
+            curDiscIdx = -1;
+            save();
+            location.reload();
+        }
+    }
+
+    function selectDiscipline(idx) {
+        curDiscIdx = idx;
+        renderSidebar();
+        document.getElementById('view-title').innerText = db.disciplines[idx].name;
+        document.getElementById('btn-new-subject').classList.remove('hidden');
+        showSubjects();
+    }
+
+    function showSubjects() {
+        hideAll();
+        document.getElementById('view-subjects').classList.remove('hidden');
+        const list = document.getElementById('subject-list');
+        list.innerHTML = '';
+        db.disciplines[curDiscIdx].subjects.forEach((s, i) => {
+            list.innerHTML += `
+                <div class="subject-card" onclick="openSubjectDetail(${i})">
+                    <div>
+                        <strong>${s.name}</strong><br>
+                        <small style="color: var(--text-muted)">${s.questions.length} questões</small>
+                    </div>
+                    <span class="revision-badge">${s.questions.length > 0 ? 'Ativo' : 'Vazio'}</span>
                 </div>`;
         });
     }
 
-    function openDiscipline(index) {
-        currentDiscIndex = index;
-        document.getElementById('current-discipline-name').innerText = db.disciplines[index].name;
-        renderSubjects();
-        showView('subjects');
-    }
-
-    // --- ASSUNTOS ---
     function addSubject() {
         const name = prompt("Nome do Assunto:");
         if (name) {
-            db.disciplines[currentDiscIndex].subjects.push({ 
-                name, 
-                questions: [],
-                lastStudy: null 
-            });
-            saveDB();
-            renderSubjects();
+            db.disciplines[curDiscIdx].subjects.push({ name, questions: [], lastUpdate: null });
+            save();
+            showSubjects();
         }
     }
 
-    function renderSubjects() {
-        const list = document.getElementById('subject-list');
+    function openSubjectDetail(idx) {
+        curSubjIdx = idx;
+        hideAll();
+        document.getElementById('view-details').classList.remove('hidden');
+        const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
+        document.getElementById('subject-detail-name').innerText = subj.name;
+        renderRevisions(subj.lastUpdate);
+    }
+
+    function renderRevisions(dateStr) {
+        const list = document.getElementById('revision-list');
         list.innerHTML = '';
-        db.disciplines[currentDiscIndex].subjects.forEach((s, i) => {
-            list.innerHTML += `<div class="card" onclick="openSubject(${i})"><h3>${s.name}</h3></div>`;
+        if (!dateStr) return list.innerHTML = 'Sem revisões agendadas.';
+        
+        const base = new Date(dateStr);
+        [1, 3, 7, 15, 30].forEach(d => {
+            let rev = new Date(base);
+            rev.setDate(rev.getDate() + d);
+            list.innerHTML += `<li class="revision-badge">${d}d: ${rev.toLocaleDateString()}</li>`;
         });
     }
 
-    function openSubject(index) {
-        currentSubjIndex = index;
-        calculateRevisions();
-        showView('add-question');
-    }
-
-    // --- QUESTÕES (JSON) & REVISÃO ---
     function saveQuestion() {
-        const input = document.getElementById('json-input');
+        const area = document.getElementById('json-input');
         try {
-            const qData = JSON.parse(input.value);
-            db.disciplines[currentDiscIndex].subjects[currentSubjIndex].questions.push(qData);
-            db.disciplines[currentDiscIndex].subjects[currentSubjIndex].lastStudy = new Date().toISOString();
-            saveDB();
-            input.value = '';
-            alert("Questão salva!");
-            calculateRevisions();
-        } catch (e) {
-            alert("Erro no formato JSON!");
-        }
+            const q = JSON.parse(area.value);
+            const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
+            subj.questions.push(q);
+            subj.lastUpdate = new Date().toISOString();
+            save();
+            area.value = '';
+            alert("Questão adicionada!");
+            renderRevisions(subj.lastUpdate);
+        } catch(e) { alert("JSON inválido!"); }
     }
 
-    function calculateRevisions() {
-        const subject = db.disciplines[currentDiscIndex].subjects[currentSubjIndex];
-        const list = document.getElementById('revision-dates');
-        list.innerHTML = '';
-        
-        if (!subject.lastStudy) return;
-
-        const baseDate = new Date(subject.lastStudy);
-        const intervals = [1, 3, 7, 15, 30];
-        
-        intervals.forEach(days => {
-            let revDate = new Date(baseDate);
-            revDate.setDate(revDate.getDate() + days);
-            list.innerHTML += `<li>Revisão ${days}d: <strong>${revDate.toLocaleDateString()}</strong></li>`;
-        });
-    }
-
-    // --- QUIZ LOGIC ---
     function startQuiz() {
-        const questions = db.disciplines[currentDiscIndex].subjects[currentSubjIndex].questions;
-        if (questions.length === 0) return alert("Adicione questões primeiro!");
-        
-        currentQuestionIndex = 0;
-        score = 0;
+        const qs = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions;
+        if (qs.length === 0) return alert("Sem questões!");
+        curQuestIdx = 0; score = 0;
+        hideAll();
+        document.getElementById('view-quiz').classList.remove('hidden');
         document.getElementById('quiz-result').classList.add('hidden');
-        document.getElementById('quiz-content').classList.remove('hidden');
-        showView('quiz');
         renderQuestion();
     }
 
     function renderQuestion() {
-        const q = db.disciplines[currentDiscIndex].subjects[currentSubjIndex].questions[currentQuestionIndex];
+        const q = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions[curQuestIdx];
+        document.getElementById('quiz-progress').innerText = `Questão ${curQuestIdx + 1}`;
         document.getElementById('q-text').innerText = q.q;
+        document.getElementById('commentary').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+        
         const container = document.getElementById('options-container');
         container.innerHTML = '';
-        document.getElementById('commentary').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
-
-        ['a', 'b', 'c', 'd', 'e'].forEach(letter => {
-            if (q[letter]) {
-                const btn = document.createElement('button');
-                btn.className = 'option';
-                btn.innerText = `${letter.toUpperCase()}) ${q[letter]}`;
-                btn.oncontextmenu = (e) => { e.preventDefault(); btn.classList.toggle('eliminated'); };
-                btn.onclick = () => checkAnswer(letter, btn);
-                container.appendChild(btn);
+        ['a','b','c','d','e'].forEach(l => {
+            if(q[l]) {
+                const b = document.createElement('button');
+                b.className = 'option';
+                b.innerText = `${l.toUpperCase()}) ${q[l]}`;
+                b.onclick = () => check(l, b);
+                b.oncontextmenu = (e) => { e.preventDefault(); b.classList.toggle('eliminated'); };
+                container.appendChild(b);
             }
         });
     }
 
-    function checkAnswer(letter, element) {
-        const q = db.disciplines[currentDiscIndex].subjects[currentSubjIndex].questions[currentQuestionIndex];
-        const options = document.querySelectorAll('.option');
-        
-        options.forEach(opt => opt.onclick = null); // Trava cliques
+    function check(choice, el) {
+        const q = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions[curQuestIdx];
+        const opts = document.querySelectorAll('.option');
+        opts.forEach(o => o.onclick = null);
 
-        if (letter === q.correct) {
-            element.classList.add('correct');
-            score++;
-        } else {
-            element.classList.add('wrong');
-            options.forEach(opt => {
-                if (opt.innerText.startsWith(q.correct.toUpperCase())) opt.classList.add('correct');
-            });
+        if(choice === q.correct) { el.classList.add('correct'); score++; }
+        else { 
+            el.classList.add('wrong');
+            opts.forEach(o => { if(o.innerText.startsWith(q.correct.toUpperCase())) o.classList.add('correct'); });
         }
 
         const comm = document.getElementById('commentary');
-        comm.innerHTML = `<strong>Gabarito: ${q.correct.toUpperCase()}</strong><br>${q.comment}`;
-        comm.style.display = 'block';
-        document.getElementById('next-btn').style.display = 'inline-block';
+        comm.innerHTML = `<strong>Resposta: ${q.correct.toUpperCase()}</strong><p>${q.comment}</p>`;
+        comm.classList.remove('hidden');
+        document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function nextQuestion() {
-        currentQuestionIndex++;
-        const questions = db.disciplines[currentDiscIndex].subjects[currentSubjIndex].questions;
-        
-        if (currentQuestionIndex < questions.length) {
-            renderQuestion();
-        } else {
-            document.getElementById('quiz-content').classList.add('hidden');
-            document.getElementById('quiz-result').classList.remove('hidden');
-            document.getElementById('score-text').innerText = `Você acertou ${score} de ${questions.length} questões!`;
-        }
+        curQuestIdx++;
+        const qs = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions;
+        if(curQuestIdx < qs.length) renderQuestion();
+        else showResult();
     }
 
-    // Inicialização
-    renderDisciplines();
-</script>
+    function showResult() {
+        document.getElementById('options-container').innerHTML = '';
+        document.getElementById('q-text').innerText = '';
+        document.getElementById('commentary').classList.add('hidden');
+        document.getElementById('next-btn').classList.add('hidden');
+        document.getElementById('quiz-result').classList.remove('hidden');
+        document.getElementById('score-text').innerText = `Você acertou ${score} de ${curQuestIdx} questões!`;
+    }
 
+    function hideAll() {
+        ['view-subjects', 'view-details', 'view-quiz'].forEach(id => document.getElementById(id).classList.add('hidden'));
+    }
+
+    renderSidebar();
+</script>
 </body>
 </html>
