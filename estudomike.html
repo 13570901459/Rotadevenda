@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyApp - PM PE Edition</title>
+    <title>StudyApp - Lotes de Questões</title>
     <style>
         :root {
             --sidebar-width: 260px;
@@ -20,76 +20,45 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Sidebar */
-        aside {
-            width: var(--sidebar-width);
-            background: #111827;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            padding: 20px 0;
-            transition: all 0.3s;
-        }
-
+        aside { width: var(--sidebar-width); background: #111827; color: white; display: flex; flex-direction: column; padding: 20px 0; }
         .sidebar-header { padding: 0 20px 20px; border-bottom: 1px solid #374151; margin-bottom: 20px; }
         .sidebar-header h2 { font-size: 1.2rem; color: #fbbf24; }
 
         .nav-list { flex-grow: 1; overflow-y: auto; list-style: none; }
-        .nav-item { 
-            padding: 12px 20px; 
-            cursor: pointer; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
-            transition: 0.2s;
-        }
+        .nav-item { padding: 12px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .nav-item:hover { background: #1f2937; }
         .nav-item.active { background: var(--primary); color: white; }
-        .nav-item .del-btn { opacity: 0; color: #9ca3af; transition: 0.2s; padding: 0 5px; }
-        .nav-item:hover .del-btn { opacity: 1; }
+        .nav-item .del-btn { opacity: 0.5; color: #9ca3af; padding: 0 5px; }
+        .nav-item .del-btn:hover { color: var(--danger); opacity: 1; }
 
         .add-disc-btn { margin: 10px 20px; padding: 10px; border: 1px dashed #4b5563; background: transparent; color: #d1d5db; border-radius: 6px; cursor: pointer; }
-        .add-disc-btn:hover { background: #1f2937; border-color: white; }
 
-        /* Main Content */
-        main { flex-grow: 1; overflow-y: auto; padding: 30px; position: relative; }
+        main { flex-grow: 1; overflow-y: auto; padding: 30px; }
         .content-card { background: var(--bg-card); border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; }
 
         .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
         .btn { padding: 10px 18px; border-radius: 8px; border: none; font-weight: 500; cursor: pointer; transition: 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); }
+        .btn-danger { background: var(--danger); color: white; padding: 5px 10px; font-size: 0.8rem; }
 
-        /* Grid de Assuntos */
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-        .subject-card { 
-            background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; 
-            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-        }
-        .subject-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .subject-card { background: #f9fafb; border: 1px solid #e5e7eb; padding: 15px; border-radius: 10px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
 
-        /* Quiz UI */
-        .option { 
-            display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; 
-            border-radius: 10px; background: white; text-align: left; cursor: pointer; font-size: 1rem;
-        }
-        .option.correct { background: #ecfdf5; border-color: var(--success); color: #065f46; }
-        .option.wrong { background: #fef2f2; border-color: var(--danger); color: #991b1b; }
-        .option.eliminated { text-decoration: line-through; opacity: 0.4; background: #f3f4f6; }
-        
-        #commentary { margin-top: 20px; padding: 20px; background: #eef2ff; border-left: 4px solid var(--primary); border-radius: 4px; }
-        
-        .revision-badge { font-size: 0.75rem; padding: 4px 10px; background: #e2e8f0; border-radius: 99px; font-weight: bold; }
+        .batch-item { display: flex; justify-content: space-between; align-items: center; background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #e2e8f0; }
 
+        .option { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 10px; background: white; text-align: left; cursor: pointer; }
+        .option.correct { background: #ecfdf5; border-color: var(--success); }
+        .option.wrong { background: #fef2f2; border-color: var(--danger); }
+        .option.eliminated { text-decoration: line-through; opacity: 0.4; }
+        
+        #commentary { margin-top: 20px; padding: 20px; background: #eef2ff; border-left: 4px solid var(--primary); }
         .hidden { display: none; }
     </style>
 </head>
 <body>
 
     <aside>
-        <div class="sidebar-header">
-            <h2>StudyManager v2</h2>
-        </div>
+        <div class="sidebar-header"><h2>StudyManager v3</h2></div>
         <ul class="nav-list" id="sidebar-disciplines"></ul>
         <button class="add-disc-btn" onclick="addDiscipline()">+ Nova Disciplina</button>
     </aside>
@@ -99,7 +68,6 @@
             <div class="header-actions">
                 <div>
                     <h1 id="view-title">Selecione uma Disciplina</h1>
-                    <p id="view-subtitle" style="color: var(--text-muted)">Organização e Revisão Espaçada</p>
                 </div>
                 <button id="btn-new-subject" class="btn btn-primary hidden" onclick="addSubject()">+ Novo Assunto</button>
             </div>
@@ -109,62 +77,56 @@
         <div id="view-details" class="hidden">
             <button class="btn" style="margin-bottom: 20px;" onclick="showSubjects()">← Voltar</button>
             <div class="content-card">
-                <h2 id="subject-detail-name">Nome do Assunto</h2>
-                <div style="margin: 20px 0;">
-                    <textarea id="json-input" rows="6" placeholder='Cole seu JSON aqui (aceita o formato de lista ou individual)...' style="width: 100%; padding: 15px; border-radius: 8px; border: 1px solid #ddd; font-family: monospace;"></textarea>
-                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="saveQuestion()">Importar Questões</button>
+                <h2 id="subject-detail-name">Assunto</h2>
+                <div style="margin: 20px 0; background: #f1f5f9; padding: 15px; border-radius: 8px;">
+                    <h4>Importar Novo Lote (JSON)</h4>
+                    <textarea id="json-input" rows="4" style="width: 100%; margin-top: 10px; padding: 10px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+                    <button class="btn btn-primary" style="margin-top: 10px;" onclick="importBatch()">Importar como novo Lote</button>
                 </div>
-                <div id="revision-panel" style="background: #f8fafc; padding: 15px; border-radius: 8px;">
-                    <h4>Cronograma de Revisões:</h4>
-                    <ul id="revision-list" style="list-style: none; margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap;"></ul>
+
+                <div id="batches-container">
+                    <h3>Meus Lotes de Questões:</h3>
+                    <div id="batch-list" style="margin-top: 15px;"></div>
                 </div>
-                <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-                <button class="btn btn-primary" style="width: 100%; padding: 15px; font-size: 1.1rem;" onclick="startQuiz()">INICIAR QUIZ</button>
+
+                <hr style="margin: 25px 0; border: 0; border-top: 2px solid #eee;">
+                <button class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.2rem;" onclick="startQuiz()">INICIAR SIMULADO (TUDO)</button>
             </div>
         </div>
 
         <div id="view-quiz" class="hidden">
-            <div class="content-card" id="quiz-content" style="max-width: 700px;">
+            <div class="content-card" style="max-width: 700px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-                    <span id="quiz-progress" style="font-weight: bold; color: var(--primary);"></span>
+                    <span id="quiz-progress" style="font-weight: bold;"></span>
                     <button class="btn" onclick="showSubjects()">Sair</button>
                 </div>
-                <h3 id="q-text" style="margin-bottom: 25px; line-height: 1.5;"></h3>
+                <h3 id="q-text"></h3>
                 <div id="options-container"></div>
                 <div id="commentary" class="hidden"></div>
                 <button class="btn btn-primary hidden" id="next-btn" style="margin-top: 25px; width: 100%;" onclick="nextQuestion()">Próxima Questão</button>
-            </div>
-            
-            <div id="quiz-result" class="hidden" style="text-align: center; background: white; padding: 40px; border-radius: 12px;">
-                <h2 style="font-size: 2.5rem; color: var(--primary);">Simulado Concluído!</h2>
-                <p id="score-text" style="font-size: 1.4rem; margin: 20px 0;"></p>
-                <button class="btn btn-primary" onclick="showSubjects()">Voltar para Assuntos</button>
+                <div id="quiz-result" class="hidden" style="text-align: center;">
+                    <h2>Resultado Final</h2>
+                    <p id="score-text" style="font-size: 1.5rem; margin: 20px 0;"></p>
+                    <button class="btn btn-primary" onclick="showSubjects()">Finalizar</button>
+                </div>
             </div>
         </div>
     </main>
 
 <script>
-    let db = JSON.parse(localStorage.getItem('studyDB_v2')) || { disciplines: [] };
-    let curDiscIdx = -1;
-    let curSubjIdx = -1;
-    let curQuestIdx = 0;
-    let score = 0;
+    let db = JSON.parse(localStorage.getItem('studyDB_v3')) || { disciplines: [] };
+    let curDiscIdx = -1, curSubjIdx = -1, curQuestIdx = 0, score = 0, activeQuestions = [];
 
-    function save() {
-        localStorage.setItem('studyDB_v2', JSON.stringify(db));
-        renderSidebar();
-    }
+    function save() { localStorage.setItem('studyDB_v3', JSON.stringify(db)); renderSidebar(); }
 
     function renderSidebar() {
         const list = document.getElementById('sidebar-disciplines');
-        if(!list) return;
         list.innerHTML = '';
         db.disciplines.forEach((d, i) => {
-            const li = document.createElement('li');
-            li.className = `nav-item ${curDiscIdx === i ? 'active' : ''}`;
-            li.onclick = () => selectDiscipline(i);
-            li.innerHTML = `<span>${d.name}</span><span class="del-btn" onclick="deleteDiscipline(event, ${i})">✕</span>`;
-            list.appendChild(li);
+            list.innerHTML += `<li class="nav-item ${curDiscIdx === i ? 'active' : ''}" onclick="selectDiscipline(${i})">
+                <span>${d.name}</span>
+                <span class="del-btn" onclick="deleteDiscipline(event, ${i})">✕</span>
+            </li>`;
         });
     }
 
@@ -175,12 +137,7 @@
 
     function deleteDiscipline(e, idx) {
         e.stopPropagation();
-        if(confirm("Excluir disciplina e todos os dados dentro dela?")) {
-            db.disciplines.splice(idx, 1);
-            curDiscIdx = -1;
-            save();
-            location.reload();
-        }
+        if(confirm("Excluir disciplina?")) { db.disciplines.splice(idx, 1); curDiscIdx = -1; save(); showSubjects(); }
     }
 
     function selectDiscipline(idx) {
@@ -197,100 +154,92 @@
         const list = document.getElementById('subject-list');
         list.innerHTML = '';
         if(curDiscIdx === -1) return;
-        
         db.disciplines[curDiscIdx].subjects.forEach((s, i) => {
-            list.innerHTML += `
-                <div class="subject-card" onclick="openSubjectDetail(${i})">
-                    <div>
-                        <strong>${s.name}</strong><br>
-                        <small style="color: var(--text-muted)">${s.questions.length} questões cadastradas</small>
-                    </div>
-                </div>`;
+            const totalQ = s.batches.reduce((acc, b) => acc + b.questions.length, 0);
+            list.innerHTML += `<div class="subject-card" onclick="openSubjectDetail(${i})">
+                <div><strong>${s.name}</strong><br><small>${totalQ} questões em ${s.batches.length} lotes</small></div>
+            </div>`;
         });
     }
 
     function addSubject() {
-        const name = prompt("Nome do Assunto (ex: Conjunções):");
-        if (name) {
-            db.disciplines[curDiscIdx].subjects.push({ name, questions: [], lastUpdate: null });
-            save();
-            showSubjects();
-        }
+        const name = prompt("Nome do Assunto:");
+        if (name) { db.disciplines[curDiscIdx].subjects.push({ name, batches: [] }); save(); showSubjects(); }
     }
 
     function openSubjectDetail(idx) {
         curSubjIdx = idx;
         hideAll();
         document.getElementById('view-details').classList.remove('hidden');
-        const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
-        document.getElementById('subject-detail-name').innerText = subj.name;
-        renderRevisions(subj.lastUpdate);
+        document.getElementById('subject-detail-name').innerText = db.disciplines[curDiscIdx].subjects[curSubjIdx].name;
+        renderBatches();
     }
 
-    function renderRevisions(dateStr) {
-        const list = document.getElementById('revision-list');
+    function renderBatches() {
+        const list = document.getElementById('batch-list');
         list.innerHTML = '';
-        if (!dateStr) return list.innerHTML = '<li>Cadastre questões para iniciar o cronograma.</li>';
+        const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
         
-        const base = new Date(dateStr);
-        [1, 3, 7, 15, 30].forEach(d => {
-            let rev = new Date(base);
-            rev.setDate(rev.getDate() + d);
-            list.innerHTML += `<li class="revision-badge">${d}d: ${rev.toLocaleDateString()}</li>`;
+        if(subj.batches.length === 0) list.innerHTML = '<p style="color:gray">Nenhum lote importado ainda.</p>';
+        
+        subj.batches.forEach((b, i) => {
+            list.innerHTML += `<div class="batch-item">
+                <div><strong>Lote #${i+1}</strong> - ${b.questions.length} questões (${b.date})</div>
+                <button class="btn btn-danger" onclick="deleteBatch(${i})">Excluir Lote</button>
+            </div>`;
         });
     }
 
-    function saveQuestion() {
+    function importBatch() {
         const area = document.getElementById('json-input');
         try {
             const data = JSON.parse(area.value);
-            const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
+            let rawQuestions = data.questoes || (Array.isArray(data) ? data : [data]);
             
-            // Lógica para processar o JSON enviado (com suporte a 'p', 'r' e 'coment')
-            if (data.questoes && Array.isArray(data.questoes)) {
-                data.questoes.forEach(item => {
-                    subj.questions.push({
-                        q: item.p || item.q,
-                        a: item.a, b: item.b, c: item.c, d: item.d,
-                        e: item.e || "N.D.A",
-                        correct: (item.r || item.correct).toLowerCase(),
-                        comment: item.coment || item.comment
-                    });
-                });
-            } else {
-                subj.questions.push({
-                    q: data.p || data.q,
-                    a: data.a, b: data.b, c: data.c, d: data.d,
-                    e: data.e || "N.D.A",
-                    correct: (data.r || data.correct).toLowerCase(),
-                    comment: data.coment || data.comment
-                });
-            }
+            let formattedQuestions = rawQuestions.map(item => ({
+                q: item.p || item.q,
+                a: item.a, b: item.b, c: item.c, d: item.d,
+                e: item.e || "N.D.A",
+                correct: (item.r || item.correct).toLowerCase(),
+                comment: item.coment || item.comment
+            }));
 
-            subj.lastUpdate = new Date().toISOString();
+            db.disciplines[curDiscIdx].subjects[curSubjIdx].batches.push({
+                date: new Date().toLocaleDateString(),
+                questions: formattedQuestions
+            });
+
             save();
             area.value = '';
-            alert("Questões importadas com sucesso!");
-            renderRevisions(subj.lastUpdate);
-        } catch(e) { 
-            alert("Erro no JSON! Verifique a formatação."); 
+            renderBatches();
+        } catch(e) { alert("Erro no JSON!"); }
+    }
+
+    function deleteBatch(idx) {
+        if(confirm("Excluir este lote de questões?")) {
+            db.disciplines[curDiscIdx].subjects[curSubjIdx].batches.splice(idx, 1);
+            save();
+            renderBatches();
         }
     }
 
     function startQuiz() {
-        const qs = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions;
-        if (qs.length === 0) return alert("Não há questões neste assunto!");
+        const subj = db.disciplines[curDiscIdx].subjects[curSubjIdx];
+        activeQuestions = subj.batches.flatMap(b => b.questions);
+        
+        if (activeQuestions.length === 0) return alert("Adicione questões!");
+        
         curQuestIdx = 0; score = 0;
         hideAll();
         document.getElementById('view-quiz').classList.remove('hidden');
         document.getElementById('quiz-result').classList.add('hidden');
-        document.getElementById('quiz-content').classList.remove('hidden');
+        document.getElementById('quiz-progress').parentNode.classList.remove('hidden');
         renderQuestion();
     }
 
     function renderQuestion() {
-        const q = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions[curQuestIdx];
-        document.getElementById('quiz-progress').innerText = `QUESTÃO ${curQuestIdx + 1}`;
+        const q = activeQuestions[curQuestIdx];
+        document.getElementById('quiz-progress').innerText = `Questão ${curQuestIdx + 1} de ${activeQuestions.length}`;
         document.getElementById('q-text').innerText = q.q;
         document.getElementById('commentary').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
@@ -310,37 +259,34 @@
     }
 
     function check(choice, el) {
-        const q = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions[curQuestIdx];
+        const q = activeQuestions[curQuestIdx];
         const opts = document.querySelectorAll('.option');
         opts.forEach(o => o.onclick = null);
 
-        if(choice === q.correct) { 
-            el.classList.add('correct'); 
-            score++; 
-        } else { 
+        if(choice === q.correct) { el.classList.add('correct'); score++; }
+        else { 
             el.classList.add('wrong');
-            opts.forEach(o => { 
-                if(o.innerText.toLowerCase().startsWith(q.correct + ")")) o.classList.add('correct'); 
-            });
+            opts.forEach(o => { if(o.innerText.toLowerCase().startsWith(q.correct + ")")) o.classList.add('correct'); });
         }
 
         const comm = document.getElementById('commentary');
-        comm.innerHTML = `<strong>GABARITO: ${q.correct.toUpperCase()}</strong><p style="margin-top:10px">${q.comment}</p>`;
+        comm.innerHTML = `<strong>Gabarito: ${q.correct.toUpperCase()}</strong><p>${q.comment}</p>`;
         comm.classList.remove('hidden');
         document.getElementById('next-btn').classList.remove('hidden');
     }
 
     function nextQuestion() {
         curQuestIdx++;
-        const qs = db.disciplines[curDiscIdx].subjects[curSubjIdx].questions;
-        if(curQuestIdx < qs.length) renderQuestion();
+        if(curQuestIdx < activeQuestions.length) renderQuestion();
         else showResult();
     }
 
     function showResult() {
-        document.getElementById('quiz-content').classList.add('hidden');
+        document.getElementById('options-container').innerHTML = '';
+        document.getElementById('q-text').innerText = '';
+        document.getElementById('quiz-progress').parentNode.classList.add('hidden');
         document.getElementById('quiz-result').classList.remove('hidden');
-        document.getElementById('score-text').innerText = `Você acertou ${score} de ${curQuestIdx} questões!`;
+        document.getElementById('score-text').innerText = `Acertos: ${score} / ${activeQuestions.length}`;
     }
 
     function hideAll() {
