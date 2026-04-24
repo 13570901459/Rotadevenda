@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyMaster Pro - Estabilidade Corrigida</title>
+    <title>StudyMaster Pro - Edital Modular</title>
     <style>
         :root {
             --sidebar-width: 280px;
@@ -27,17 +27,21 @@
         .timer-container { background: #1e293b; color: #fbbf24; padding: 15px; border-radius: 10px; text-align: center; margin: 10px 20px; border: 1px solid #334155; }
         #timer-display { font-family: monospace; font-size: 1.8rem; font-weight: bold; }
 
-        main { flex-grow: 1; overflow-y: auto; padding: 30px; position: relative; }
+        main { flex-grow: 1; overflow-y: auto; padding: 30px; }
         .content-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; margin-bottom: 20px; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 25px; }
         .stat-card { background: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--primary); }
         
         .item-row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; gap: 15px; background: white; border-radius: 8px; margin-bottom: 8px; }
-        .btn { padding: 10px 15px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; }
+        .btn { padding: 8px 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; }
         .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
         .btn-danger { background: #fee2e2; color: var(--danger); }
         .btn-ghost { background: #f1f5f9; color: #475569; }
+
+        .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin: 8px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--success); transition: width 0.3s; }
 
         .option { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 10px; text-align: left; cursor: pointer; background: white; }
         .option.correct { background: #ecfdf5; border-color: var(--success); }
@@ -54,8 +58,8 @@
             <div class="timer-container">
                 <div id="timer-display">00:00:00</div>
                 <div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center;">
-                    <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.75rem;" onclick="toggleTimer()" id="timer-btn">INICIAR</button>
-                    <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.75rem;" onclick="resetTimer()">ZERAR</button>
+                    <button class="btn btn-primary" onclick="toggleTimer()" id="timer-btn">INICIAR</button>
+                    <button class="btn btn-danger" onclick="resetTimer()">ZERAR</button>
                 </div>
             </div>
         </div>
@@ -64,33 +68,43 @@
         
         <div style="padding: 20px; border-top: 1px solid #374151; display: flex; flex-direction: column; gap: 8px;">
             <button class="btn btn-primary" onclick="addDiscipline()">+ Nova Disciplina</button>
-            <button class="btn btn-ghost" style="font-size: 0.8rem;" onclick="exportBackup()">Exportar Backup</button>
-            <button class="btn btn-ghost" style="font-size: 0.8rem;" onclick="document.getElementById('importFile').click()">Importar / Sync</button>
+            <button class="btn btn-ghost" onclick="exportBackup()">Exportar Backup</button>
+            <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">Importar / Sync</button>
             <input type="file" id="importFile" class="hidden" onchange="importBackup(event)">
         </div>
     </aside>
 
     <main>
         <div id="view-dashboard">
-            <h1>Painel de Controle</h1>
+            <h1>Progresso Geral</h1>
             <div class="stats-grid">
-                <div class="stat-card"><h4>Questões Total</h4><p id="stat-total">0</p></div>
-                <div class="stat-card"><h4>Acertos Gerais</h4><p id="stat-hits" style="color: var(--success)">0</p></div>
-                <div class="stat-card"><h4>Aproveitamento</h4><p id="stat-percent">0%</p></div>
+                <div class="stat-card"><h4>Questões no Banco</h4><p id="stat-total">0</p></div>
+                <div class="stat-card"><h4>Suas Questões</h4><p id="stat-solved">0</p></div>
+                <div class="stat-card"><h4>Aproveitamento</h4><p id="stat-percent" style="color:var(--primary)">0%</p></div>
             </div>
+            
             <div class="content-card">
-                <h3>Edital Verticalizado</h3>
-                <div id="edital-overview"></div>
-                <button class="btn btn-ghost" style="margin-top: 15px;" onclick="importEdital()">Configurar Edital (JSON)</button>
+                <h3>Checklist do Edital (Visão Geral)</h3>
+                <div id="edital-summary-list"></div>
             </div>
         </div>
 
         <div id="view-subjects" class="hidden">
             <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1 id="view-title">Disciplina</h1>
-                <button class="btn btn-primary" onclick="addSubject()">+ Novo Assunto</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-success" onclick="configLocalEdital()">Configurar Edital desta Matéria</button>
+                    <button class="btn btn-primary" onclick="addSubject()">+ Novo Assunto</button>
+                </div>
             </div>
-            <div id="subject-list"></div>
+
+            <div class="content-card" id="local-edital-card" style="border-left: 5px solid var(--success);">
+                <h4>Edital Verticalizado</h4>
+                <div id="local-edital-content"></div>
+            </div>
+
+            <h3>Meus Assuntos de Questões</h3>
+            <div id="subject-list" style="margin-top: 15px;"></div>
         </div>
 
         <div id="view-details" class="hidden">
@@ -98,9 +112,9 @@
             <div class="content-card" style="margin-top: 20px;">
                 <h2 id="subj-name-display">Assunto</h2>
                 <div style="margin: 20px 0; background: #f8fafc; padding: 20px; border-radius: 8px;">
-                    <h4>Importar Lote de Questões</h4>
-                    <textarea id="json-input" rows="4" style="width:100%; margin-top:10px; padding:10px;" placeholder="Cole o JSON..."></textarea>
-                    <button class="btn btn-primary" style="margin-top:10px;" onclick="importBatch()">Adicionar</button>
+                    <h4>Importar Lote (JSON)</h4>
+                    <textarea id="json-input" rows="3" style="width:100%; margin-top:10px; padding:10px;" placeholder='[{"q":"Pergunta?","a":"...","correct":"a"}]'></textarea>
+                    <button class="btn btn-primary" style="margin-top:10px;" onclick="importBatch()">Salvar Lote</button>
                 </div>
                 <div id="batch-list"></div>
                 <button class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.2rem; margin-top: 20px;" onclick="startQuiz()">INICIAR SIMULADO</button>
@@ -112,41 +126,37 @@
                 <div id="quiz-active">
                     <div style="display: flex; justify-content: space-between;">
                         <span id="quiz-progress" style="font-weight: bold; color: var(--primary);"></span>
-                        <button class="btn btn-danger" onclick="finishQuiz()">Finalizar Agora</button>
+                        <button class="btn btn-danger" onclick="finishQuiz()">Finalizar</button>
                     </div>
                     <h3 id="q-text" style="margin: 25px 0;"></h3>
                     <div id="options-container"></div>
                     <div id="commentary" class="hidden" style="margin-top:15px; padding:15px; background:#eff6ff; border-left:4px solid var(--primary);"></div>
                     <button id="next-btn" class="btn btn-primary hidden" style="width:100%; margin-top:20px;" onclick="nextQuestion()">Próxima Questão</button>
                 </div>
-
                 <div id="quiz-results" class="hidden" style="text-align:center;">
-                    <h2 style="color:var(--primary)">Simulado Finalizado!</h2>
-                    <div style="font-size: 3rem; font-weight:bold; margin:20px 0;" id="res-perc">0%</div>
-                    <p>Acertos: <span id="res-hits">0</span> | Erros: <span id="res-miss">0</span></p>
-                    <button class="btn btn-primary" style="margin-top:30px; width:100%;" onclick="goHome()">Ir para o Início (Dashboard)</button>
+                    <h2>Resultado: <span id="res-perc">0%</span></h2>
+                    <p style="margin:10px 0;">Acertos: <span id="res-hits">0</span> | Erros: <span id="res-miss">0</span></p>
+                    <button class="btn btn-primary" style="width:100%; margin-top:20px;" onclick="goHome()">Voltar ao Início</button>
                 </div>
             </div>
         </div>
     </main>
 
 <script>
-    // Banco de dados com verificação de integridade
-    let db = JSON.parse(localStorage.getItem('studyDB_v6')) || { 
+    // Inicialização do Banco v7 (Foco em Edital por Disciplina)
+    let db = JSON.parse(localStorage.getItem('studyDB_v7')) || { 
         disciplines: [], 
-        stats: { hits: 0, misses: 0, solved: 0 },
-        edital: [] 
+        stats: { hits: 0, misses: 0, solved: 0 }
     };
 
     let curDisc = -1, curSubj = -1, curQuest = 0;
     let activeQs = [], sHits = 0, sMiss = 0;
     let timerVal = 0, timerInt = null;
 
-    // --- FUNÇÕES DE NAVEGAÇÃO ---
-    function hideAll() {
-        ['view-dashboard', 'view-subjects', 'view-details', 'view-quiz'].forEach(id => {
-            document.getElementById(id).classList.add('hidden');
-        });
+    function save() { 
+        localStorage.setItem('studyDB_v7', JSON.stringify(db)); 
+        renderSidebar(); 
+        updateDashboard(); 
     }
 
     function goHome() {
@@ -157,39 +167,97 @@
         renderSidebar();
     }
 
-    // --- CRONÔMETRO ---
-    function toggleTimer() {
-        const btn = document.getElementById('timer-btn');
-        if(timerInt) {
-            clearInterval(timerInt); timerInt = null;
-            btn.innerText = "INICIAR"; btn.style.background = "var(--primary)";
-        } else {
-            btn.innerText = "PAUSAR"; btn.style.background = "var(--warning)";
-            timerInt = setInterval(() => {
-                timerVal++;
-                let h = Math.floor(timerVal/3600), m = Math.floor((timerVal%3600)/60), s = timerVal%60;
-                document.getElementById('timer-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
-            }, 1000);
-        }
+    function hideAll() {
+        ['view-dashboard', 'view-subjects', 'view-details', 'view-quiz'].forEach(id => {
+            document.getElementById(id).classList.add('hidden');
+        });
     }
-    function resetTimer() { clearInterval(timerInt); timerInt = null; timerVal = 0; document.getElementById('timer-display').innerText = "00:00:00"; document.getElementById('timer-btn').innerText = "INICIAR"; }
 
-    // --- LOGICA CORE ---
-    function save() { localStorage.setItem('studyDB_v6', JSON.stringify(db)); updateDashboard(); renderSidebar(); }
-
+    // --- DASHBOARD (Visão Geral de tudo) ---
     function updateDashboard() {
         let total = 0;
         db.disciplines.forEach(d => d.subjects.forEach(s => s.batches.forEach(b => total += b.questions.length)));
         document.getElementById('stat-total').innerText = total;
-        document.getElementById('stat-hits').innerText = db.stats.hits;
+        document.getElementById('stat-solved').innerText = db.stats.solved;
         let p = db.stats.solved > 0 ? Math.round((db.stats.hits / db.stats.solved) * 100) : 0;
         document.getElementById('stat-percent').innerText = p + "%";
-        renderEdital();
+        
+        renderGlobalEdital();
     }
 
+    // Mostra o progresso de cada matéria na home
+    function renderGlobalEdital() {
+        const cont = document.getElementById('edital-summary-list');
+        cont.innerHTML = '';
+        if(db.disciplines.length === 0) { cont.innerHTML = 'Nenhuma disciplina cadastrada.'; return; }
+        
+        db.disciplines.forEach(d => {
+            let topics = d.localEdital || [];
+            let done = topics.filter(t => t.done).length;
+            let p = topics.length > 0 ? Math.round((done / topics.length) * 100) : 0;
+            
+            cont.innerHTML += `
+                <div style="margin-bottom: 10px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.9rem;">
+                        <span>${d.name}</span>
+                        <span>${p}%</span>
+                    </div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${p}%"></div></div>
+                </div>`;
+        });
+    }
+
+    // --- DISCIPLINA (Assuntos + Edital Local) ---
+    function selectDiscipline(i) {
+        curDisc = i;
+        hideAll();
+        renderSidebar();
+        document.getElementById('view-subjects').classList.remove('hidden');
+        document.getElementById('view-title').innerText = db.disciplines[i].name;
+        renderSubjects();
+        renderLocalEdital();
+    }
+
+    function renderLocalEdital() {
+        const cont = document.getElementById('local-edital-content');
+        const topics = db.disciplines[curDisc].localEdital || [];
+        if(topics.length === 0) {
+            cont.innerHTML = '<p style="color:gray; font-size:0.8rem;">Edital não configurado para esta disciplina.</p>';
+            return;
+        }
+        
+        let html = '<div style="max-height: 200px; overflow-y: auto;">';
+        topics.forEach((t, ti) => {
+            html += `
+                <div style="display:flex; align-items:center; gap:10px; padding:5px 0; border-bottom:1px solid #f9f9f9;">
+                    <input type="checkbox" ${t.done ? 'checked' : ''} onchange="toggleTopic(${ti})">
+                    <span style="font-size:0.9rem; ${t.done ? 'text-decoration:line-through; color:gray' : ''}">${t.name}</span>
+                </div>`;
+        });
+        html += '</div>';
+        cont.innerHTML = html;
+    }
+
+    function toggleTopic(ti) {
+        db.disciplines[curDisc].localEdital[ti].done = !db.disciplines[curDisc].localEdital[ti].done;
+        save();
+        renderLocalEdital();
+    }
+
+    function configLocalEdital() {
+        const raw = prompt("Cole os tópicos do edital desta disciplina (ex: Acentuação, Crase, Pontuação) separados por vírgula:");
+        if(raw) {
+            const list = raw.split(',').map(item => ({ name: item.trim(), done: false }));
+            db.disciplines[curDisc].localEdital = list;
+            save();
+            renderLocalEdital();
+        }
+    }
+
+    // --- GERENCIAMENTO ---
     function renderSidebar() {
         const list = document.getElementById('sidebar-disciplines');
-        list.innerHTML = `<li class="nav-item ${curDisc === -1 ? 'active' : ''}" onclick="goHome()"><span>🏠 Dashboard</span></li>`;
+        list.innerHTML = `<li class="nav-item ${curDisc === -1 ? 'active' : ''}" onclick="goHome()">🏠 Dashboard</li>`;
         db.disciplines.forEach((d, i) => {
             list.innerHTML += `<li class="nav-item ${curDisc === i ? 'active' : ''}" onclick="selectDiscipline(${i})">
                 <span>${d.name}</span>
@@ -198,18 +266,10 @@
         });
     }
 
-    function selectDiscipline(i) {
-        curDisc = i;
-        hideAll();
-        renderSidebar();
-        document.getElementById('view-subjects').classList.remove('hidden');
-        document.getElementById('view-title').innerText = db.disciplines[i].name;
-        renderSubjects();
-    }
-
+    function addDiscipline() { let n = prompt("Nova Disciplina:"); if(n){ db.disciplines.push({name:n, subjects:[], localEdital:[]}); save(); }}
+    function deleteDisc(e, i) { e.stopPropagation(); if(confirm("Excluir?")){ db.disciplines.splice(i,1); save(); goHome(); }}
     function renderSubjects() {
-        const list = document.getElementById('subject-list');
-        list.innerHTML = '';
+        const list = document.getElementById('subject-list'); list.innerHTML = '';
         db.disciplines[curDisc].subjects.forEach((s, i) => {
             list.innerHTML += `<div class="item-row">
                 <div style="flex-grow:1; cursor:pointer" onclick="openSubject(${i})"><strong>${s.name}</strong></div>
@@ -218,55 +278,34 @@
             </div>`;
         });
     }
-
-    function addDiscipline() { let n = prompt("Nome da Disciplina:"); if(n){ db.disciplines.push({name:n, subjects:[]}); save(); }}
-    function deleteDisc(e, i) { e.stopPropagation(); if(confirm("Excluir?")){ db.disciplines.splice(i,1); save(); goHome(); }}
-    function addSubject() { let n = prompt("Nome do Assunto:"); if(n){ db.disciplines[curDisc].subjects.push({name:n, batches:[]}); save(); renderSubjects(); }}
+    function addSubject() { let n = prompt("Assunto de Questão:"); if(n){ db.disciplines[curDisc].subjects.push({name:n, batches:[]}); save(); renderSubjects(); }}
     function editSubject(i) { let n = prompt("Nome:", db.disciplines[curDisc].subjects[i].name); if(n){ db.disciplines[curDisc].subjects[i].name = n; save(); renderSubjects(); }}
     function deleteSubject(i) { if(confirm("Excluir?")){ db.disciplines[curDisc].subjects.splice(i,1); save(); renderSubjects(); }}
 
-    function openSubject(i) {
-        curSubj = i; hideAll();
-        document.getElementById('view-details').classList.remove('hidden');
-        document.getElementById('subj-name-display').innerText = db.disciplines[curDisc].subjects[i].name;
-        renderBatches();
-    }
-
-    function renderBatches() {
-        const list = document.getElementById('batch-list'); list.innerHTML = '';
-        db.disciplines[curDisc].subjects[curSubj].batches.forEach((b, i) => {
-            list.innerHTML += `<div class="item-row">Lote #${i+1} (${b.questions.length} qts) <button class="btn btn-danger" onclick="deleteBatch(${i})">✕</button></div>`;
-        });
-    }
-
+    function openSubject(i) { curSubj = i; hideAll(); document.getElementById('view-details').classList.remove('hidden'); document.getElementById('subj-name-display').innerText = db.disciplines[curDisc].subjects[i].name; renderBatches(); }
+    function renderBatches() { const list = document.getElementById('batch-list'); list.innerHTML = ''; db.disciplines[curDisc].subjects[curSubj].batches.forEach((b, i) => { list.innerHTML += `<div class="item-row">Lote #${i+1} (${b.questions.length} qts) <button class="btn btn-danger" onclick="deleteBatch(${i})">✕</button></div>`; }); }
     function deleteBatch(i) { db.disciplines[curDisc].subjects[curSubj].batches.splice(i,1); save(); renderBatches(); }
 
     function importBatch() {
         const area = document.getElementById('json-input');
         try {
             const data = JSON.parse(area.value);
-            let qs = data.questoes || (Array.isArray(data) ? data : [data]);
-            let fmt = qs.map(q => ({
-                id: Math.random(), q: q.p || q.q, a: q.a, b: q.b, c: q.c, d: q.d, e: q.e || "N.D.A",
-                correct: (q.r || q.correct).toLowerCase(), comment: q.coment || q.comment
-            }));
+            let qs = Array.isArray(data) ? data : (data.questoes || [data]);
+            let fmt = qs.map(q => ({ id: Math.random(), q: q.p || q.q, a: q.a, b: q.b, c: q.c, d: q.d, e: q.e || "N.D.A", correct: (q.r || q.correct).toLowerCase(), comment: q.coment || q.comment }));
             db.disciplines[curDisc].subjects[curSubj].batches.push({ questions: fmt });
             save(); area.value = ''; renderBatches();
         } catch(e) { alert("JSON Inválido!"); }
     }
 
-    // --- SIMULADO ---
+    // --- QUIZ ---
     function startQuiz() {
         activeQs = db.disciplines[curDisc].subjects[curSubj].batches.flatMap(b => b.questions);
-        if(activeQs.length === 0) return alert("Adicione questões!");
-        curQuest = 0; sHits = 0; sMiss = 0;
-        hideAll();
+        curQuest = 0; sHits = 0; sMiss = 0; hideAll();
         document.getElementById('view-quiz').classList.remove('hidden');
         document.getElementById('quiz-active').classList.remove('hidden');
         document.getElementById('quiz-results').classList.add('hidden');
         renderQuestion();
     }
-
     function renderQuestion() {
         const q = activeQs[curQuest];
         document.getElementById('quiz-progress').innerText = `QUESTÃO ${curQuest+1}/${activeQs.length}`;
@@ -274,78 +313,36 @@
         const cont = document.getElementById('options-container'); cont.innerHTML = '';
         document.getElementById('commentary').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
-
         ['a','b','c','d','e'].forEach(l => {
             if(q[l]) {
                 const b = document.createElement('button'); b.className = 'option';
                 b.innerText = `${l.toUpperCase()}) ${q[l]}`;
                 b.onclick = () => {
-                    const opts = document.querySelectorAll('.option');
-                    opts.forEach(o => o.onclick = null);
+                    const opts = document.querySelectorAll('.option'); opts.forEach(o => o.onclick = null);
                     db.stats.solved++;
                     if(l === q.correct) { b.classList.add('correct'); sHits++; db.stats.hits++; }
-                    else { b.classList.add('wrong'); sMiss++; db.stats.misses++; 
-                        opts.forEach(o => { if(o.innerText.toLowerCase().startsWith(q.correct+")")) o.classList.add('correct'); });
-                    }
+                    else { b.classList.add('wrong'); sMiss++; db.stats.misses++; opts.forEach(o => { if(o.innerText.toLowerCase().startsWith(q.correct+")")) o.classList.add('correct'); }); }
                     document.getElementById('commentary').innerHTML = `<strong>Gabarito: ${q.correct.toUpperCase()}</strong><br>${q.comment}`;
-                    document.getElementById('commentary').classList.remove('hidden');
-                    document.getElementById('next-btn').classList.remove('hidden');
+                    document.getElementById('commentary').classList.remove('hidden'); document.getElementById('next-btn').classList.remove('hidden');
                     save();
                 };
                 cont.appendChild(b);
             }
         });
     }
+    function nextQuestion() { curQuest++; if(curQuest < activeQs.length) renderQuestion(); else finishQuiz(); }
+    function finishQuiz() { document.getElementById('quiz-active').classList.add('hidden'); document.getElementById('quiz-results').classList.remove('hidden'); document.getElementById('res-hits').innerText = sHits; document.getElementById('res-miss').innerText = sMiss; document.getElementById('res-perc').innerText = Math.round((sHits/activeQs.length)*100) + "%"; }
 
-    function nextQuestion() {
-        curQuest++;
-        if(curQuest < activeQs.length) renderQuestion();
-        else finishQuiz();
-    }
-
-    function finishQuiz() {
-        document.getElementById('quiz-active').classList.add('hidden');
-        document.getElementById('quiz-results').classList.remove('hidden');
-        document.getElementById('res-hits').innerText = sHits;
-        document.getElementById('res-miss').innerText = sMiss;
-        let p = Math.round((sHits / activeQs.length) * 100);
-        document.getElementById('res-perc').innerText = p + "%";
-    }
-
-    function showSubjects() { selectDiscipline(curDisc); }
-
-    // --- EDITAL ---
-    function renderEdital() {
-        const cont = document.getElementById('edital-overview'); cont.innerHTML = '';
-        if(!db.edital || db.edital.length === 0) { cont.innerHTML = '<p style="color:gray">Edital não configurado.</p>'; return; }
-        db.edital.forEach((d, di) => {
-            let done = d.topics.filter(t => t.done).length;
-            let p = Math.round((done/d.topics.length)*100);
-            cont.innerHTML += `<div style="margin-bottom:15px; border:1px solid #ddd; padding:10px; border-radius:8px;">
-                <div style="display:flex; justify-content:space-between"><strong>${d.title}</strong><span>${p}%</span></div>
-                <div style="height:8px; background:#eee; border-radius:4px; margin:5px 0;"><div style="width:${p}%; background:var(--success); height:100%; border-radius:4px;"></div></div>
-                <div style="max-height:80px; overflow-y:auto; font-size:0.8rem;">
-                    ${d.topics.map((t, ti) => `<div style="display:flex; gap:10px;"><input type="checkbox" ${t.done?'checked':''} onchange="db.edital[${di}].topics[${ti}].done=!db.edital[${di}].topics[${ti}].done; save();"> ${t.name}</div>`).join('')}
-                </div>
-            </div>`;
-        });
-    }
-
-    function importEdital() { const j = prompt("Cole o JSON do Edital:"); if(j){ try{ db.edital = JSON.parse(j); save(); }catch(e){alert("Erro!");}}}
+    // --- TIMER ---
+    function toggleTimer() { const btn = document.getElementById('timer-btn'); if(timerInt){ clearInterval(timerInt); timerInt = null; btn.innerText = "INICIAR"; } else { btn.innerText = "PAUSAR"; timerInt = setInterval(() => { timerVal++; let h = Math.floor(timerVal/3600), m = Math.floor((timerVal%3600)/60), s = timerVal%60; document.getElementById('timer-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }, 1000); } }
+    function resetTimer() { clearInterval(timerInt); timerInt = null; timerVal = 0; document.getElementById('timer-display').innerText = "00:00:00"; document.getElementById('timer-btn').innerText = "INICIAR"; }
 
     // --- BACKUP ---
-    function exportBackup() {
-        const blob = new Blob([JSON.stringify(db)], {type:"application/json"});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = "estudos_backup.json"; a.click();
-    }
-    function importBackup(e) {
-        const reader = new FileReader();
-        reader.onload = (ev) => { db = JSON.parse(ev.target.result); save(); location.reload(); };
-        reader.readAsText(e.target.files[0]);
-    }
+    function exportBackup() { const b = new Blob([JSON.stringify(db)], {type:"application/json"}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = "estudos.json"; a.click(); }
+    function importBackup(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); save(); location.reload(); }; r.readAsText(e.target.files[0]); }
 
     window.onload = () => { updateDashboard(); renderSidebar(); };
+    function showSubjects() { selectDiscipline(curDisc); }
 </script>
 </body>
 </html>
