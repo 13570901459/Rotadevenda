@@ -3,486 +3,405 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Bingo Online – Firebase</title>
+  <title>Cartela de Bingo</title>
   <style>
-    :root{
-      --bg:#0b1020;--panel:#0f172a;--ink:#e5e7eb;--muted:#9ca3af;--brand:#22c55e;--accent:#38bdf8;--danger:#ef4444;--win:#f59e0b
+    :root {
+      --bg: #0f172a;          /* slate-900 */
+      --panel: #111827;       /* gray-900 */
+      --ink: #e5e7eb;         /* gray-200 */
+      --muted: #9ca3af;       /* gray-400 */
+      --brand: #22c55e;       /* green-500 */
+      --accent: #38bdf8;      /* sky-400 */
+      --danger: #ef4444;      /* red-500 */
+      --win: #f59e0b;         /* amber-500 */
     }
     *{box-sizing:border-box}
-    body{margin:0;font-family:system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Arial; background:radial-gradient(70rem 70rem at 20% -10%, #1f2937, var(--bg)); color:var(--ink)}
-    header,main,footer{max-width:1000px;margin:auto;padding:16px}
-    header{display:flex;gap:12px;align-items:center;justify-content:space-between}
-    .brand{display:flex;gap:10px;align-items:center}
-    .brand .t{font-weight:900;font-size:20px;letter-spacing:.4px}
-    .row{display:flex;gap:10px;flex-wrap:wrap}
-    .card{background:linear-gradient(180deg, rgba(148,163,184,.05), rgba(2,6,23,.6));border:1px solid rgba(148,163,184,.2);border-radius:16px;padding:14px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
-    .panel{display:grid;grid-template-columns:1fr;gap:8px}
-    input,select{background:#0b1220;border:1px solid rgba(148,163,184,.25);color:#e5e7eb;padding:10px;border-radius:12px;min-width:200px}
-    button{background:linear-gradient(180deg,#16a34a,#15803d);border:0;color:#fff;padding:10px 14px;border-radius:12px;font-weight:800;cursor:pointer}
-    button.secondary{background:linear-gradient(180deg,#334155,#1f2937)}
-    button.danger{background:linear-gradient(180deg,#ef4444,#b91c1c)}
-    .grid{width:100%;border-collapse:separate;border-spacing:8px}
-    th,td{width:18%;aspect-ratio:1/1;text-align:center;border-radius:14px;position:relative;overflow:hidden}
-    th{background:linear-gradient(180deg,#0ea5e9,#0369a1);color:white;font-size:clamp(18px,5vw,28px);font-weight:900;letter-spacing:4px;text-shadow:0 2px 8px rgba(0,0,0,.35)}
-    td{background:linear-gradient(180deg,#111827,#0b1220);border:1px solid rgba(148,163,184,.2);font-size:clamp(16px,5vw,26px);font-weight:800;cursor:pointer}
-    td.marked{background:linear-gradient(180deg,#14532d,#052e16);border-color:rgba(34,197,94,.6)}
-    td.free{background:linear-gradient(180deg,#4338ca,#1e1b4b)}
-    td.winner{box-shadow:0 0 0 3px var(--win) inset}
-    .status{color:var(--muted)}
-    .pill{background:rgba(56,189,248,.1);border:1px solid rgba(56,189,248,.3);padding:6px 10px;border-radius:999px;font-weight:700}
-    .list{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow:auto}
-    .item{display:flex;justify-content:space-between;gap:8px;padding:8px;border:1px solid rgba(148,163,184,.2);border-radius:12px;background:rgba(2,6,23,.4)}
-    .big{font-size:clamp(28px,6vw,44px);font-weight:900}
-    .overlay{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.6);backdrop-filter:blur(2px);z-index:50}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(90rem 90rem at 10% -10%, #1f2937 0, var(--bg) 45%);
+      color: var(--ink);
+    }
+    header{
+      max-width: 980px; margin: 24px auto 12px; padding:0 16px;
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+    }
+    .title{
+      display:flex; align-items:center; gap:12px;
+    }
+    .badge{font-size:12px; color:var(--muted)}
+    .card-id{
+      display:flex; align-items:center; gap:8px; font-weight:600; letter-spacing:.5px;
+      background:rgba(56,189,248,.08); border:1px solid rgba(56,189,248,.3); padding:6px 10px; border-radius:10px;
+    }
+    .actions{display:flex; flex-wrap:wrap; gap:8px}
+    button{
+      background:linear-gradient(180deg, #16a34a, #15803d);
+      color:white; border:0; padding:10px 14px; border-radius:12px; cursor:pointer; font-weight:700;
+      box-shadow: 0 6px 20px rgba(34,197,94,.25);
+    }
+    button.secondary{background:linear-gradient(180deg, #334155, #1f2937); box-shadow:none; color:#e2e8f0}
+    button.danger{background:linear-gradient(180deg, #ef4444, #b91c1c)}
+    button:active{transform:translateY(1px)}
+
+    main{max-width:980px; margin:12px auto 32px; padding:0 16px}
+    .board{
+      user-select:none; background:rgba(255,255,255,.03); border:1px solid rgba(148,163,184,.2); border-radius:18px; padding:18px;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    .grid{width:100%; border-collapse:separate; border-spacing:8px}
+    th, td{
+      width:18%; aspect-ratio:1/1; text-align:center; border-radius:14px; position:relative; overflow:hidden;
+    }
+    th{
+      background:linear-gradient(180deg, #0ea5e9, #0369a1); color:white; font-size:clamp(20px, 6vw, 34px); letter-spacing:4px; font-weight:900; text-shadow:0 2px 8px rgba(0,0,0,.35);
+    }
+    td{
+      background:linear-gradient(180deg, #111827, #0b1220); border:1px solid rgba(148,163,184,.18);
+      font-size:clamp(18px, 5vw, 28px); font-weight:800; color:#e5e7eb;
+      transition: transform .08s ease, box-shadow .2s ease, border-color .2s ease;
+      cursor:pointer;
+    }
+    td:hover{transform:translateY(-1px); box-shadow:0 10px 18px rgba(0,0,0,.35)}
+    td .sub{position:absolute; inset:auto 8px 8px auto; font-size:11px; color:var(--muted)}
+    td.marked{background:linear-gradient(180deg, #14532d, #052e16); border-color:rgba(34,197,94,.6)}
+    td.marked::after{
+      content:"✓"; position:absolute; inset:0; display:grid; place-items:center; font-size:clamp(28px, 7vw, 44px); color:var(--brand);
+      text-shadow:0 2px 10px rgba(34,197,94,.35); font-weight:900;
+    }
+    td.free{background:linear-gradient(180deg, #4338ca, #1e1b4b); border-color:rgba(129,140,248,.7)}
+    td.winner{box-shadow:0 0 0 3px var(--win) inset, 0 0 30px rgba(245,158,11,.35)}
+
+    .status{
+      display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:14px;
+      color:var(--muted)
+    }
+    .status b{color:var(--ink)}
+
+    /* Bingo overlay */
+    .overlay{
+      position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:50;
+      backdrop-filter: blur(2px);
+    }
     .overlay.show{display:flex}
-    .toast{background:#0b1020;border:1px solid rgba(148,163,184,.25);border-radius:18px;padding:24px 20px;max-width:560px}
-    .toast h2{margin:0 0 6px}
-    .numbers{display:flex;flex-wrap:wrap;gap:6px}
-    .ball{padding:6px 10px;border-radius:999px;border:1px solid rgba(148,163,184,.25);background:#0b1220}
-    .grid-wrap{overflow:auto}
+    .toast{
+      background: radial-gradient(40rem 30rem at 30% 10%, rgba(56,189,248,.12), transparent 60%), #0b1020;
+      border:1px solid rgba(148,163,184,.25); border-radius:18px; padding:26px 28px; text-align:center; color:#fff;
+      box-shadow:0 20px 60px rgba(0,0,0,.55);
+    }
+    .toast h2{font-size:clamp(28px, 6vw, 44px); margin:0 0 6px; letter-spacing:3px}
+    .toast p{margin:0; color:#cbd5e1}
+    .toast .row{display:flex; gap:10px; justify-content:center; margin-top:14px}
+
+    /* confetti dots */
+    .confetti {position: fixed; inset: 0; pointer-events: none; overflow:hidden}
+    .dot{position:absolute; width:10px; height:10px; border-radius:50%; opacity:.9; animation:fall 1.8s linear forwards}
+    @keyframes fall {
+      from { transform: translateY(-10vh) rotate(0deg); }
+      to   { transform: translateY(110vh) rotate(720deg); }
+    }
+
+    footer{max-width:980px;margin:16px auto 40px; padding:0 16px; color:var(--muted); font-size:14px}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.31L12 14.77 7.22 16.69l.91-5.31L4.27 7.62l5.34-.78L12 2z" fill="url(#g)"/><defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs></svg>
-      <div class="t">Bingo Online – Firebase</div>
+    <div class="title">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12 2l2.39 4.84 5.34.78-3.86 3.76.91 5.31L12 14.77 7.22 16.69l.91-5.31L4.27 7.62l5.34-.78L12 2z" fill="url(#g)"/>
+        <defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#38bdf8"/><stop offset="1" stop-color="#22c55e"/></linearGradient></defs>
+      </svg>
+      <div>
+        <div style="font-size:22px; font-weight:900; letter-spacing:.5px">Cartela de Bingo</div>
+        <div class="badge">Gere, marque e detecte BINGO (linhas, colunas e diagonais)</div>
+      </div>
     </div>
-    <div class="status" id="status">Conectando…</div>
+    <div class="actions">
+      <button id="newCardBtn" title="Gerar nova cartela">Nova cartela</button>
+      <button class="secondary" id="resetMarksBtn" title="Desmarcar tudo">Limpar marcações</button>
+      <button class="secondary" id="printBtn" title="Imprimir ou salvar em PDF">Imprimir</button>
+    </div>
   </header>
 
   <main>
-    <section class="row">
-      <div class="card" style="flex:1 1 320px">
-        <div class="panel">
-          <div class="row">
-            <select id="role">
-              <option value="player">Entrar como Jogador</option>
-              <option value="host">Entrar como Anfitrião</option>
-            </select>
-            <input id="roomCode" placeholder="Código da sala (ex: ABC123)" />
-            <button id="btnJoin">Entrar / Criar</button>
-          </div>
-          <div class="row" id="hostControls" style="display:none">
-            <button id="btnCreateRoom">Criar nova sala</button>
-            <button class="secondary" id="btnDraw">Sortear número</button>
-            <button class="danger" id="btnReset">Reiniciar sala</button>
-          </div>
-          <div class="row" id="nameRow">
-            <input id="playerName" placeholder="Seu nome" />
-            <button id="btnSetName">Confirmar nome</button>
-            <span class="pill">Seu ID: <span id="uidShort">—</span></span>
-          </div>
+    <div class="board">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; flex-wrap:wrap">
+        <div class="card-id">ID da cartela: <span id="cardId"></span>
+          <button class="secondary" id="copyIdBtn" style="padding:6px 10px">Copiar ID</button>
         </div>
+        <div class="status">Status: <b id="statusText">Aguardando marcações…</b></div>
       </div>
 
-      <div class="card" style="flex:1 1 320px">
-        <div class="panel">
-          <div><b>Sala:</b> <span id="roomDisplay">—</span></div>
-          <div><b>Números sorteados:</b></div>
-          <div class="numbers" id="drawnList"></div>
-          <div><b>Último número:</b> <span class="big" id="lastNumber">—</span></div>
-        </div>
-      </div>
-
-      <div class="card" style="flex:1 1 320px">
-        <div class="panel">
-          <div><b>Jogadores na sala</b></div>
-          <div class="list" id="playersList"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="row" style="margin-top:12px">
-      <div class="card grid-wrap" style="flex:2 1 520px">
-        <div class="row" style="justify-content:space-between;align-items:center">
-          <div><b>Sua cartela</b> <span class="pill">ID: <span id="cardId">—</span></span></div>
-          <div class="row">
-            <button class="secondary" id="btnNewCard">Nova cartela</button>
-            <button class="secondary" id="btnClear">Limpar marcas</button>
-          </div>
-        </div>
-        <table class="grid" aria-label="Cartela de Bingo">
-          <thead><tr><th>B</th><th>I</th><th>N</th><th>G</th><th>O</th></tr></thead>
-          <tbody id="tbody"></tbody>
-        </table>
-        <div class="status" id="cardStatus">Aguardando…</div>
-      </div>
-
-      <div class="card" style="flex:1 1 320px">
-        <div class="panel">
-          <div><b>Quase bingo</b> <span class="status">(linhas/colunas/diagonais a 1 número)</span></div>
-          <div class="list" id="almostList"></div>
-        </div>
-      </div>
-    </section>
+      <table class="grid" aria-label="Cartela de Bingo">
+        <thead>
+          <tr>
+            <th>B</th><th>I</th><th>N</th><th>G</th><th>O</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
   </main>
 
-  <div class="overlay" id="bingoOverlay">
+  <div class="overlay" id="bingoOverlay" role="dialog" aria-modal="true">
     <div class="toast">
-      <h2>🎉 BINGO!</h2>
-      <p id="winnerText">Temos um vencedor.</p>
-      <div style="margin-top:12px" class="row">
-        <button class="secondary" id="btnCloseOverlay">OK</button>
-        <button id="btnShowWinner">Conferir cartela do vencedor</button>
+      <h2>🎉 B I N G O !</h2>
+      <p>Você completou uma linha, coluna ou diagonal.</p>
+      <div class="row">
+        <button id="okOverlay" class="secondary">OK</button>
+        <button id="screenshotBtn">Baixar imagem</button>
       </div>
     </div>
+    <div class="confetti" id="confetti"></div>
   </div>
 
   <footer>
-    <small class="status">Dica: o anfitrião cria a sala e usa "Sortear número". Jogadores entram com o código, confirmam o nome, ganham uma cartela e tudo atualiza em tempo real.</small>
+    Dica: toque nas casas para marcar/desmarcar. A casa central é livre.
   </footer>
 
-  <!-- Firebase (v10 modular) -->
-  <script type="module">
-    // 1) COLOQUE SEU CONFIG DO FIREBASE AQUI
-    // Crie um projeto no Firebase, ative Auth (Anônima) e Realtime Database.
-    // Copie a config do app web e substitua os valores abaixo.
-    const firebaseConfig = {
-      apiKey: "COLOQUE_SUA_API_KEY",
-      authDomain: "SEU_PROJETO.firebaseapp.com",
-      databaseURL: "https://SEU_PROJETO-default-rtdb.firebaseio.com",
-      projectId: "SEU_PROJETO",
-      storageBucket: "SEU_PROJETO.appspot.com",
-      messagingSenderId: "",
-      appId: ""
-    };
-
-    // 2) IMPORTS
-    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-    import { getAuth, signInAnonymously, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-    import { getDatabase, ref, set, get, onValue, update, push, child, remove } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js';
-
-    // 3) INIT
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getDatabase(app);
-
-    // UI elts
-    const roleSel = document.getElementById('role');
-    const roomInput = document.getElementById('roomCode');
-    const btnJoin = document.getElementById('btnJoin');
-    const btnCreateRoom = document.getElementById('btnCreateRoom');
-    const btnDraw = document.getElementById('btnDraw');
-    const btnReset = document.getElementById('btnReset');
-    const hostControls = document.getElementById('hostControls');
-    const nameRow = document.getElementById('nameRow');
-    const playerNameInput = document.getElementById('playerName');
-    const btnSetName = document.getElementById('btnSetName');
-    const uidShort = document.getElementById('uidShort');
-    const statusBar = document.getElementById('status');
-    const roomDisplay = document.getElementById('roomDisplay');
-    const drawnList = document.getElementById('drawnList');
-    const lastNumberEl = document.getElementById('lastNumber');
-    const playersList = document.getElementById('playersList');
+  <script>
     const tbody = document.getElementById('tbody');
-    const cardStatus = document.getElementById('cardStatus');
-    const cardIdEl = document.getElementById('cardId');
-    const btnNewCard = document.getElementById('btnNewCard');
-    const btnClear = document.getElementById('btnClear');
-    const almostList = document.getElementById('almostList');
+    const statusText = document.getElementById('statusText');
     const overlay = document.getElementById('bingoOverlay');
-    const btnCloseOverlay = document.getElementById('btnCloseOverlay');
-    const btnShowWinner = document.getElementById('btnShowWinner');
-    const winnerText = document.getElementById('winnerText');
+    const confetti = document.getElementById('confetti');
+    const cardIdEl = document.getElementById('cardId');
 
-    let UID = null;
-    let currentRoom = null;
-    let myPlayerKey = null; // chave no /rooms/{code}/players/{myPlayerKey}
+    const ranges = [
+      [1,15], [16,30], [31,45], [46,60], [61,75]
+    ];
 
-    // Auth anônima
-    onAuthStateChanged(auth, async (u)=>{
-      if(u){
-        UID = u.uid;
-        uidShort.textContent = UID.slice(0,6);
-        statusBar.textContent = 'Autenticado';
-      } else {
-        try{
-          await signInAnonymously(auth);
-        }catch(e){
-          statusBar.textContent = 'Erro na autenticação';
-          console.error(e);
-        }
-      }
-    });
+    const STORAGE_KEY = 'bingo-card-v1';
 
-    // Helpers
-    const ranges = [[1,15],[16,30],[31,45],[46,60],[61,75]];
-    function pickUnique(min,max,count){
-      const pool = Array.from({length:max-min+1},(_,i)=>i+min);
-      for(let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]]}
-      return pool.slice(0,count).sort((a,b)=>a-b);
+    function uuid(){
+      if (crypto && crypto.randomUUID) return crypto.randomUUID();
+      return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2,8);
     }
-    function generateCard(){
-      const columns = ranges.map(([a,b], idx)=>pickUnique(a,b,(idx===2?4:5)));
-      const grid = Array.from({length:5},()=>Array(5).fill(0));
+
+    function pickUnique(min, max, count){
+      const pool = Array.from({length: max-min+1}, (_,i)=>i+min);
+      for(let i=pool.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool.slice(0, count).sort((a,b)=>a-b);
+    }
+
+    function buildCard(){
+      // gera ID e números
+      const id = uuid();
+      const columns = ranges.map(([a,b], idx)=>{
+        const need = (idx===2) ? 4 : 5; // coluna N tem espaço livre
+        return pickUnique(a,b,need);
+      });
+
+      // monta grid 5x5
+      tbody.innerHTML = '';
       for(let r=0;r<5;r++){
+        const tr = document.createElement('tr');
         for(let c=0;c<5;c++){
-          if(r===2 && c===2){grid[r][c]=0; continue;} // FREE
-          const index = (c===2 && r>1)? r-1 : r;
-          grid[r][c] = columns[c][index];
-        }
-      }
-      return grid; // 5x5
-    }
-    function gridToList(g){ return g.flat(); }
-    function newMarks(){
-      const m = Array.from({length:5},()=>Array(5).fill(false));
-      m[2][2]=true; // free
-      return m;
-    }
-    function checkLines(m){
-      const winners=[];
-      // linhas
-      for(let r=0;r<5;r++) if(m[r].every(v=>v)) winners.push({type:'row',idx:r});
-      // colunas
-      for(let c=0;c<5;c++) if([0,1,2,3,4].every(r=>m[r][c])) winners.push({type:'col',idx:c});
-      // diagonais
-      if([0,1,2,3,4].every(i=>m[i][i])) winners.push({type:'diag',idx:0});
-      if([0,1,2,3,4].every(i=>m[i][4-i])) winners.push({type:'diag',idx:1});
-      return winners;
-    }
-    function almostBingo(g,m,drawn){
-      // retorna lista de linhas/colunas/diagonais que faltam 1
-      const res=[];
-      // linhas
-      for(let r=0;r<5;r++){
-        const vals = m[r];
-        const miss = vals.filter(v=>!v).length;
-        if(miss===1) res.push(`Linha ${r+1}`)
-      }
-      // colunas
-      for(let c=0;c<5;c++){
-        const miss = [0,1,2,3,4].filter(r=>!m[r][c]).length;
-        if(miss===1) res.push(`Coluna ${c+1}`)
-      }
-      // diagonais
-      const missA = [0,1,2,3,4].filter(i=>!m[i][i]).length;
-      if(missA===1) res.push('Diagonal principal');
-      const missB = [0,1,2,3,4].filter(i=>!m[i][4-i]).length;
-      if(missB===1) res.push('Diagonal secundária');
-      return res;
-    }
-
-    function renderCard(grid, marks){
-      tbody.innerHTML='';
-      for(let r=0;r<5;r++){
-        const tr=document.createElement('tr');
-        for(let c=0;c<5;c++){
-          const td=document.createElement('td');
-          td.dataset.r=r; td.dataset.c=c;
+          const td = document.createElement('td');
+          td.dataset.r = r; td.dataset.c = c;
           if(r===2 && c===2){
             td.classList.add('marked','free');
-            td.textContent='FREE';
-          }else{
-            td.textContent=grid[r][c];
+            td.innerHTML = '<div class="sub">FREE</div>';
+          } else {
+            const colArr = columns[c];
+            const index = (c===2 && r>1) ? r-1 : r; // pular espaço livre ao preencher coluna N
+            const value = colArr[index];
+            td.textContent = value;
+            td.dataset.val = value;
+            td.innerHTML += '<div class="sub">'+value+'</div>';
+            td.addEventListener('click',()=>toggle(td));
           }
-          if(marks && marks[r][c]) td.classList.add('marked');
-          td.addEventListener('click',()=>{
-            toggleMark(td);
-            saveMyMarks();
-          });
           tr.appendChild(td);
         }
         tbody.appendChild(tr);
       }
+
+      clearWinners();
+      statusText.textContent = 'Aguardando marcações…';
+
+      const state = { id, marks: getMarks() };
+      cardIdEl.textContent = id;
+      saveState(state);
     }
 
-    function readMarksFromDOM(){
-      const m = Array.from({length:5},()=>Array(5).fill(false));
-      tbody.querySelectorAll('td').forEach(td=>{
-        const r=+td.dataset.r, c=+td.dataset.c;
-        if(td.classList.contains('marked')) m[r][c]=true;
-      });
-      return m;
+    function getMarks(){
+      const marks = [];
+      for(const td of tbody.querySelectorAll('td')){
+        marks.push(td.classList.contains('marked'));
+      }
+      return marks;
     }
-    function toggleMark(td){
-      if(td.classList.contains('free')) return; // FREE já marcado
+
+    function restoreMarks(marks){
+      const tds = [...tbody.querySelectorAll('td')];
+      marks.forEach((m,i)=>{
+        if(m) tds[i].classList.add('marked'); else tds[i].classList.remove('marked');
+      });
+    }
+
+    function toggle(td){
       td.classList.toggle('marked');
-      evaluateBingo();
-    }
-
-    // Estado local da minha cartela
-    let myGrid = null; // 5x5 números
-    let myMarks = null; // 5x5 bool
-
-    // Handlers UI
-    roleSel.addEventListener('change',()=>{
-      hostControls.style.display = (roleSel.value==='host')?'flex':'none';
-    });
-
-    btnCreateRoom.addEventListener('click', async ()=>{
-      const code = makeRoomCode();
-      await set(ref(db, `rooms/${code}`), {
-        createdAt: Date.now(),
-        numbers: [],
-        last: null,
-        winner: null
-      });
-      roomInput.value = code;
-      statusBar.textContent = `Sala criada: ${code}`;
-    });
-
-    btnJoin.addEventListener('click', async ()=>{
-      const code = (roomInput.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-      if(!code){ alert('Digite o código da sala.'); return; }
-      await ensureRoom(code);
-      currentRoom = code;
-      roomDisplay.textContent = code;
-      attachRoomListeners(code);
-      statusBar.textContent = `Conectado à sala ${code}`;
-      if(roleSel.value==='host') hostControls.style.display='flex';
-    });
-
-    btnSetName.addEventListener('click', async ()=>{
-      const name = (playerNameInput.value||'').trim();
-      if(!name){ alert('Digite seu nome.'); return; }
-      if(!currentRoom){ alert('Entre numa sala primeiro.'); return; }
-      if(!myPlayerKey){
-        // cria player
-        const playersRef = ref(db, `rooms/${currentRoom}/players`);
-        const newRef = push(playersRef);
-        myPlayerKey = newRef.key;
-        myGrid = generateCard();
-        myMarks = newMarks();
-        await set(newRef, {
-          uid: UID,
-          name,
-          card: myGrid,
-          marks: myMarks,
-          createdAt: Date.now()
-        });
-        cardIdEl.textContent = myPlayerKey;
-        renderCard(myGrid, myMarks);
+      const winners = checkBingo();
+      const state = loadState();
+      if(state){ state.marks = getMarks(); saveState(state); }
+      if(winners.length){
+        celebrate(winners);
       } else {
-        await update(ref(db, `rooms/${currentRoom}/players/${myPlayerKey}`), { name });
-      }
-      statusBar.textContent = `Nome salvo: ${name}`;
-    });
-
-    btnNewCard.addEventListener('click', async ()=>{
-      if(!currentRoom || !myPlayerKey) return;
-      myGrid = generateCard();
-      myMarks = newMarks();
-      renderCard(myGrid, myMarks);
-      await update(ref(db, `rooms/${currentRoom}/players/${myPlayerKey}`), { card: myGrid, marks: myMarks });
-    });
-
-    btnClear.addEventListener('click', async ()=>{
-      if(!currentRoom || !myPlayerKey) return;
-      myMarks = newMarks();
-      renderCard(myGrid, myMarks);
-      await update(ref(db, `rooms/${currentRoom}/players/${myPlayerKey}`), { marks: myMarks });
-    });
-
-    btnDraw.addEventListener('click', async ()=>{
-      if(!currentRoom) return;
-      const roomSnap = await get(ref(db, `rooms/${currentRoom}`));
-      const data = roomSnap.val();
-      const drawn = data?.numbers || [];
-      if(drawn.length>=75){ alert('Todos os números já foram sorteados.'); return; }
-      const n = drawNext(drawn);
-      drawn.push(n);
-      await update(ref(db, `rooms/${currentRoom}`), { numbers: drawn, last: n });
-    });
-
-    btnReset.addEventListener('click', async ()=>{
-      if(!currentRoom) return;
-      if(!confirm('Reiniciar sala? Isso limpa sorteio e vencedores, mas mantém jogadores.')) return;
-      await update(ref(db, `rooms/${currentRoom}`), { numbers: [], last: null, winner: null });
-      // limpar marks dos jogadores
-      const playersSnap = await get(ref(db, `rooms/${currentRoom}/players`));
-      if(playersSnap.exists()){
-        const updates = {};
-        playersSnap.forEach(ch=>{
-          updates[`rooms/${currentRoom}/players/${ch.key}/marks`] = newMarks();
-        });
-        await update(ref(db), updates);
-      }
-    });
-
-    btnCloseOverlay.addEventListener('click', ()=> overlay.classList.remove('show'));
-    btnShowWinner.addEventListener('click', async ()=>{
-      if(!currentRoom) return;
-      const winSnap = await get(ref(db, `rooms/${currentRoom}/winner`));
-      if(winSnap.exists()){
-        const w = winSnap.val();
-        const pSnap = await get(ref(db, `rooms/${currentRoom}/players/${w.playerKey}`));
-        if(pSnap.exists()){
-          const p = pSnap.val();
-          showWinnerCard(p);
-        }
-      }
-    });
-
-    function makeRoomCode(){
-      const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-      let s=''; for(let i=0;i<6;i++) s+=chars[Math.floor(Math.random()*chars.length)];
-      return s;
-    }
-
-    async function ensureRoom(code){
-      const snap = await get(ref(db, `rooms/${code}`));
-      if(!snap.exists()){
-        await set(ref(db, `rooms/${code}`), {
-          createdAt: Date.now(), numbers: [], last: null, winner: null
-        });
+        statusText.textContent = 'Continuando…';
+        clearWinners();
       }
     }
 
-    function drawNext(drawn){
-      const pool = new Set(Array.from({length:75},(_,i)=>i+1));
-      drawn.forEach(n=>pool.delete(n));
-      const arr=[...pool];
-      return arr[Math.floor(Math.random()*arr.length)];
+    function matrixMarked(){
+      const M = Array.from({length:5},()=>Array(5).fill(false));
+      for(const td of tbody.querySelectorAll('td')){
+        const r = +td.dataset.r, c = +td.dataset.c;
+        M[r][c] = td.classList.contains('marked');
+      }
+      return M;
     }
 
-    function attachRoomListeners(code){
-      // sorteio
-      onValue(ref(db, `rooms/${code}/numbers`), (snap)=>{
-        const arr = snap.val()||[];
-        renderDrawn(arr);
-        if(arr.length && myGrid){
-          // marca automaticamente
-          autoMarkFromDraw(arr[arr.length-1]);
+    function checkBingo(){
+      const M = matrixMarked();
+      const lines = [];
+      // linhas
+      for(let r=0;r<5;r++) if(M[r].every(v=>v)) lines.push({type:'row', idx:r});
+      // colunas
+      for(let c=0;c<5;c++) if(M.every(row=>row[c])) lines.push({type:'col', idx:c});
+      // diagonais
+      if([0,1,2,3,4].every(i=>M[i][i])) lines.push({type:'diag', idx:0});
+      if([0,1,2,3,4].every(i=>M[i][4-i])) lines.push({type:'diag', idx:1});
+      return lines;
+    }
+
+    function clearWinners(){
+      for(const td of tbody.querySelectorAll('td')) td.classList.remove('winner');
+    }
+
+    function paintWinners(lines){
+      clearWinners();
+      lines.forEach(L=>{
+        if(L.type==='row'){
+          for(let c=0;c<5;c++) tbody.querySelector(`td[data-r="${L.idx}"][data-c="${c}"]`).classList.add('winner');
+        } else if(L.type==='col'){
+          for(let r=0;r<5;r++) tbody.querySelector(`td[data-r="${r}"][data-c="${L.idx}"]`).classList.add('winner');
+        } else if(L.type==='diag' && L.idx===0){
+          for(let i=0;i<5;i++) tbody.querySelector(`td[data-r="${i}"][data-c="${i}"]`).classList.add('winner');
+        } else if(L.type==='diag' && L.idx===1){
+          for(let i=0;i<5;i++) tbody.querySelector(`td[data-r="${i}"][data-c="${4-i}"]`).classList.add('winner');
         }
-      });
-      onValue(ref(db, `rooms/${code}/last`), (snap)=>{
-        lastNumberEl.textContent = snap.val()||'—';
-      });
-      // winner
-      onValue(ref(db, `rooms/${code}/winner`), (snap)=>{
-        const w = snap.val();
-        if(w){
-          winnerText.textContent = `Vencedor: ${w.name} (cartela ${w.playerKey})`;
-          overlay.classList.add('show');
-        } else {
-          overlay.classList.remove('show');
-        }
-      });
-      // players list
-      onValue(ref(db, `rooms/${code}/players`), (snap)=>{
-        const players = snap.val()||{};
-        renderPlayers(players);
-        // se eu já me registrei, sincroniza minha cartela
-        if(myPlayerKey && players[myPlayerKey]){
-          const p = players[myPlayerKey];
-          myGrid = p.card; myMarks = p.marks;
-          renderCard(myGrid, myMarks);
-        }
-        // render quase bingo para cada
-        renderAlmost(players);
       });
     }
 
-    function renderDrawn(arr){
-      drawnList.innerHTML='';
-      arr.forEach(n=>{
-        const d=document.createElement('div'); d.className='ball'; d.textContent=n; drawnList.appendChild(d);
-      });
+    function vibrate(ms=80){ if(navigator.vibrate) navigator.vibrate(ms); }
+
+    function fireworks(){
+      confetti.innerHTML = '';
+      const N = 120;
+      for(let i=0;i<N;i++){
+        const d = document.createElement('div');
+        d.className = 'dot';
+        d.style.left = Math.random()*100 + 'vw';
+        d.style.top = (-Math.random()*30) + 'vh';
+        d.style.background = `hsl(${Math.random()*360}, 90%, 60%)`;
+        d.style.animationDelay = (Math.random()*0.6) + 's';
+        d.style.transform = `translateY(-10vh) rotate(${Math.random()*360}deg)`;
+        confetti.appendChild(d);
+      }
+      setTimeout(()=>confetti.innerHTML='', 2200);
     }
 
-    function renderPlayers(players){
-      playersList.innerHTML='';
-      Object.entries(players).forEach(([k,p])=>{
-        c
+    function celebrate(lines){
+      paintWinners(lines);
+      statusText.textContent = 'BINGO!';
+      overlay.classList.add('show');
+      fireworks();
+      vibrate(120);
+      // pequeno beep com WebAudio
+      try{
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.connect(g); g.connect(audioCtx.destination);
+        o.type = 'triangle'; o.frequency.value = 880; g.gain.value = 0.001;
+        o.start();
+        g.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.02);
+        g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.4);
+        o.stop(audioCtx.currentTime + 0.45);
+      }catch(e){}
+    }
+
+    function saveState(state){
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+    function loadState(){
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return null;
+      try{ return JSON.parse(raw); }catch{ return null }
+    }
+
+    function regenerate(){
+      buildCard();
+    }
+
+    function resetMarks(){
+      for(const td of tbody.querySelectorAll('td')){
+        if(!(td.classList.contains('free'))) td.classList.remove('marked');
+      }
+      clearWinners();
+      statusText.textContent = 'Marcações limpas.';
+      const state = loadState(); if(state){ state.marks = getMarks(); saveState(state); }
+    }
+
+    function printCard(){ window.print(); }
+
+    function copyId(){
+      const id = cardIdEl.textContent.trim();
+      navigator.clipboard.writeText(id).then(()=>{
+        statusText.textContent = 'ID copiado!';
+        vibrate(40);
+      }).catch(()=>{});
+    }
+
+    // exporta imagem simples da cartela
+    async function screenshotBoard(){
+      const node = document.querySelector('.board');
+      // uso leve de html2canvas embutido
+      if(!window.html2canvas){
+        await loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js');
+      }
+      const canvas = await html2canvas(node, {backgroundColor: '#0f172a', scale: 2});
+      const link = document.createElement('a');
+      link.download = 'cartela-bingo-'+cardIdEl.textContent+'.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function loadScript(src){
+      return new Promise((res, rej)=>{ const s=document.createElement('script'); s.src=src; s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+    }
+
+    // Eventos UI
+    document.getElementById('newCardBtn').addEventListener('click', regenerate);
+    document.getElementById('resetMarksBtn').addEventListener('click', resetMarks);
+    document.getElementById('printBtn').addEventListener('click', printCard);
+    document.getElementById('copyIdBtn').addEventListener('click', copyId);
+    document.getElementById('okOverlay').addEventListener('click', ()=> overlay.classList.remove('show'));
+    document.getElementById('screenshotBtn').addEventListener('click', screenshotBoard);
+
+    // Inicialização: tenta carregar card salvo, senão cria um novo
+    (function init(){
+      const saved = loadState();
+      if(saved){
+        // reconstruir uma cartela com mesma distribuição é complexo sem guardar números; então apenas gera nova e restaura marcas (aproximação)
+        buildCard();
+        restoreMarks(saved.marks || []);
+        cardIdEl.textContent = saved.id || uuid();
+      } else {
+        buildCard();
+      }
+    })();
+  </script>
+</body>
+</html>
