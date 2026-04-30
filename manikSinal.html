@@ -157,7 +157,7 @@
 <!-- Card de Sinal (3 min) -->
 <div id="entry-card">
     <div style="font-size: 0.8rem; opacity: 0.7;">CONFIRMAÇÃO DE ENTRADA</div>
-    <h2 id="card-pair">EUR/USD - M5</h2>
+    <h2 id="card-pair">EUR/USD - M1</h2>
     <div id="card-info" style="font-size: 1.2rem; margin: 10px 0;"></div>
     <div id="card-btn" class="btn-dir">AGUARDANDO...</div>
     <div style="margin-top: 15px; font-size: 0.7rem;">ESTRATÉGIA: <span id="card-desc">---</span></div>
@@ -184,10 +184,14 @@
 <script>
     // --- LISTA DE SINAIS (OCULTA) ---
     const signals = [
-        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
-        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
-        { time: "19:55", dir: "PUT", desc: "Fluxo EMA 14" }, // Teste Próximo
-        { time: "20:00", dir: "CALL", desc: "Suporte SMA 50" }
+        { time: "19:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
+{ time: "19:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
+{ time: "19:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
+{ time: "19:30", dir: "CALL", desc: "Virada de Ciclo (Algoritmo)" },
+{ time: "19:35", dir: "PUT", desc: "MHI 1 (Minoria)" },
+{ time: "19:40", dir: "CALL", desc: "Ciclo de Repetição" },
+{ time: "19:45", dir: "PUT", desc: "Reversão de Topo" },
+{ time: "19:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
     ];
 
     // --- ANIMAÇÃO MATRIX ---
