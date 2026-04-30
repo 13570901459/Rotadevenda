@@ -147,7 +147,7 @@
 <div id="lock-on">
     <div class="lock-title">TARGET LOCKED</div>
     <div class="lock-time" id="lk-time">00:00</div>
-    <div class="lock-dir" id="lk-dir">CALL</div>
+    <div class="lock-dir" id="lk-dir">Atenção!</div>
     <div class="lock-desc" id="lk-desc">ESTRATEGIA</div>
     <p class="blink" style="margin-top: 40px; color: var(--alert);">PREPARAR ENTRADA NA CORRETORA</p>
 </div>
@@ -155,14 +155,14 @@
 <script>
     // LISTA MANUAL
     const sinais = [
-        { time: "19:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
-        { time: "19:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
-        { time: "19:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
-        { time: "19:30", dir: "CALL", desc: "Virada de Ciclo (Algoritmo)" },
-        { time: "19:35", dir: "PUT", desc: "MHI 1 (Minoria)" },
-        { time: "19:40", dir: "CALL", desc: "Ciclo de Repetição" },
-        { time: "19:45", dir: "PUT", desc: "Reversão de Topo" },
-        { time: "19:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
+       { time: "20:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
+{ time: "20:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
+{ time: "20:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
+{ time: "20:30", dir: "PUT", desc: "Virada de Ciclo (Estatístico)" },
+{ time: "20:35", dir: "CALL", desc: "MHI 1 (Minoria)" },
+{ time: "20:40", dir: "CALL", desc: "Ciclo de Repetição" },
+{ time: "20:45", dir: "PUT", desc: "Reversão de Topo" },
+{ time: "20:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
     ];
 
     function log(msg) {
