@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QUANTUM MILITARY TERMINAL | V5.0</title>
+    <title>QUANTUM TACTICAL TERMINAL | V6.0</title>
     <style>
         :root {
             --neon-green: #00ff41;
             --dark-bg: #010101;
             --alert-red: #ff003c;
-            --cyber-blue: #00f2ff;
             --army-green: #1a2e1a;
+            --interface-gold: #ffcc00;
         }
 
-        * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; cursor: crosshair; }
+        * { box-sizing: border-box; font-family: 'Consolas', monospace; }
 
         body {
             background-color: var(--dark-bg);
@@ -21,258 +21,233 @@
             margin: 0;
             height: 100vh;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
             border: 2px solid var(--army-green);
         }
 
-        /* OVERLAY DE SCANNER */
-        body::before {
+        /* EFEITO DE SCANLINE HACKER */
+        body::after {
             content: " ";
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
             background-size: 100% 2px, 3px 100%;
-            z-index: 1000;
             pointer-events: none;
+            z-index: 1000;
         }
 
         header {
-            display: grid; grid-template-columns: 1fr 1fr 1fr;
-            padding: 10px; background: #000; border-bottom: 1px solid var(--neon-green);
-            font-size: 10px; text-transform: uppercase;
-        }
-
-        /* GRID PRINCIPAL COMPLEXO */
-        .grid-container {
-            display: grid;
-            grid-template-columns: 250px 1fr 300px;
-            grid-template-rows: 1fr 200px;
-            gap: 10px;
-            padding: 10px;
-            height: calc(100vh - 50px);
-        }
-
-        @media (max-width: 900px) {
-            .grid-container { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; overflow-y: auto; }
-        }
-
-        /* PAINÉIS */
-        .panel {
-            border: 1px solid var(--army-green);
-            background: rgba(0, 20, 0, 0.3);
-            padding: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .panel-header {
-            background: var(--army-green);
-            color: #fff;
-            font-size: 11px;
-            padding: 3px 8px;
-            margin: -10px -10px 10px -10px;
             display: flex; justify-content: space-between;
+            padding: 10px 20px; background: #000;
+            border-bottom: 1px solid var(--neon-green);
+            font-size: 12px; letter-spacing: 2px;
         }
 
-        /* MONITOR DE FREQUÊNCIA (OSCILOSCÓPIO) */
-        #oscillator { width: 100%; height: 60px; background: #000; border: 1px solid var(--neon-green); }
+        /* GRID PRINCIPAL */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: calc(100vh - 45px);
+        }
 
-        /* ALERTAS DE INTERFACE */
-        #alert-system {
-            position: fixed;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            width: 400px;
-            z-index: 2000;
+        /* PAINEL LATERAL */
+        .sidebar {
+            border-right: 1px solid var(--army-green);
+            display: flex; flex-direction: column;
+            background: rgba(0, 10, 0, 0.5);
+        }
+
+        .panel-title {
+            background: var(--army-green);
+            color: white; padding: 5px 10px;
+            font-size: 11px; text-transform: uppercase;
+        }
+
+        #log-terminal {
+            flex-grow: 1; padding: 10px;
+            font-size: 10px; overflow-y: hidden;
+            color: rgba(0, 255, 65, 0.7);
+        }
+
+        /* ÁREA CENTRAL DO RADAR */
+        .viewport {
+            position: relative;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+
+        #radar-canvas {
+            position: absolute; opacity: 0.2;
+            width: 80%; height: 80%; z-index: -1;
+        }
+
+        /* NOTIFICAÇÃO 10 MIN (DISCRETA) */
+        #notify-10 {
+            position: absolute; top: 20px; right: -350px;
+            width: 300px; background: rgba(0, 20, 0, 0.9);
+            border: 1px solid var(--interface-gold);
+            padding: 15px; transition: 0.5s;
+            box-shadow: 0 0 15px var(--interface-gold);
+        }
+
+        /* OVERLAY 3 MIN (SEQUESTRO DE TELA) */
+        #signal-overlay {
+            position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%;
             background: rgba(0,0,0,0.95);
-            border: 2px solid var(--neon-green);
-            padding: 30px;
-            text-align: center;
-            transition: all 0.3s;
+            display: none; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 2000;
+            border: 10px solid transparent;
         }
 
-        #alert-system.active { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 100px var(--neon-green); }
-        #alert-system.danger { border-color: var(--alert-red); box-shadow: 0 0 100px var(--alert-red); }
+        #signal-overlay.active-put { display: flex; border-color: var(--alert-red); animation: pulse-red 1.5s infinite; }
+        #signal-overlay.active-call { display: flex; border-color: var(--neon-green); animation: pulse-green 1.5s infinite; }
 
-        /* BARRAS DE VOLUME DINÂMICAS */
-        .volume-bar { height: 10px; background: #111; margin: 5px 0; border: 1px solid #333; position: relative; }
-        .volume-fill { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.5s; }
+        .big-time { font-size: 120px; font-weight: bold; margin: 0; line-height: 1; }
+        .big-dir { font-size: 80px; margin: 20px 0; border: 2px solid #fff; padding: 10px 40px; }
+        .strategy-label { font-size: 20px; color: #888; text-transform: uppercase; }
 
-        /* LOGS HACKER */
-        #hacker-logs { font-size: 9px; color: var(--neon-green); opacity: 0.7; height: 100%; overflow: hidden; }
+        @keyframes pulse-red { 0% { box-shadow: inset 0 0 50px #ff0000; } 50% { box-shadow: inset 0 0 150px #ff0000; } 100% { box-shadow: inset 0 0 50px #ff0000; } }
+        @keyframes pulse-green { 0% { box-shadow: inset 0 0 50px #00ff41; } 50% { box-shadow: inset 0 0 150px #00ff41; } 100% { box-shadow: inset 0 0 50px #00ff41; } }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 12px; }
-        .stat-val { color: #fff; text-align: right; }
-
-        .blink { animation: blinker 0.8s linear infinite; }
+        .blink { animation: blinker 1s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
 <header>
-    <div>ID: <span id="session-id"></span></div>
-    <div style="text-align:center; font-weight:bold; letter-spacing:3px;">SYSTEMA DE ANÁLISE QUANTUM</div>
-    <div style="text-align:right">LATENCY: <span id="latency">24ms</span></div>
+    <div>STATUS: <span class="blink">SYSTEM_ONLINE</span></div>
+    <div id="pair-header">ASSET: EUR/USD (OTC)</div>
+    <div id="clock">00:00:00</div>
 </header>
 
-<!-- POPUP DE SINAL DINÂMICO -->
-<div id="alert-system">
-    <div id="alert-tag" style="font-size: 10px; margin-bottom: 10px;">[SINAL DETECTADO]</div>
-    <h1 id="alert-type" style="margin: 0; font-size: 3rem;">PUT</h1>
-    <div id="alert-timer" style="font-size: 1.5rem; margin: 10px 0;">03:00</div>
-    <div style="font-size: 10px; color: #888;">CONFIRMAÇÃO: EMA14 + MHI + RSI</div>
-    <div id="alert-btn" style="margin-top:20px; padding:10px; border:1px solid #fff;">AGUARDANDO ENTRADA...</div>
+<div class="main-grid">
+    <div class="sidebar">
+        <div class="panel-title">Kernel Activity</div>
+        <div id="log-terminal"></div>
+        <div class="panel-title">Performance Monitor</div>
+        <div style="padding:10px; font-size: 12px;">
+            CPU_LOAD: 14% <br>
+            LATENCY: 12ms <br>
+            WINS: <span id="win-count" style="color:var(--neon-green)">0</span> | 
+            LOSS: <span id="loss-count" style="color:var(--alert-red)">0</span>
+        </div>
+    </div>
+
+    <div class="viewport">
+        <canvas id="radar-canvas"></canvas>
+        <div id="status-text" style="font-size: 18px; letter-spacing: 5px;">AGUARDANDO SEQUÊNCIA DE DADOS...</div>
+        
+        <!-- Notificação lateral 10 min -->
+        <div id="notify-10">
+            <div style="color:var(--interface-gold); font-size:10px; margin-bottom:5px;">[NOTIFICAÇÃO DE ANÁLISE]</div>
+            <div id="notify-msg" style="font-size:13px;">ANÁLISE TRAVADA NO PAR EUR/USD. AGUARDE...</div>
+        </div>
+    </div>
 </div>
 
-<div class="grid-container">
-    
-    <!-- ESQUERDA: STATUS DE INDICADORES -->
-    <div class="panel">
-        <div class="panel-header">INDICADORES HFT <span>LIVE</span></div>
-        <div class="stat-grid">
-            <div>EMA 14:</div><div id="ema14" class="stat-val">---</div>
-            <div>SMA 50:</div><div id="sma50" class="stat-val">---</div>
-            <div>RSI (14):</div><div id="rsi" class="stat-val">---</div>
-            <div>FRACTAL:</div><div id="fractal" class="stat-val" style="color:var(--cyber-blue)">SYNCING</div>
-        </div>
-        <hr style="border: 0; border-top: 1px solid var(--army-green); margin: 15px 0;">
-        <div style="font-size: 10px;">FLUXO DE VOLUME (REAL-TIME)</div>
-        <div class="volume-bar"><div id="vol-buy" class="volume-fill" style="background:var(--neon-green)"></div></div>
-        <div class="volume-bar"><div id="vol-sell" class="volume-fill" style="background:var(--alert-red)"></div></div>
-    </div>
-
-    <!-- CENTRO: OSCILOSCÓPIO E ANÁLISE DE TENDÊNCIA -->
-    <div class="panel">
-        <div class="panel-header">FREQUÊNCIA DE MERCADO (EUR/USD)</div>
-        <canvas id="oscillator"></canvas>
-        <div style="margin-top: 10px; height: 100px; border: 1px solid #111; position: relative;">
-            <div id="trend-line" style="position: absolute; bottom: 50%; left: 0; width: 100%; height: 1px; background: #222;"></div>
-            <div id="price-dot" style="position: absolute; bottom: 50%; right: 10px; width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 10px var(--neon-green);"></div>
-        </div>
-        <div id="status-msg" class="blink" style="margin-top:10px; text-align:center; font-size:12px;">ESCANEANDO PADRÕES PROBABILÍSTICOS...</div>
-    </div>
-
-    <!-- DIREITA: HISTÓRICO DE WIN/LOSS PROFISSIONAL -->
-    <div class="panel">
-        <div class="panel-header">LOG DE OPERAÇÕES <span>ASSERT: <span id="perc">0%</span></span></div>
-        <div id="hacker-logs"></div>
-    </div>
-
-    <!-- RODAPÉ: CONSOLE DE CÓDIGOS -->
-    <div class="panel" style="grid-column: 1 / -1;">
-        <div class="panel-header">QUANTUM KERNEL LOGS</div>
-        <div id="kernel-logs" style="font-size: 10px; column-count: 3; color: #555;">
-            > INICIALIZANDO ANALIZADOR DE VELA...<br>
-            > RECONHECENDO SUPORTE EM 1.0921<br>
-            > RSI EM NÍVEL DE SOBRECOMPRA...
-        </div>
-    </div>
+<!-- O Sequestro de Tela (3 min antes) -->
+<div id="signal-overlay">
+    <div class="strategy-label" id="ov-desc">ESTRATÉGIA</div>
+    <div class="big-time" id="ov-time">00:00</div>
+    <div class="big-dir" id="ov-dir">CALL</div>
+    <div class="strategy-label blink">ENTRADA IMINENTE - PREPARAR</div>
 </div>
 
 <script>
-    // LISTA DE SINAIS (Oculta)
-    const signals = [
-        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
-        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
-        { time: "19:15", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
-        { time: "19:17", dir: "CALL", desc: "Reversão" }
+    // LISTA DE SINAIS MANUAL
+    const signalList = [
+        { time: "19:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
+        { time: "19:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
+        { time: "19:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
+        { time: "19:30", dir: "CALL", desc: "Virada de Ciclo (Algoritmo)" },
+        { time: "19:35", dir: "PUT", desc: "MHI 1 (Minoria)" },
+        { time: "19:40", dir: "CALL", desc: "Ciclo de Repetição" },
+        { time: "19:45", dir: "PUT", desc: "Reversão de Topo" },
+        { time: "19:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
     ];
 
-    let wins = 0; let total = 0;
-    const sessionID = "TX-" + Math.floor(Math.random()*999999);
-    document.getElementById('session-id').innerText = sessionID;
+    let wins = 0; let losses = 0;
 
-    // --- ANIMAÇÃO OSCILOSCÓPIO ---
-    const canvas = document.getElementById('oscillator');
-    const ctx = canvas.getContext('2d');
-    let x = 0;
-    function drawOsc() {
-        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-        ctx.strokeStyle = "#00ff41"; ctx.beginPath();
-        ctx.moveTo(x, 30 + Math.sin(x/10)*20 + Math.random()*10);
-        x += 2; if(x > canvas.width) x = 0;
-        ctx.lineTo(x, 30 + Math.sin(x/10)*20); ctx.stroke();
-        requestAnimationFrame(drawOsc);
+    function addLog(msg) {
+        const terminal = document.getElementById('log-terminal');
+        const entry = document.createElement('div');
+        entry.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
+        terminal.prepend(entry);
+        if(terminal.childNodes.length > 25) terminal.lastChild.remove();
     }
-    drawOsc();
 
-    // --- SIMULAÇÃO DE DADOS DINÂMICOS ---
-    setInterval(() => {
-        const price = (1.08 + Math.random()*0.01).toFixed(5);
-        document.getElementById('ema14').innerText = (parseFloat(price) + 0.0002).toFixed(5);
-        document.getElementById('rsi').innerText = (Math.random()*100).toFixed(2);
-        document.getElementById('latency').innerText = Math.floor(Math.random()*20 + 10) + "ms";
-        
-        // Volume bars
-        document.getElementById('vol-buy').style.width = Math.random()*100 + "%";
-        document.getElementById('vol-sell').style.width = Math.random()*100 + "%";
-
-        // Kernel logs
-        const kernel = document.getElementById('kernel-logs');
-        const codes = ["> PARITY SYNC...", "> VOLUME DELTA: 0.12", "> CANDLE REJECTION AT H1", "> SMA50 CROSSOVER"];
-        kernel.innerHTML = codes[Math.floor(Math.random()*codes.length)] + "<br>" + kernel.innerHTML.substring(0, 300);
-    }, 2000);
-
-    // --- LÓGICA DE SINAL E ALERTAS ---
-    function checkClock() {
+    function updateTerminal() {
         const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-        
-        signals.forEach(sig => {
+        const curTimeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
+
+        signalList.forEach(sig => {
             const [h, m] = sig.time.split(':').map(Number);
             const target = new Date(); target.setHours(h, m, 0);
-            const diff = (target - now) / 60000;
+            const diffMs = target - now;
+            const diffMin = diffMs / 60000;
 
-            // 10 MINUTOS ANTES: NOTIFICAÇÃO DE ANÁLISE
-            if (diff <= 10 && diff > 9.9) {
-                showPopup("ANALISANDO...", `DETECTADA POSSÍVEL ENTRADA ${sig.dir} ÀS ${sig.time}`, false);
+            // 1. ALERTA 10 MINUTOS (Notificação lateral)
+            if (diffMin <= 10 && diffMin > 9.8) {
+                const note = document.getElementById('notify-10');
+                note.style.right = '20px';
+                document.getElementById('notify-msg').innerText = `Análise travada para ${sig.time}.`;
+                addLog(`[ALERTA] Varredura iniciada para o sinal das ${sig.time}`);
+                setTimeout(() => { note.style.right = '-350px'; }, 8000);
             }
 
-            // 3 MINUTOS ANTES: ENTRADA COMPLEXA
-            if (diff <= 3 && diff > 0) {
-                showPopup(`CONFIRMAR ${sig.dir}`, `ENTRADA EM ${Math.ceil(diff)} MINUTOS`, true, sig.dir);
-                document.getElementById('alert-timer').innerText = Math.floor(diff) + ":" + now.getSeconds().toString().padStart(2,'0');
-            }
-
-            // MOMENTO DO SINAL (RESULTADO)
-            if (Math.abs(diff) < 0.01 && !sig.done) {
-                sig.done = true;
-                processResult(sig);
+            // 2. SEQUESTRO DE TELA 3 MINUTOS
+            if (diffMin <= 3 && diffMin > 0) {
+                const overlay = document.getElementById('signal-overlay');
+                overlay.className = sig.dir === 'PUT' ? 'active-put' : 'active-call';
+                
+                document.getElementById('ov-time').innerText = sig.time;
+                document.getElementById('ov-dir').innerText = sig.dir;
+                document.getElementById('ov-desc').innerText = sig.desc;
+                
+                document.getElementById('status-text').innerText = `SINAL EM CURSO: ${sig.dir}`;
+            } 
+            
+            // 3. FECHAR OVERLAY APÓS O SINAL
+            if (diffMin < 0 && diffMin > -1) {
+                document.getElementById('signal-overlay').className = '';
+                if(!sig.processed) {
+                    sig.processed = true;
+                    // Simulação automática de resultado
+                    const win = Math.random() > 0.3;
+                    if(win) { wins++; addLog(`RESULTADO: WIN @ ${sig.time}`); }
+                    else { losses++; addLog(`RESULTADO: LOSS @ ${sig.time}`); }
+                    document.getElementById('win-count').innerText = wins;
+                    document.getElementById('loss-count').innerText = losses;
+                }
             }
         });
     }
 
-    function showPopup(type, msg, isAction, dir) {
-        const alert = document.getElementById('alert-system');
-        alert.classList.add('active');
-        if(dir === 'PUT') alert.classList.add('danger'); else alert.classList.remove('danger');
-        
-        document.getElementById('alert-tag').innerText = type;
-        document.getElementById('alert-type').innerText = dir || "!!!";
-        document.getElementById('alert-btn').innerText = msg;
+    // Efeito Visual de Radar de fundo
+    const canvas = document.getElementById('radar-canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 600; canvas.height = 600;
+    let angle = 0;
 
-        if(!isAction) setTimeout(() => alert.classList.remove('active'), 5000);
+    function drawRadar() {
+        ctx.clearRect(0,0,600,600);
+        ctx.strokeStyle = '#00ff41';
+        ctx.beginPath(); ctx.arc(300,300,250,0,Math.PI*2); ctx.stroke();
+        ctx.moveTo(300,300);
+        ctx.lineTo(300 + Math.cos(angle)*250, 300 + Math.sin(angle)*250);
+        ctx.stroke();
+        angle += 0.05;
+        requestAnimationFrame(drawRadar);
     }
+    drawRadar();
 
-    function processResult(sig) {
-        total++;
-        const isWin = Math.random() > 0.3; // 70% Win rate sim
-        const log = document.getElementById('hacker-logs');
-        const color = isWin ? 'var(--neon-green)' : 'var(--alert-red)';
-        const resText = isWin ? 'WIN' : 'LOSS (GALE 1...)';
-        
-        if(isWin) wins++;
-        
-        log.innerHTML = `<div style="color:${color}; margin-bottom:5px;">[${sig.time}] ${sig.dir} -> ${resText}</div>` + log.innerHTML;
-        
-        document.getElementById('perc').innerText = ((wins/total)*100).toFixed(1) + "%";
-        document.getElementById('alert-system').classList.remove('active');
-    }
-
-    setInterval(checkClock, 1000);
+    setInterval(updateTerminal, 1000);
+    addLog("Terminal Quantum Inicializado...");
+    addLog("Lista manual carregada com sucesso.");
 </script>
 
 </body>
