@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEMA TÁTICO | EUR/USD</title>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <style>
+        :root {
+            --army-green: #4b5320;
+            --neon-green: #00ff41;
+            --dark-black: #0a0a0a;
+            --alert-red: #ff0000;
+            --military-grey: #2f2f2f;
+        }
+
+        body {
+            background-color: var(--dark-black);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            overflow-x: hidden;
+            border: 2px solid var(--army-green);
+        }
+
+        /* Estilo Militar Futurista */
+        header {
+            background: linear-gradient(180deg, var(--army-green), var(--dark-black));
+            padding: 10px;
+            text-align: center;
+            border-bottom: 2px solid var(--neon-green);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 10px;
+            padding: 15px;
+            height: 85vh;
+        }
+
+        #chart {
+            background: #000;
+            border: 1px solid var(--army-green);
+            position: relative;
+        }
+
+        .sidebar {
+            background: rgba(20, 20, 20, 0.9);
+            border-left: 2px solid var(--army-green);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .panel-title {
+            background: var(--army-green);
+            color: white;
+            padding: 5px;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        .log-container {
+            flex-grow: 1;
+            border: 1px solid var(--military-grey);
+            font-size: 0.7rem;
+            overflow-y: auto;
+            padding: 5px;
+            background: rgba(0, 30, 0, 0.5);
+        }
+
+        .signal-alert {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid var(--alert-red);
+            padding: 10px;
+            display: none;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background: var(--military-grey);
+            font-weight: bold;
+        }
+
+        .win { color: var(--neon-green); }
+        .loss { color: var(--alert-red); }
+
+        /* Estilização da lista de sinais */
+        .signal-item {
+            border-bottom: 1px dashed var(--army-green);
+            padding: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #realtime-clock {
+            font-size: 1.2rem;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Tactical Signal Analyzer v3.0</h1>
+</header>
+
+<div class="container">
+    <div id="chart-area">
+        <div id="realtime-clock">00:00:00</div>
+        <div id="chart" style="width: 100%; height: 500px;"></div>
+        <div id="alert-box" class="signal-alert">
+            [AVISO]: ANÁLISE EM CURSO... POSSÍVEL ENTRADA EM <span id="alert-timer">10</span> MINUTOS.
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="panel-title">CENTRAL DE COMANDO</div>
+        
+        <div class="stats">
+            WIN: <span id="win-count">0</span> | LOSS: <span id="loss-count">0</span>
+        </div>
+
+        <div class="panel-title">PRÓXIMOS SINAIS (M5)</div>
+        <div id="signal-list" class="log-container">
+            <!-- Sinais serão injetados aqui -->
+        </div>
+
+        <div class="panel-title">FEED OPERACIONAL AO VIVO</div>
+        <div id="live-feed" class="log-container">
+            > Sistema iniciado...<br>
+            > Monitorando Médias Móveis (EMA14/50)...<br>
+            > Suporte/Resistência Ativos...
+        </div>
+    </div>
+</div>
+
+<script>
+    // Configurações e Lista de Sinais
+    const rawSignals = [
+        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
+        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
+        { time: "13:20", dir: "PUT", desc: "Fluxo (Abaixo EMA14)" },
+        { time: "13:25", dir: "CALL", desc: "MHI 1 (Minoria)" },
+        { time: "13:30", dir: "PUT", desc: "Reversão Ciclo" },
+        { time: "16:45", dir: "CALL", desc: "MHI 1 (Minoria)" }, // Exemplo próximo
+        { time: "16:50", dir: "PUT", desc: "Ciclo Probabilidade" }
+    ];
+
+    let wins = 0;
+    let losses = 0;
+
+    // Inicializar Gráfico
+    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+        layout: { backgroundColor: '#000', textColor: '#00ff41' },
+        grid: { vertLines: { color: '#1a1a1a' }, horzLines: { color: '#1a1a1a' } },
+        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+        priceScale: { borderColor: '#4b5320' },
+        timeScale: { borderColor: '#4b5320', timeVisible: true },
+    });
+
+    const candleSeries = chart.addCandlestickSeries({
+        upColor: '#00ff41', downColor: '#ff0000', borderVisible: false,
+        wickUpColor: '#00ff41', wickDownColor: '#ff0000'
+    });
+
+    // Conectar à API Real (EUR/USD via Binance - Símbolo substituto comum: BTCUSDT para teste ou Forex via Websocket)
+    // Para fins de demonstração em HTML puro, usamos BTCUSDT que é aberto 24/7. 
+    // Para EURUSD real, seria necessário um token de API (Oanda/Polygon).
+    const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_1m');
+
+    socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        const candle = data.k;
+        candleSeries.update({
+            time: candle.t / 1000,
+            open: parseFloat(candle.o),
+            high: parseFloat(candle.h),
+            low: parseFloat(candle.l),
+            close: parseFloat(candle.c),
+        });
+        checkSignalTiming();
+    };
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('realtime-clock').innerText = now.toLocaleTimeString();
+    }
+    setInterval(updateClock, 1000);
+
+    function addLog(msg) {
+        const feed = document.getElementById('live-feed');
+        feed.innerHTML = `> ${msg}<br>` + feed.innerHTML;
+    }
+
+    // Lógica de Sinais e Alertas
+    function checkSignalTiming() {
+        const now = new Date();
+        const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                             now.getMinutes().toString().padStart(2, '0');
+        
+        rawSignals.forEach(sig => {
+            const [sigH, sigM] = sig.time.split(':').map(Number);
+            const sigDate = new Date();
+            sigDate.setHours(sigH, sigM, 0);
+
+            const diffMinutes = (sigDate - now) / 60000;
+
+            // Alerta 10 minutos antes
+            if (diffMinutes <= 10 && diffMinutes > 3) {
+                const alertBox = document.getElementById('alert-box');
+                alertBox.style.display = 'block';
+                document.getElementById('alert-timer').innerText = Math.floor(diffMinutes);
+            } 
+            // Execução 2-3 minutos antes
+            else if (diffMinutes <= 3 && diffMinutes > 0) {
+                addLog(`PREPARAÇÃO: ${sig.dir} em ${sig.time} (${sig.desc})`);
+            }
+            // Momento do Sinal (Simulação de Resultado)
+            else if (Math.abs(diffMinutes) < 0.1) {
+                processResult(sig);
+            }
+        });
+    }
+
+    function processResult(sig) {
+        // Simulação de Gale 1
+        const win = Math.random() > 0.3; // 70% chance simulada
+        if(win) {
+            wins++;
+            document.getElementById('win-count').innerText = wins;
+            addLog(`<span class="win">WIN NO SINAL ${sig.time}!</span>`);
+        } else {
+            addLog(`<span class="loss">LOSS NO SINAL. ENTRANDO EM GALE 1...</span>`);
+            setTimeout(() => {
+                if(Math.random() > 0.4) {
+                    wins++;
+                    document.getElementById('win-count').innerText = wins;
+                    addLog(`<span class="win">WIN GALE 1!</span>`);
+                } else {
+                    losses++;
+                    document.getElementById('loss-count').innerText = losses;
+                    addLog(`<span class="loss">LOSS TOTAL NO SINAL ${sig.time}</span>`);
+                }
+            }, 2000);
+        }
+    }
+
+    // Popular lista inicial
+    const listContainer = document.getElementById('signal-list');
+    rawSignals.forEach(s => {
+        listContainer.innerHTML += `
+            <div class="signal-item">
+                <span>${s.time}</span>
+                <span>${s.dir === 'CALL' ? '🟢' : '🔴'} ${s.dir}</span>
+                <small>${s.desc}</small>
+            </div>
+        `;
+    });
+
+</script>
+
+</body>
+</html>
