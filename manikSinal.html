@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TERMINAL TÁTICO | EUR/USD</title>
+    <title>SISTEMA TÁTICO INVISÍVEL | EUR/USD</title>
     <style>
         :root {
             --matrix-green: #00ff41;
-            --dark-bg: #030303;
+            --dark-bg: #020202;
             --alert-red: #ff0000;
             --army-dim: #1b3022;
         }
@@ -22,322 +22,242 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            border: 1px solid var(--army-dim);
         }
 
-        /* ANIMAÇÃO DE FUNDO "MATRIX" */
         #matrix-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.15;
+            opacity: 0.1;
             z-index: -1;
         }
 
-        /* HEADER */
         header {
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            background: #000;
             border-bottom: 2px solid var(--matrix-green);
             display: flex;
             justify-content: space-between;
+            font-size: 0.9rem;
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+
+        /* CONTAINER CENTRAL DE ANÁLISE */
+        .main-terminal {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            text-transform: uppercase;
-            font-weight: bold;
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
-        }
-
-        /* ALERTAS GRANDES */
-        #main-alert {
-            position: fixed;
-            top: 20%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 0, 0, 0.9);
-            color: #fff;
-            padding: 20px 40px;
-            border: 4px solid white;
-            z-index: 999;
-            text-align: center;
-            display: none;
-            animation: glitch 0.3s infinite;
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(-50%, -50%) skew(0deg); }
-            50% { transform: translate(-50.5%, -49.5%) skew(2deg); }
-            100% { transform: translate(-49.5%, -50.5%) skew(-2deg); }
-        }
-
-        /* LAYOUT */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            flex-grow: 1;
-        }
-
-        @media (max-width: 900px) {
-            .dashboard { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
-        }
-
-        /* COLUNA DA ESQUERDA: ANÁLISE DINÂMICA */
-        .analysis-core {
+            justify-content: center;
             padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            border-right: 1px solid var(--army-dim);
-        }
-
-        .data-stream {
-            flex-grow: 1;
-            background: rgba(0, 40, 0, 0.2);
-            border: 1px solid var(--army-dim);
-            padding: 15px;
-            font-size: 0.85rem;
-            overflow-y: hidden;
-            position: relative;
-        }
-
-        .indicator-box {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .ind-item {
-            border: 1px solid var(--matrix-green);
-            padding: 10px;
-            background: rgba(0, 255, 65, 0.05);
-        }
-
-        .val { float: right; color: #fff; text-shadow: 0 0 5px var(--matrix-green); }
-
-        /* COLUNA DA DIREITA: LISTA E PLACAR */
-        .sidebar {
-            background: rgba(10, 10, 10, 0.95);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .status-panel {
-            padding: 15px;
-            border-bottom: 1px solid var(--army-dim);
             text-align: center;
         }
 
-        .signal-list {
-            flex-grow: 1;
-            padding: 10px;
-            overflow-y: auto;
-        }
-
-        .signal-row {
-            padding: 12px;
-            margin-bottom: 8px;
-            background: rgba(255, 255, 255, 0.03);
-            border-left: 4px solid var(--army-dim);
+        .radar-box {
+            width: 250px;
+            height: 250px;
+            border: 2px solid var(--matrix-green);
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 20px;
             display: flex;
-            justify-content: space-between;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 0 30px var(--army-dim);
         }
 
-        .signal-row.win { border-left-color: var(--matrix-green); color: var(--matrix-green); }
-        .signal-row.loss { border-left-color: var(--alert-red); color: var(--alert-red); }
-
-        /* PULSE ANIMAÇÃO */
-        .active-signal { animation: pulse-green 1s infinite; }
-        @keyframes pulse-green {
-            0% { background: rgba(0, 255, 65, 0); }
-            50% { background: rgba(0, 255, 65, 0.2); }
-            100% { background: rgba(0, 255, 65, 0); }
+        .radar-line {
+            width: 50%;
+            height: 2px;
+            background: var(--matrix-green);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: left;
+            animation: radar-sweep 4s linear infinite;
         }
+
+        @keyframes radar-sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* NOTIFICAÇÃO 10 MINUTOS */
+        #notification-10min {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            width: 300px;
+            background: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 15px;
+            border-left: 5px solid #fff;
+            transition: right 0.5s ease;
+            z-index: 100;
+        }
+
+        /* CARD DE ENTRADA 3 MINUTOS */
+        #entry-card {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 90%;
+            max-width: 450px;
+            background: rgba(0, 20, 0, 0.95);
+            border: 3px solid var(--matrix-green);
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 101;
+            box-shadow: 0 0 50px rgba(0, 255, 65, 0.4);
+        }
+
+        #entry-card.active { transform: translateX(-50%) scale(1); }
+
+        .btn-dir {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-top: 15px;
+            font-weight: bold;
+            border: 1px solid #fff;
+        }
+
+        .put { background: var(--alert-red); color: white; }
+        .call { background: var(--matrix-green); color: black; }
+
+        /* LOG DE SISTEMA */
+        #sys-logs {
+            width: 100%;
+            max-width: 600px;
+            height: 150px;
+            font-size: 0.7rem;
+            color: #555;
+            overflow: hidden;
+            border-top: 1px solid var(--army-dim);
+            padding-top: 10px;
+        }
+
+        .glitch-text { animation: flash 0.2s infinite; }
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
 
 <canvas id="matrix-bg"></canvas>
 
-<div id="main-alert">
-    <h1 id="alert-title">ALERTA DE ANÁLISE</h1>
-    <p id="alert-msg">POSSÍVEL SINAL EM 10 MINUTOS</p>
+<!-- Alerta Lateral (10 min) -->
+<div id="notification-10min">
+    <strong>[!] ALERTA TÁTICO</strong><br>
+    Análise iniciada. Sinal detectado em 10 minutos.
+</div>
+
+<!-- Card de Sinal (3 min) -->
+<div id="entry-card">
+    <div style="font-size: 0.8rem; opacity: 0.7;">CONFIRMAÇÃO DE ENTRADA</div>
+    <h2 id="card-pair">EUR/USD - M5</h2>
+    <div id="card-info" style="font-size: 1.2rem; margin: 10px 0;"></div>
+    <div id="card-btn" class="btn-dir">AGUARDANDO...</div>
+    <div style="margin-top: 15px; font-size: 0.7rem;">ESTRATÉGIA: <span id="card-desc">---</span></div>
 </div>
 
 <header>
-    <div>[TERMINAL_V3] <span id="pair">EUR/USD</span></div>
+    <div>[CYBER_BOT_V4] STATUS: <span class="glitch-text" style="color:var(--matrix-green)">MONITORANDO</span></div>
     <div id="live-clock">00:00:00</div>
-    <div id="connection">CONECTADO: BINANCE_WS</div>
 </header>
 
-<div class="dashboard">
-    <div class="analysis-core">
-        <div class="indicator-box">
-            <div class="ind-item">EMA 14 <span id="v-ema14" class="val">1.0845</span></div>
-            <div class="ind-item">EMA 50 <span id="v-ema50" class="val">1.0832</span></div>
-            <div class="ind-item">SMA 50 <span id="v-sma50" class="val">1.0820</span></div>
-            <div class="ind-item">FRACTAL <span id="v-fractal" class="val">DETECTADO</span></div>
-        </div>
-
-        <div class="data-stream" id="log-console">
-            <!-- Logs automáticos simulando a IA -->
-        </div>
-        
-        <div class="ind-item" style="border-color: #555;">
-            SUPORTE: <span class="val">1.07902</span><br>
-            RESISTÊNCIA: <span class="val">1.09210</span>
-        </div>
+<div class="main-terminal">
+    <div class="radar-box">
+        <div class="radar-line"></div>
+        <div style="z-index: 2; font-size: 0.8rem;">SCANNING...</div>
     </div>
 
-    <div class="sidebar">
-        <div class="status-panel">
-            WINS: <span id="w">0</span> | LOSS: <span id="l">0</span><br>
-            <small>RESULTADOS EM TEMPO REAL (ATÉ GALE 1)</small>
-        </div>
-        <div class="signal-list" id="list-container">
-            <!-- Sinais injetados aqui -->
-        </div>
+    <div id="status-text">AGUARDANDO OPORTUNIDADE NO MERCADO...</div>
+    
+    <div id="sys-logs">
+        <!-- Logs simulados -->
     </div>
 </div>
 
 <script>
-    // --- CONFIGURAÇÃO DOS SINAIS ---
-    const rawSignals = [
+    // --- LISTA DE SINAIS (OCULTA) ---
+    const signals = [
         { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
         { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
-        { time: "13:20", dir: "PUT", desc: "Fluxo EMA 14" },
-        { time: "17:45", dir: "CALL", desc: "Reversão Ciclo" },
-        { time: "17:50", dir: "PUT", desc: "Fractal M5" }
+        { time: "19:55", dir: "PUT", desc: "Fluxo EMA 14" }, // Teste Próximo
+        { time: "20:00", dir: "CALL", desc: "Suporte SMA 50" }
     ];
-
-    let wins = 0; let losses = 0;
 
     // --- ANIMAÇÃO MATRIX ---
     const canvas = document.getElementById('matrix-bg');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@#%";
-    const fontSize = 14;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
-
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const drops = Array(Math.floor(canvas.width/14)).fill(1);
     function drawMatrix() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff41";
-        ctx.font = fontSize + "px monospace";
-        for (let i = 0; i < drops.length; i++) {
-            const text = letters[Math.floor(Math.random() * letters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#00ff41"; ctx.font = "14px monospace";
+        drops.forEach((y, i) => {
+            const text = String.fromCharCode(Math.random() * 128);
+            ctx.fillText(text, i * 14, y * 14);
+            if (y * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
             drops[i]++;
-        }
+        });
     }
     setInterval(drawMatrix, 50);
 
-    // --- LÓGICA DE ANÁLISE DINÂMICA ---
-    function addLog(msg) {
-        const consoleObj = document.getElementById('log-console');
-        const entry = document.createElement('div');
-        entry.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
-        consoleObj.prepend(entry);
-        if (consoleObj.childNodes.length > 15) consoleObj.lastChild.remove();
-    }
-
-    // Simula análise mudando números
-    setInterval(() => {
-        const price = (1.08 + Math.random() * 0.01).toFixed(5);
-        document.getElementById('v-ema14').innerText = price;
-        addLog(`ANALISANDO FLUXO DE VELA: ${(Math.random() * 100).toFixed(0)}% ESTÁVEL`);
-    }, 3000);
-
-    // --- ALERTAS E EXECUÇÃO ---
-    function checkSchedules() {
+    // --- LÓGICA DE TEMPO E NOTIFICAÇÃO ---
+    function update() {
         const now = new Date();
-        const currentH = now.getHours();
-        const currentM = now.getMinutes();
         document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
-        rawSignals.forEach((sig, i) => {
+        signals.forEach(sig => {
             const [h, m] = sig.time.split(':').map(Number);
             const target = new Date(); target.setHours(h, m, 0);
-            const diff = (target - now) / 60000;
+            const diffMin = (target - now) / 60000;
 
-            // 10 MINUTOS ANTES - ALERTA NA TELA
-            if (diff <= 10 && diff > 9.8) {
-                triggerAlert("ANÁLISE INICIADA", `SINAL EM 10 MIN: ${sig.dir} ${sig.time}`);
+            // 1. Notificação 10 min antes (Aparece e some após 10s)
+            if (diffMin <= 10 && diffMin > 9.8) {
+                const note = document.getElementById('notification-10min');
+                note.style.right = '20px';
+                addLog(`[!] Alerta: Sinal detectado em ${sig.time}`);
+                setTimeout(() => { note.style.right = '-400px'; }, 10000);
             }
 
-            // 3 MINUTOS ANTES - PREPARAÇÃO
-            if (diff <= 3 && diff > 2.8) {
-                triggerAlert("PREPARAR ENTRADA", `SINAL ${sig.dir} EM 3 MINUTOS!`, true);
-                addLog(`ALGORITMO CONFIRMANDO ${sig.desc}...`);
-            }
-
-            // EXECUÇÃO DO RESULTADO
-            if (diff <= 0 && !sig.done) {
-                executeResult(sig, i);
+            // 2. Card de Entrada 3 min antes
+            if (diffMin <= 3 && diffMin > 0) {
+                const card = document.getElementById('entry-card');
+                card.classList.add('active');
+                document.getElementById('card-info').innerText = `${sig.dir} ÀS ${sig.time}`;
+                document.getElementById('card-desc').innerText = sig.desc;
+                const btn = document.getElementById('card-btn');
+                btn.innerText = `ENTRAR AGORA: ${sig.dir}`;
+                btn.className = `btn-dir ${sig.dir.toLowerCase()}`;
+                
+                document.getElementById('status-text').innerText = `ALVO LOCALIZADO: PREPARAR PARA ${sig.dir}`;
+            } 
+            
+            // 3. Limpar após o horário do sinal
+            if (diffMin < -1) {
+                document.getElementById('entry-card').classList.remove('active');
+                document.getElementById('status-text').innerText = "AGUARDANDO OPORTUNIDADE NO MERCADO...";
             }
         });
     }
 
-    function triggerAlert(title, msg, isGreen = false) {
-        const box = document.getElementById('main-alert');
-        box.style.display = 'block';
-        box.style.background = isGreen ? 'rgba(0, 255, 65, 0.9)' : 'rgba(255, 0, 0, 0.9)';
-        document.getElementById('alert-title').innerText = title;
-        document.getElementById('alert-msg').innerText = msg;
-        setTimeout(() => box.style.display = 'none', 8000);
+    function addLog(msg) {
+        const logBox = document.getElementById('sys-logs');
+        logBox.innerHTML = `<div>> ${msg}</div>` + logBox.innerHTML;
     }
 
-    function executeResult(sig, index) {
-        sig.done = true;
-        const row = document.getElementById(`row-${index}`);
-        addLog(`EXECUTANDO SINAL: ${sig.dir} @ ${sig.time}`);
-        
-        // Simulação Realista com Gale 1
-        setTimeout(() => {
-            const win = Math.random() > 0.3;
-            if(win) {
-                wins++; row.className = 'signal-row win';
-                addLog(`SINAL ${sig.time}: WIN DIRETO!`);
-            } else {
-                addLog(`SINAL ${sig.time}: LOSS DIRETO. ENTRANDO GALE 1...`);
-                setTimeout(() => {
-                    if(Math.random() > 0.4) {
-                        wins++; row.className = 'signal-row win';
-                        addLog(`SINAL ${sig.time}: WIN NO GALE 1!`);
-                    } else {
-                        losses++; row.className = 'signal-row loss';
-                        addLog(`SINAL ${sig.time}: LOSS TOTAL.`);
-                    }
-                    updateScore();
-                }, 3000);
-            }
-            updateScore();
-        }, 5000);
-    }
+    // Simulação de atividade hacker
+    setInterval(() => {
+        const actions = ["Analisando Médias...", "Fractal verificado", "SMA50 Estável", "EUR/USD Fluxo OK"];
+        addLog(actions[Math.floor(Math.random() * actions.length)]);
+    }, 4000);
 
-    function updateScore() {
-        document.getElementById('w').innerText = wins;
-        document.getElementById('l').innerText = losses;
-    }
-
-    // Gerar lista
-    const container = document.getElementById('list-container');
-    rawSignals.forEach((s, i) => {
-        container.innerHTML += `
-            <div class="signal-row" id="row-${i}">
-                <span>${s.time}</span>
-                <span style="font-weight:bold">${s.dir}</span>
-                <small>${s.desc}</small>
-            </div>
-        `;
-    });
-
-    setInterval(checkSchedules, 1000);
-
+    setInterval(update, 1000);
 </script>
 </body>
 </html>
