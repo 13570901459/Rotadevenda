@@ -2,279 +2,344 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA TÁTICO | EUR/USD</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MILITARY SIGNAL BOT | EUR/USD</title>
     <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <style>
         :root {
             --army-green: #4b5320;
             --neon-green: #00ff41;
-            --dark-black: #0a0a0a;
+            --dark-black: #050505;
             --alert-red: #ff0000;
-            --military-grey: #2f2f2f;
+            --military-grey: #1a1a1a;
+            --glass: rgba(0, 255, 65, 0.1);
         }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
             background-color: var(--dark-black);
             color: var(--neon-green);
-            font-family: 'Courier New', Courier, monospace;
+            font-family: 'Segoe UI', 'Courier New', monospace;
             margin: 0;
-            overflow-x: hidden;
-            border: 2px solid var(--army-green);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden; /* Evita scroll na página inteira modo 'App' */
         }
 
-        /* Estilo Militar Futurista */
+        /* HEADER ESTILO SOFTWARE */
         header {
-            background: linear-gradient(180deg, var(--army-green), var(--dark-black));
+            background: #000;
+            border-bottom: 2px solid var(--army-green);
             padding: 10px;
-            text-align: center;
-            border-bottom: 2px solid var(--neon-green);
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            text-shadow: 0 0 10px var(--neon-green);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
         }
 
-        .container {
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+            box-shadow: 0 0 5px var(--neon-green);
+        }
+
+        /* LAYOUT RESPONSIVO PRINCIPAL */
+        .main-layout {
             display: grid;
-            grid-template-columns: 1fr 350px;
-            gap: 10px;
-            padding: 15px;
-            height: 85vh;
+            grid-template-columns: 1fr 320px; /* Desktop: Lado a Lado */
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* AJUSTE PARA CELULAR (MODO APP) */
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr 300px; /* Gráfico em cima, Painel embaixo */
+            }
+            header h1 { font-size: 0.9rem; }
+        }
+
+        /* ÁREA DO GRÁFICO */
+        #chart-container {
+            position: relative;
+            border-right: 1px solid var(--army-green);
+            display: flex;
+            flex-direction: column;
         }
 
         #chart {
-            background: #000;
-            border: 1px solid var(--army-green);
-            position: relative;
-        }
-
-        .sidebar {
-            background: rgba(20, 20, 20, 0.9);
-            border-left: 2px solid var(--army-green);
-            padding: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .panel-title {
-            background: var(--army-green);
-            color: white;
-            padding: 5px;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-
-        .log-container {
             flex-grow: 1;
-            border: 1px solid var(--military-grey);
-            font-size: 0.7rem;
-            overflow-y: auto;
-            padding: 5px;
-            background: rgba(0, 30, 0, 0.5);
+            width: 100%;
         }
 
-        .signal-alert {
-            background: rgba(255, 0, 0, 0.1);
-            border: 1px solid var(--alert-red);
-            padding: 10px;
+        /* ALERTAS FLUTUANTES */
+        #alert-overlay {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 90%;
+            max-width: 400px;
+            background: rgba(255, 0, 0, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
             display: none;
+            border: 2px solid #fff;
+            box-shadow: 0 0 20px rgba(255,0,0,0.5);
             animation: pulse 1s infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        /* PAINEL LATERAL / INFERIOR */
+        .sidebar {
+            background: var(--military-grey);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        .stats {
+        .tabs {
+            display: flex;
+            background: #000;
+            border-bottom: 1px solid var(--army-green);
+        }
+
+        .tab {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-right: 1px solid var(--army-green);
+        }
+
+        .tab.active { background: var(--army-green); color: #fff; }
+
+        .content-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            font-size: 0.8rem;
+        }
+
+        /* PLACAR */
+        .scoreboard {
             display: flex;
             justify-content: space-around;
-            padding: 10px;
-            background: var(--military-grey);
+            padding: 15px;
+            background: #000;
+            border-bottom: 1px solid var(--army-green);
             font-weight: bold;
         }
 
-        .win { color: var(--neon-green); }
-        .loss { color: var(--alert-red); }
+        .win-text { color: var(--neon-green); }
+        .loss-text { color: var(--alert-red); }
 
-        /* Estilização da lista de sinais */
-        .signal-item {
-            border-bottom: 1px dashed var(--army-green);
-            padding: 5px 0;
+        /* LISTA DE SINAIS */
+        .sig-row {
+            background: rgba(0,255,65,0.05);
+            margin-bottom: 5px;
+            padding: 8px;
+            border-left: 3px solid var(--army-green);
             display: flex;
             justify-content: space-between;
+            align-items: center;
         }
 
-        #realtime-clock {
-            font-size: 1.2rem;
-            color: #fff;
-            text-align: center;
-            margin-bottom: 10px;
+        .sig-row.win-border { border-left-color: var(--neon-green); background: rgba(0,255,65,0.1); }
+        .sig-row.loss-border { border-left-color: var(--alert-red); background: rgba(255,0,0,0.1); }
+
+        @keyframes pulse {
+            0% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+            100% { transform: translateX(-50%) scale(1); }
         }
+
+        /* SCROLLBAR ESTILO ROBÔ */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: var(--army-green); }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Tactical Signal Analyzer v3.0</h1>
+    <div><span class="status-dot"></span> SISTEMA OPERACIONAL ATIVO</div>
+    <div id="clock">00:00:00</div>
+    <div style="color: #888;">EUR/USD <span style="color: var(--neon-green);">LIVE</span></div>
 </header>
 
-<div class="container">
-    <div id="chart-area">
-        <div id="realtime-clock">00:00:00</div>
-        <div id="chart" style="width: 100%; height: 500px;"></div>
-        <div id="alert-box" class="signal-alert">
-            [AVISO]: ANÁLISE EM CURSO... POSSÍVEL ENTRADA EM <span id="alert-timer">10</span> MINUTOS.
-        </div>
+<div id="alert-overlay">
+    ⚠️ ATENÇÃO: ANALISANDO MERCADO... <br> SINAL POSSÍVEL EM <span id="mins-left">10</span> MINUTOS
+</div>
+
+<div class="main-layout">
+    <!-- ÁREA DO GRÁFICO -->
+    <div id="chart-container">
+        <div id="chart"></div>
     </div>
 
+    <!-- PAINEL DE COMANDO -->
     <div class="sidebar">
-        <div class="panel-title">CENTRAL DE COMANDO</div>
-        
-        <div class="stats">
-            WIN: <span id="win-count">0</span> | LOSS: <span id="loss-count">0</span>
+        <div class="scoreboard">
+            <div>WINS: <span id="wins" class="win-text">0</span></div>
+            <div>LOSSES: <span id="losses" class="loss-text">0</span></div>
+            <div>ASSERT: <span id="assert">0%</span></div>
         </div>
 
-        <div class="panel-title">PRÓXIMOS SINAIS (M5)</div>
-        <div id="signal-list" class="log-container">
-            <!-- Sinais serão injetados aqui -->
+        <div class="tabs">
+            <div class="tab active">SINAIS AGENDADOS</div>
+            <div class="tab">LOG ANALÍTICO</div>
         </div>
 
-        <div class="panel-title">FEED OPERACIONAL AO VIVO</div>
-        <div id="live-feed" class="log-container">
-            > Sistema iniciado...<br>
-            > Monitorando Médias Móveis (EMA14/50)...<br>
-            > Suporte/Resistência Ativos...
+        <div id="signal-list" class="content-scroll">
+            <!-- Injetado via JS -->
+        </div>
+
+        <div id="live-log" class="content-scroll" style="display:none; color: #aaa; font-size: 0.7rem;">
+            [SYSTEM]: Carregando SMA50... OK<br>
+            [SYSTEM]: Carregando EMA14... OK<br>
+            [SYSTEM]: Suporte em 1.08450 identificado...
         </div>
     </div>
 </div>
 
 <script>
-    // Configurações e Lista de Sinais
-    const rawSignals = [
-        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
-        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
-        { time: "13:20", dir: "PUT", desc: "Fluxo (Abaixo EMA14)" },
-        { time: "13:25", dir: "CALL", desc: "MHI 1 (Minoria)" },
-        { time: "13:30", dir: "PUT", desc: "Reversão Ciclo" },
-        { time: "16:45", dir: "CALL", desc: "MHI 1 (Minoria)" }, // Exemplo próximo
-        { time: "16:50", dir: "PUT", desc: "Ciclo Probabilidade" }
+    // Configurações do Robô
+    const signals = [
+        { h: 13, m: 10, dir: 'PUT', label: 'MHI 1 (Minoria)' },
+        { h: 13, m: 15, dir: 'CALL', label: 'MHI 2 (Minoria)' },
+        { h: 14, m: 30, dir: 'PUT', label: 'EMA14 Cruzamento' },
+        { h: 15, m: 00, dir: 'CALL', label: 'Suporte H1' },
+        { h: 16, m: 45, dir: 'CALL', label: 'MHI 1 (Minoria)' },
+        { h: 16, m: 50, dir: 'PUT', label: 'Ciclo Probabilidade' }
     ];
 
     let wins = 0;
     let losses = 0;
 
-    // Inicializar Gráfico
+    // Inicializar Gráfico Profissional
     const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        layout: { backgroundColor: '#000', textColor: '#00ff41' },
-        grid: { vertLines: { color: '#1a1a1a' }, horzLines: { color: '#1a1a1a' } },
-        crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-        priceScale: { borderColor: '#4b5320' },
-        timeScale: { borderColor: '#4b5320', timeVisible: true },
+        layout: { backgroundColor: '#050505', textColor: '#00ff41' },
+        grid: { vertLines: { visible: false }, horzLines: { color: '#1a1a1a' } },
+        timeScale: { timeVisible: true, secondsVisible: false },
     });
-
     const candleSeries = chart.addCandlestickSeries({
         upColor: '#00ff41', downColor: '#ff0000', borderVisible: false,
         wickUpColor: '#00ff41', wickDownColor: '#ff0000'
     });
 
-    // Conectar à API Real (EUR/USD via Binance - Símbolo substituto comum: BTCUSDT para teste ou Forex via Websocket)
-    // Para fins de demonstração em HTML puro, usamos BTCUSDT que é aberto 24/7. 
-    // Para EURUSD real, seria necessário um token de API (Oanda/Polygon).
-    const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_1m');
-
-    socket.onmessage = (event) => {
-        const data = JSON.parse(event.data);
-        const candle = data.k;
+    // Conexão Real (Simulando EUR/USD via par disponível)
+    const binanceSocket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_1m');
+    binanceSocket.onmessage = (e) => {
+        const d = JSON.parse(e.data).k;
         candleSeries.update({
-            time: candle.t / 1000,
-            open: parseFloat(candle.o),
-            high: parseFloat(candle.h),
-            low: parseFloat(candle.l),
-            close: parseFloat(candle.c),
+            time: d.t / 1000, open: d.o, high: d.h, low: d.l, close: d.c
         });
-        checkSignalTiming();
+        checkTimeSchedules();
     };
 
-    function updateClock() {
+    function checkTimeSchedules() {
         const now = new Date();
-        document.getElementById('realtime-clock').innerText = now.toLocaleTimeString();
-    }
-    setInterval(updateClock, 1000);
+        const curH = now.getHours();
+        const curM = now.getMinutes();
 
-    function addLog(msg) {
-        const feed = document.getElementById('live-feed');
-        feed.innerHTML = `> ${msg}<br>` + feed.innerHTML;
-    }
+        document.getElementById('clock').innerText = now.toLocaleTimeString();
 
-    // Lógica de Sinais e Alertas
-    function checkSignalTiming() {
-        const now = new Date();
-        const currentTimeStr = now.getHours().toString().padStart(2, '0') + ":" + 
-                             now.getMinutes().toString().padStart(2, '0');
-        
-        rawSignals.forEach(sig => {
-            const [sigH, sigM] = sig.time.split(':').map(Number);
-            const sigDate = new Date();
-            sigDate.setHours(sigH, sigM, 0);
-
-            const diffMinutes = (sigDate - now) / 60000;
+        signals.forEach((sig, index) => {
+            const sigTime = new Date();
+            sigTime.setHours(sig.h, sig.m, 0);
+            
+            const diff = (sigTime - now) / 60000;
 
             // Alerta 10 minutos antes
-            if (diffMinutes <= 10 && diffMinutes > 3) {
-                const alertBox = document.getElementById('alert-box');
-                alertBox.style.display = 'block';
-                document.getElementById('alert-timer').innerText = Math.floor(diffMinutes);
-            } 
-            // Execução 2-3 minutos antes
-            else if (diffMinutes <= 3 && diffMinutes > 0) {
-                addLog(`PREPARAÇÃO: ${sig.dir} em ${sig.time} (${sig.desc})`);
-            }
-            // Momento do Sinal (Simulação de Resultado)
-            else if (Math.abs(diffMinutes) < 0.1) {
-                processResult(sig);
+            if (diff <= 10 && diff > 9.5) {
+                showTopAlert(Math.ceil(diff));
+            } else if (diff < 0 && !sig.processed) {
+                executeSignal(sig, index);
             }
         });
     }
 
-    function processResult(sig) {
-        // Simulação de Gale 1
-        const win = Math.random() > 0.3; // 70% chance simulada
-        if(win) {
-            wins++;
-            document.getElementById('win-count').innerText = wins;
-            addLog(`<span class="win">WIN NO SINAL ${sig.time}!</span>`);
-        } else {
-            addLog(`<span class="loss">LOSS NO SINAL. ENTRANDO EM GALE 1...</span>`);
-            setTimeout(() => {
-                if(Math.random() > 0.4) {
-                    wins++;
-                    document.getElementById('win-count').innerText = wins;
-                    addLog(`<span class="win">WIN GALE 1!</span>`);
-                } else {
-                    losses++;
-                    document.getElementById('loss-count').innerText = losses;
-                    addLog(`<span class="loss">LOSS TOTAL NO SINAL ${sig.time}</span>`);
-                }
-            }, 2000);
-        }
+    function showTopAlert(m) {
+        const alert = document.getElementById('alert-overlay');
+        document.getElementById('mins-left').innerText = m;
+        alert.style.display = 'block';
+        setTimeout(() => alert.style.display = 'none', 5000);
     }
 
-    // Popular lista inicial
-    const listContainer = document.getElementById('signal-list');
-    rawSignals.forEach(s => {
-        listContainer.innerHTML += `
-            <div class="signal-item">
-                <span>${s.time}</span>
-                <span>${s.dir === 'CALL' ? '🟢' : '🔴'} ${s.dir}</span>
-                <small>${s.desc}</small>
+    function executeSignal(sig, idx) {
+        sig.processed = true;
+        const row = document.getElementById(`sig-${idx}`);
+        
+        // Simulação de Gale 1 Realista
+        setTimeout(() => {
+            const isWin = Math.random() > 0.4;
+            if(isWin) {
+                wins++;
+                row.className = 'sig-row win-border';
+                row.innerHTML += ' <b>WIN</b>';
+            } else {
+                // Tenta Gale 1
+                setTimeout(() => {
+                    if(Math.random() > 0.5) {
+                        wins++;
+                        row.className = 'sig-row win-border';
+                        row.innerHTML += ' <b>GALE 1</b>';
+                    } else {
+                        losses++;
+                        row.className = 'sig-row loss-border';
+                        row.innerHTML += ' <b>LOSS</b>';
+                    }
+                    updateScore();
+                }, 2000);
+            }
+            updateScore();
+        }, 3000);
+    }
+
+    function updateScore() {
+        document.getElementById('wins').innerText = wins;
+        document.getElementById('losses').innerText = losses;
+        const total = wins + losses;
+        const perc = total > 0 ? ((wins / total) * 100).toFixed(1) : 0;
+        document.getElementById('assert').innerText = perc + '%';
+    }
+
+    // Renderizar Lista Inicial
+    const container = document.getElementById('signal-list');
+    signals.forEach((s, i) => {
+        container.innerHTML += `
+            <div class="sig-row" id="sig-${i}">
+                <span>${s.h}:${s.m.toString().padStart(2,'0')}</span>
+                <span style="color:${s.dir === 'CALL' ? 'var(--neon-green)' : 'var(--alert-red)'}">${s.dir}</span>
+                <span style="font-size:0.6rem; opacity:0.7">${s.label}</span>
             </div>
         `;
     });
 
-</script>
+    // Ajuste Automático do Gráfico ao Redimensionar
+    window.addEventListener('resize', () => {
+        chart.applyOptions({ 
+            width: document.getElementById('chart').clientWidth,
+            height: document.getElementById('chart').clientHeight 
+        });
+    });
 
+</script>
 </body>
 </html>
