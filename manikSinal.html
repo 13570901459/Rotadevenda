@@ -3,265 +3,277 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISTEMA TÁTICO INVISÍVEL | EUR/USD</title>
+    <title>QUANTUM MILITARY TERMINAL | V5.0</title>
     <style>
         :root {
-            --matrix-green: #00ff41;
-            --dark-bg: #020202;
-            --alert-red: #ff0000;
-            --army-dim: #1b3022;
+            --neon-green: #00ff41;
+            --dark-bg: #010101;
+            --alert-red: #ff003c;
+            --cyber-blue: #00f2ff;
+            --army-green: #1a2e1a;
         }
 
-        * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+        * { box-sizing: border-box; font-family: 'Consolas', 'Courier New', monospace; cursor: crosshair; }
 
         body {
             background-color: var(--dark-bg);
-            color: var(--matrix-green);
+            color: var(--neon-green);
             margin: 0;
             height: 100vh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            border: 2px solid var(--army-green);
         }
 
-        #matrix-bg {
+        /* OVERLAY DE SCANNER */
+        body::before {
+            content: " ";
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.1;
-            z-index: -1;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            z-index: 1000;
+            pointer-events: none;
         }
 
         header {
-            padding: 15px;
-            background: #000;
-            border-bottom: 2px solid var(--matrix-green);
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+            display: grid; grid-template-columns: 1fr 1fr 1fr;
+            padding: 10px; background: #000; border-bottom: 1px solid var(--neon-green);
+            font-size: 10px; text-transform: uppercase;
         }
 
-        /* CONTAINER CENTRAL DE ANÁLISE */
-        .main-terminal {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
+        /* GRID PRINCIPAL COMPLEXO */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            grid-template-rows: 1fr 200px;
+            gap: 10px;
+            padding: 10px;
+            height: calc(100vh - 50px);
         }
 
-        .radar-box {
-            width: 250px;
-            height: 250px;
-            border: 2px solid var(--matrix-green);
-            border-radius: 50%;
+        @media (max-width: 900px) {
+            .grid-container { grid-template-columns: 1fr; grid-template-rows: auto 1fr auto; overflow-y: auto; }
+        }
+
+        /* PAINÉIS */
+        .panel {
+            border: 1px solid var(--army-green);
+            background: rgba(0, 20, 0, 0.3);
+            padding: 10px;
             position: relative;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 0 30px var(--army-dim);
-        }
-
-        .radar-line {
-            width: 50%;
-            height: 2px;
-            background: var(--matrix-green);
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform-origin: left;
-            animation: radar-sweep 4s linear infinite;
-        }
-
-        @keyframes radar-sweep {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* NOTIFICAÇÃO 10 MINUTOS */
-        #notification-10min {
-            position: fixed;
-            top: 20px;
-            right: -400px;
-            width: 300px;
-            background: rgba(255, 0, 0, 0.8);
-            color: #fff;
-            padding: 15px;
-            border-left: 5px solid #fff;
-            transition: right 0.5s ease;
-            z-index: 100;
-        }
-
-        /* CARD DE ENTRADA 3 MINUTOS */
-        #entry-card {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) scale(0);
-            width: 90%;
-            max-width: 450px;
-            background: rgba(0, 20, 0, 0.95);
-            border: 3px solid var(--matrix-green);
-            padding: 25px;
-            text-align: center;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 101;
-            box-shadow: 0 0 50px rgba(0, 255, 65, 0.4);
-        }
-
-        #entry-card.active { transform: translateX(-50%) scale(1); }
-
-        .btn-dir {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 15px;
-            font-weight: bold;
-            border: 1px solid #fff;
-        }
-
-        .put { background: var(--alert-red); color: white; }
-        .call { background: var(--matrix-green); color: black; }
-
-        /* LOG DE SISTEMA */
-        #sys-logs {
-            width: 100%;
-            max-width: 600px;
-            height: 150px;
-            font-size: 0.7rem;
-            color: #555;
             overflow: hidden;
-            border-top: 1px solid var(--army-dim);
-            padding-top: 10px;
         }
 
-        .glitch-text { animation: flash 0.2s infinite; }
-        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .panel-header {
+            background: var(--army-green);
+            color: #fff;
+            font-size: 11px;
+            padding: 3px 8px;
+            margin: -10px -10px 10px -10px;
+            display: flex; justify-content: space-between;
+        }
+
+        /* MONITOR DE FREQUÊNCIA (OSCILOSCÓPIO) */
+        #oscillator { width: 100%; height: 60px; background: #000; border: 1px solid var(--neon-green); }
+
+        /* ALERTAS DE INTERFACE */
+        #alert-system {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 400px;
+            z-index: 2000;
+            background: rgba(0,0,0,0.95);
+            border: 2px solid var(--neon-green);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        #alert-system.active { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 100px var(--neon-green); }
+        #alert-system.danger { border-color: var(--alert-red); box-shadow: 0 0 100px var(--alert-red); }
+
+        /* BARRAS DE VOLUME DINÂMICAS */
+        .volume-bar { height: 10px; background: #111; margin: 5px 0; border: 1px solid #333; position: relative; }
+        .volume-fill { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.5s; }
+
+        /* LOGS HACKER */
+        #hacker-logs { font-size: 9px; color: var(--neon-green); opacity: 0.7; height: 100%; overflow: hidden; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 12px; }
+        .stat-val { color: #fff; text-align: right; }
+
+        .blink { animation: blinker 0.8s linear infinite; }
+        @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-<canvas id="matrix-bg"></canvas>
-
-<!-- Alerta Lateral (10 min) -->
-<div id="notification-10min">
-    <strong>[!] ALERTA TÁTICO</strong><br>
-    Análise iniciada. Sinal detectado em 10 minutos.
-</div>
-
-<!-- Card de Sinal (3 min) -->
-<div id="entry-card">
-    <div style="font-size: 0.8rem; opacity: 0.7;">CONFIRMAÇÃO DE ENTRADA</div>
-    <h2 id="card-pair">EUR/USD - M1</h2>
-    <div id="card-info" style="font-size: 1.2rem; margin: 10px 0;"></div>
-    <div id="card-btn" class="btn-dir">AGUARDANDO...</div>
-    <div style="margin-top: 15px; font-size: 0.7rem;">ESTRATÉGIA: <span id="card-desc">---</span></div>
-</div>
-
 <header>
-    <div>[CYBER_BOT_V4] STATUS: <span class="glitch-text" style="color:var(--matrix-green)">MONITORANDO</span></div>
-    <div id="live-clock">00:00:00</div>
+    <div>ID: <span id="session-id"></span></div>
+    <div style="text-align:center; font-weight:bold; letter-spacing:3px;">SYSTEMA DE ANÁLISE QUANTUM</div>
+    <div style="text-align:right">LATENCY: <span id="latency">24ms</span></div>
 </header>
 
-<div class="main-terminal">
-    <div class="radar-box">
-        <div class="radar-line"></div>
-        <div style="z-index: 2; font-size: 0.8rem;">SCANNING...</div>
+<!-- POPUP DE SINAL DINÂMICO -->
+<div id="alert-system">
+    <div id="alert-tag" style="font-size: 10px; margin-bottom: 10px;">[SINAL DETECTADO]</div>
+    <h1 id="alert-type" style="margin: 0; font-size: 3rem;">PUT</h1>
+    <div id="alert-timer" style="font-size: 1.5rem; margin: 10px 0;">03:00</div>
+    <div style="font-size: 10px; color: #888;">CONFIRMAÇÃO: EMA14 + MHI + RSI</div>
+    <div id="alert-btn" style="margin-top:20px; padding:10px; border:1px solid #fff;">AGUARDANDO ENTRADA...</div>
+</div>
+
+<div class="grid-container">
+    
+    <!-- ESQUERDA: STATUS DE INDICADORES -->
+    <div class="panel">
+        <div class="panel-header">INDICADORES HFT <span>LIVE</span></div>
+        <div class="stat-grid">
+            <div>EMA 14:</div><div id="ema14" class="stat-val">---</div>
+            <div>SMA 50:</div><div id="sma50" class="stat-val">---</div>
+            <div>RSI (14):</div><div id="rsi" class="stat-val">---</div>
+            <div>FRACTAL:</div><div id="fractal" class="stat-val" style="color:var(--cyber-blue)">SYNCING</div>
+        </div>
+        <hr style="border: 0; border-top: 1px solid var(--army-green); margin: 15px 0;">
+        <div style="font-size: 10px;">FLUXO DE VOLUME (REAL-TIME)</div>
+        <div class="volume-bar"><div id="vol-buy" class="volume-fill" style="background:var(--neon-green)"></div></div>
+        <div class="volume-bar"><div id="vol-sell" class="volume-fill" style="background:var(--alert-red)"></div></div>
     </div>
 
-    <div id="status-text">AGUARDANDO OPORTUNIDADE NO MERCADO...</div>
-    
-    <div id="sys-logs">
-        <!-- Logs simulados -->
+    <!-- CENTRO: OSCILOSCÓPIO E ANÁLISE DE TENDÊNCIA -->
+    <div class="panel">
+        <div class="panel-header">FREQUÊNCIA DE MERCADO (EUR/USD)</div>
+        <canvas id="oscillator"></canvas>
+        <div style="margin-top: 10px; height: 100px; border: 1px solid #111; position: relative;">
+            <div id="trend-line" style="position: absolute; bottom: 50%; left: 0; width: 100%; height: 1px; background: #222;"></div>
+            <div id="price-dot" style="position: absolute; bottom: 50%; right: 10px; width: 8px; height: 8px; background: var(--neon-green); border-radius: 50%; box-shadow: 0 0 10px var(--neon-green);"></div>
+        </div>
+        <div id="status-msg" class="blink" style="margin-top:10px; text-align:center; font-size:12px;">ESCANEANDO PADRÕES PROBABILÍSTICOS...</div>
+    </div>
+
+    <!-- DIREITA: HISTÓRICO DE WIN/LOSS PROFISSIONAL -->
+    <div class="panel">
+        <div class="panel-header">LOG DE OPERAÇÕES <span>ASSERT: <span id="perc">0%</span></span></div>
+        <div id="hacker-logs"></div>
+    </div>
+
+    <!-- RODAPÉ: CONSOLE DE CÓDIGOS -->
+    <div class="panel" style="grid-column: 1 / -1;">
+        <div class="panel-header">QUANTUM KERNEL LOGS</div>
+        <div id="kernel-logs" style="font-size: 10px; column-count: 3; color: #555;">
+            > INICIALIZANDO ANALIZADOR DE VELA...<br>
+            > RECONHECENDO SUPORTE EM 1.0921<br>
+            > RSI EM NÍVEL DE SOBRECOMPRA...
+        </div>
     </div>
 </div>
 
 <script>
-    // --- LISTA DE SINAIS (OCULTA) ---
+    // LISTA DE SINAIS (Oculta)
     const signals = [
-        { time: "19:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
-{ time: "19:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
-{ time: "19:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
-{ time: "19:30", dir: "CALL", desc: "Virada de Ciclo (Algoritmo)" },
-{ time: "19:35", dir: "PUT", desc: "MHI 1 (Minoria)" },
-{ time: "19:40", dir: "CALL", desc: "Ciclo de Repetição" },
-{ time: "19:45", dir: "PUT", desc: "Reversão de Topo" },
-{ time: "19:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
+        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
+        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
+        { time: "19:15", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
+        { time: "19:17", dir: "CALL", desc: "Reversão" }
     ];
 
-    // --- ANIMAÇÃO MATRIX ---
-    const canvas = document.getElementById('matrix-bg');
+    let wins = 0; let total = 0;
+    const sessionID = "TX-" + Math.floor(Math.random()*999999);
+    document.getElementById('session-id').innerText = sessionID;
+
+    // --- ANIMAÇÃO OSCILOSCÓPIO ---
+    const canvas = document.getElementById('oscillator');
     const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-    const drops = Array(Math.floor(canvas.width/14)).fill(1);
-    function drawMatrix() {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = "#00ff41"; ctx.font = "14px monospace";
-        drops.forEach((y, i) => {
-            const text = String.fromCharCode(Math.random() * 128);
-            ctx.fillText(text, i * 14, y * 14);
-            if (y * 14 > canvas.height && Math.random() > 0.975) drops[i] = 0;
-            drops[i]++;
-        });
+    let x = 0;
+    function drawOsc() {
+        ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+        ctx.strokeStyle = "#00ff41"; ctx.beginPath();
+        ctx.moveTo(x, 30 + Math.sin(x/10)*20 + Math.random()*10);
+        x += 2; if(x > canvas.width) x = 0;
+        ctx.lineTo(x, 30 + Math.sin(x/10)*20); ctx.stroke();
+        requestAnimationFrame(drawOsc);
     }
-    setInterval(drawMatrix, 50);
+    drawOsc();
 
-    // --- LÓGICA DE TEMPO E NOTIFICAÇÃO ---
-    function update() {
+    // --- SIMULAÇÃO DE DADOS DINÂMICOS ---
+    setInterval(() => {
+        const price = (1.08 + Math.random()*0.01).toFixed(5);
+        document.getElementById('ema14').innerText = (parseFloat(price) + 0.0002).toFixed(5);
+        document.getElementById('rsi').innerText = (Math.random()*100).toFixed(2);
+        document.getElementById('latency').innerText = Math.floor(Math.random()*20 + 10) + "ms";
+        
+        // Volume bars
+        document.getElementById('vol-buy').style.width = Math.random()*100 + "%";
+        document.getElementById('vol-sell').style.width = Math.random()*100 + "%";
+
+        // Kernel logs
+        const kernel = document.getElementById('kernel-logs');
+        const codes = ["> PARITY SYNC...", "> VOLUME DELTA: 0.12", "> CANDLE REJECTION AT H1", "> SMA50 CROSSOVER"];
+        kernel.innerHTML = codes[Math.floor(Math.random()*codes.length)] + "<br>" + kernel.innerHTML.substring(0, 300);
+    }, 2000);
+
+    // --- LÓGICA DE SINAL E ALERTAS ---
+    function checkClock() {
         const now = new Date();
-        document.getElementById('live-clock').innerText = now.toLocaleTimeString();
-
+        const timeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+        
         signals.forEach(sig => {
             const [h, m] = sig.time.split(':').map(Number);
             const target = new Date(); target.setHours(h, m, 0);
-            const diffMin = (target - now) / 60000;
+            const diff = (target - now) / 60000;
 
-            // 1. Notificação 10 min antes (Aparece e some após 10s)
-            if (diffMin <= 10 && diffMin > 9.8) {
-                const note = document.getElementById('notification-10min');
-                note.style.right = '20px';
-                addLog(`[!] Alerta: Sinal detectado em ${sig.time}`);
-                setTimeout(() => { note.style.right = '-400px'; }, 10000);
+            // 10 MINUTOS ANTES: NOTIFICAÇÃO DE ANÁLISE
+            if (diff <= 10 && diff > 9.9) {
+                showPopup("ANALISANDO...", `DETECTADA POSSÍVEL ENTRADA ${sig.dir} ÀS ${sig.time}`, false);
             }
 
-            // 2. Card de Entrada 3 min antes
-            if (diffMin <= 3 && diffMin > 0) {
-                const card = document.getElementById('entry-card');
-                card.classList.add('active');
-                document.getElementById('card-info').innerText = `${sig.dir} ÀS ${sig.time}`;
-                document.getElementById('card-desc').innerText = sig.desc;
-                const btn = document.getElementById('card-btn');
-                btn.innerText = `ENTRAR AGORA: ${sig.dir}`;
-                btn.className = `btn-dir ${sig.dir.toLowerCase()}`;
-                
-                document.getElementById('status-text').innerText = `ALVO LOCALIZADO: PREPARAR PARA ${sig.dir}`;
-            } 
-            
-            // 3. Limpar após o horário do sinal
-            if (diffMin < -1) {
-                document.getElementById('entry-card').classList.remove('active');
-                document.getElementById('status-text').innerText = "AGUARDANDO OPORTUNIDADE NO MERCADO...";
+            // 3 MINUTOS ANTES: ENTRADA COMPLEXA
+            if (diff <= 3 && diff > 0) {
+                showPopup(`CONFIRMAR ${sig.dir}`, `ENTRADA EM ${Math.ceil(diff)} MINUTOS`, true, sig.dir);
+                document.getElementById('alert-timer').innerText = Math.floor(diff) + ":" + now.getSeconds().toString().padStart(2,'0');
+            }
+
+            // MOMENTO DO SINAL (RESULTADO)
+            if (Math.abs(diff) < 0.01 && !sig.done) {
+                sig.done = true;
+                processResult(sig);
             }
         });
     }
 
-    function addLog(msg) {
-        const logBox = document.getElementById('sys-logs');
-        logBox.innerHTML = `<div>> ${msg}</div>` + logBox.innerHTML;
+    function showPopup(type, msg, isAction, dir) {
+        const alert = document.getElementById('alert-system');
+        alert.classList.add('active');
+        if(dir === 'PUT') alert.classList.add('danger'); else alert.classList.remove('danger');
+        
+        document.getElementById('alert-tag').innerText = type;
+        document.getElementById('alert-type').innerText = dir || "!!!";
+        document.getElementById('alert-btn').innerText = msg;
+
+        if(!isAction) setTimeout(() => alert.classList.remove('active'), 5000);
     }
 
-    // Simulação de atividade hacker
-    setInterval(() => {
-        const actions = ["Analisando Médias...", "Fractal verificado", "SMA50 Estável", "EUR/USD Fluxo OK"];
-        addLog(actions[Math.floor(Math.random() * actions.length)]);
-    }, 4000);
+    function processResult(sig) {
+        total++;
+        const isWin = Math.random() > 0.3; // 70% Win rate sim
+        const log = document.getElementById('hacker-logs');
+        const color = isWin ? 'var(--neon-green)' : 'var(--alert-red)';
+        const resText = isWin ? 'WIN' : 'LOSS (GALE 1...)';
+        
+        if(isWin) wins++;
+        
+        log.innerHTML = `<div style="color:${color}; margin-bottom:5px;">[${sig.time}] ${sig.dir} -> ${resText}</div>` + log.innerHTML;
+        
+        document.getElementById('perc').innerText = ((wins/total)*100).toFixed(1) + "%";
+        document.getElementById('alert-system').classList.remove('active');
+    }
 
-    setInterval(update, 1000);
+    setInterval(checkClock, 1000);
 </script>
+
 </body>
 </html>
