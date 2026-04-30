@@ -3,342 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>MILITARY SIGNAL BOT | EUR/USD</title>
-    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <title>TERMINAL TÁTICO | EUR/USD</title>
     <style>
         :root {
-            --army-green: #4b5320;
-            --neon-green: #00ff41;
-            --dark-black: #050505;
+            --matrix-green: #00ff41;
+            --dark-bg: #030303;
             --alert-red: #ff0000;
-            --military-grey: #1a1a1a;
-            --glass: rgba(0, 255, 65, 0.1);
+            --army-dim: #1b3022;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
 
         body {
-            background-color: var(--dark-black);
-            color: var(--neon-green);
-            font-family: 'Segoe UI', 'Courier New', monospace;
+            background-color: var(--dark-bg);
+            color: var(--matrix-green);
             margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
             height: 100vh;
-            overflow: hidden; /* Evita scroll na página inteira modo 'App' */
-        }
-
-        /* HEADER ESTILO SOFTWARE */
-        header {
-            background: #000;
-            border-bottom: 2px solid var(--army-green);
-            padding: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.8rem;
-            letter-spacing: 2px;
-        }
-
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background-color: var(--neon-green);
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 5px;
-            box-shadow: 0 0 5px var(--neon-green);
-        }
-
-        /* LAYOUT RESPONSIVO PRINCIPAL */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1fr 320px; /* Desktop: Lado a Lado */
-            flex-grow: 1;
             overflow: hidden;
-        }
-
-        /* AJUSTE PARA CELULAR (MODO APP) */
-        @media (max-width: 900px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr 300px; /* Gráfico em cima, Painel embaixo */
-            }
-            header h1 { font-size: 0.9rem; }
-        }
-
-        /* ÁREA DO GRÁFICO */
-        #chart-container {
-            position: relative;
-            border-right: 1px solid var(--army-green);
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--army-dim);
         }
 
-        #chart {
-            flex-grow: 1;
+        /* ANIMAÇÃO DE FUNDO "MATRIX" */
+        #matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            z-index: -1;
         }
 
-        /* ALERTAS FLUTUANTES */
-        #alert-overlay {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            width: 90%;
-            max-width: 400px;
-            background: rgba(255, 0, 0, 0.9);
-            color: white;
-            padding: 15px;
-            border-radius: 5px;
-            text-align: center;
-            font-weight: bold;
-            display: none;
-            border: 2px solid #fff;
-            box-shadow: 0 0 20px rgba(255,0,0,0.5);
-            animation: pulse 1s infinite;
-        }
-
-        /* PAINEL LATERAL / INFERIOR */
-        .sidebar {
-            background: var(--military-grey);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .tabs {
-            display: flex;
-            background: #000;
-            border-bottom: 1px solid var(--army-green);
-        }
-
-        .tab {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            font-size: 0.7rem;
-            cursor: pointer;
-            border-right: 1px solid var(--army-green);
-        }
-
-        .tab.active { background: var(--army-green); color: #fff; }
-
-        .content-scroll {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 10px;
-            font-size: 0.8rem;
-        }
-
-        /* PLACAR */
-        .scoreboard {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            background: #000;
-            border-bottom: 1px solid var(--army-green);
-            font-weight: bold;
-        }
-
-        .win-text { color: var(--neon-green); }
-        .loss-text { color: var(--alert-red); }
-
-        /* LISTA DE SINAIS */
-        .sig-row {
-            background: rgba(0,255,65,0.05);
-            margin-bottom: 5px;
-            padding: 8px;
-            border-left: 3px solid var(--army-green);
+        /* HEADER */
+        header {
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid var(--matrix-green);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            text-transform: uppercase;
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
         }
 
-        .sig-row.win-border { border-left-color: var(--neon-green); background: rgba(0,255,65,0.1); }
-        .sig-row.loss-border { border-left-color: var(--alert-red); background: rgba(255,0,0,0.1); }
-
-        @keyframes pulse {
-            0% { transform: translateX(-50%) scale(1); }
-            50% { transform: translateX(-50%) scale(1.05); }
-            100% { transform: translateX(-50%) scale(1); }
+        /* ALERTAS GRANDES */
+        #main-alert {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px 40px;
+            border: 4px solid white;
+            z-index: 999;
+            text-align: center;
+            display: none;
+            animation: glitch 0.3s infinite;
         }
 
-        /* SCROLLBAR ESTILO ROBÔ */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: var(--army-green); }
+        @keyframes glitch {
+            0% { transform: translate(-50%, -50%) skew(0deg); }
+            50% { transform: translate(-50.5%, -49.5%) skew(2deg); }
+            100% { transform: translate(-49.5%, -50.5%) skew(-2deg); }
+        }
+
+        /* LAYOUT */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            flex-grow: 1;
+        }
+
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+        }
+
+        /* COLUNA DA ESQUERDA: ANÁLISE DINÂMICA */
+        .analysis-core {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            border-right: 1px solid var(--army-dim);
+        }
+
+        .data-stream {
+            flex-grow: 1;
+            background: rgba(0, 40, 0, 0.2);
+            border: 1px solid var(--army-dim);
+            padding: 15px;
+            font-size: 0.85rem;
+            overflow-y: hidden;
+            position: relative;
+        }
+
+        .indicator-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .ind-item {
+            border: 1px solid var(--matrix-green);
+            padding: 10px;
+            background: rgba(0, 255, 65, 0.05);
+        }
+
+        .val { float: right; color: #fff; text-shadow: 0 0 5px var(--matrix-green); }
+
+        /* COLUNA DA DIREITA: LISTA E PLACAR */
+        .sidebar {
+            background: rgba(10, 10, 10, 0.95);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-panel {
+            padding: 15px;
+            border-bottom: 1px solid var(--army-dim);
+            text-align: center;
+        }
+
+        .signal-list {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .signal-row {
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid var(--army-dim);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .signal-row.win { border-left-color: var(--matrix-green); color: var(--matrix-green); }
+        .signal-row.loss { border-left-color: var(--alert-red); color: var(--alert-red); }
+
+        /* PULSE ANIMAÇÃO */
+        .active-signal { animation: pulse-green 1s infinite; }
+        @keyframes pulse-green {
+            0% { background: rgba(0, 255, 65, 0); }
+            50% { background: rgba(0, 255, 65, 0.2); }
+            100% { background: rgba(0, 255, 65, 0); }
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div><span class="status-dot"></span> SISTEMA OPERACIONAL ATIVO</div>
-    <div id="clock">00:00:00</div>
-    <div style="color: #888;">EUR/USD <span style="color: var(--neon-green);">LIVE</span></div>
-</header>
+<canvas id="matrix-bg"></canvas>
 
-<div id="alert-overlay">
-    ⚠️ ATENÇÃO: ANALISANDO MERCADO... <br> SINAL POSSÍVEL EM <span id="mins-left">10</span> MINUTOS
+<div id="main-alert">
+    <h1 id="alert-title">ALERTA DE ANÁLISE</h1>
+    <p id="alert-msg">POSSÍVEL SINAL EM 10 MINUTOS</p>
 </div>
 
-<div class="main-layout">
-    <!-- ÁREA DO GRÁFICO -->
-    <div id="chart-container">
-        <div id="chart"></div>
+<header>
+    <div>[TERMINAL_V3] <span id="pair">EUR/USD</span></div>
+    <div id="live-clock">00:00:00</div>
+    <div id="connection">CONECTADO: BINANCE_WS</div>
+</header>
+
+<div class="dashboard">
+    <div class="analysis-core">
+        <div class="indicator-box">
+            <div class="ind-item">EMA 14 <span id="v-ema14" class="val">1.0845</span></div>
+            <div class="ind-item">EMA 50 <span id="v-ema50" class="val">1.0832</span></div>
+            <div class="ind-item">SMA 50 <span id="v-sma50" class="val">1.0820</span></div>
+            <div class="ind-item">FRACTAL <span id="v-fractal" class="val">DETECTADO</span></div>
+        </div>
+
+        <div class="data-stream" id="log-console">
+            <!-- Logs automáticos simulando a IA -->
+        </div>
+        
+        <div class="ind-item" style="border-color: #555;">
+            SUPORTE: <span class="val">1.07902</span><br>
+            RESISTÊNCIA: <span class="val">1.09210</span>
+        </div>
     </div>
 
-    <!-- PAINEL DE COMANDO -->
     <div class="sidebar">
-        <div class="scoreboard">
-            <div>WINS: <span id="wins" class="win-text">0</span></div>
-            <div>LOSSES: <span id="losses" class="loss-text">0</span></div>
-            <div>ASSERT: <span id="assert">0%</span></div>
+        <div class="status-panel">
+            WINS: <span id="w">0</span> | LOSS: <span id="l">0</span><br>
+            <small>RESULTADOS EM TEMPO REAL (ATÉ GALE 1)</small>
         </div>
-
-        <div class="tabs">
-            <div class="tab active">SINAIS AGENDADOS</div>
-            <div class="tab">LOG ANALÍTICO</div>
-        </div>
-
-        <div id="signal-list" class="content-scroll">
-            <!-- Injetado via JS -->
-        </div>
-
-        <div id="live-log" class="content-scroll" style="display:none; color: #aaa; font-size: 0.7rem;">
-            [SYSTEM]: Carregando SMA50... OK<br>
-            [SYSTEM]: Carregando EMA14... OK<br>
-            [SYSTEM]: Suporte em 1.08450 identificado...
+        <div class="signal-list" id="list-container">
+            <!-- Sinais injetados aqui -->
         </div>
     </div>
 </div>
 
 <script>
-    // Configurações do Robô
-    const signals = [
-        { h: 13, m: 10, dir: 'PUT', label: 'MHI 1 (Minoria)' },
-        { h: 13, m: 15, dir: 'CALL', label: 'MHI 2 (Minoria)' },
-        { h: 14, m: 30, dir: 'PUT', label: 'EMA14 Cruzamento' },
-        { h: 15, m: 00, dir: 'CALL', label: 'Suporte H1' },
-        { h: 16, m: 45, dir: 'CALL', label: 'MHI 1 (Minoria)' },
-        { h: 16, m: 50, dir: 'PUT', label: 'Ciclo Probabilidade' }
+    // --- CONFIGURAÇÃO DOS SINAIS ---
+    const rawSignals = [
+        { time: "13:10", dir: "PUT", desc: "MHI 1 (Minoria)" },
+        { time: "13:15", dir: "CALL", desc: "MHI 2 (Minoria)" },
+        { time: "13:20", dir: "PUT", desc: "Fluxo EMA 14" },
+        { time: "17:45", dir: "CALL", desc: "Reversão Ciclo" },
+        { time: "17:50", dir: "PUT", desc: "Fractal M5" }
     ];
 
-    let wins = 0;
-    let losses = 0;
+    let wins = 0; let losses = 0;
 
-    // Inicializar Gráfico Profissional
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        layout: { backgroundColor: '#050505', textColor: '#00ff41' },
-        grid: { vertLines: { visible: false }, horzLines: { color: '#1a1a1a' } },
-        timeScale: { timeVisible: true, secondsVisible: false },
-    });
-    const candleSeries = chart.addCandlestickSeries({
-        upColor: '#00ff41', downColor: '#ff0000', borderVisible: false,
-        wickUpColor: '#00ff41', wickDownColor: '#ff0000'
-    });
+    // --- ANIMAÇÃO MATRIX ---
+    const canvas = document.getElementById('matrix-bg');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$@#%";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-    // Conexão Real (Simulando EUR/USD via par disponível)
-    const binanceSocket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_1m');
-    binanceSocket.onmessage = (e) => {
-        const d = JSON.parse(e.data).k;
-        candleSeries.update({
-            time: d.t / 1000, open: d.o, high: d.h, low: d.l, close: d.c
-        });
-        checkTimeSchedules();
-    };
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#00ff41";
+        ctx.font = fontSize + "px monospace";
+        for (let i = 0; i < drops.length; i++) {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        }
+    }
+    setInterval(drawMatrix, 50);
 
-    function checkTimeSchedules() {
+    // --- LÓGICA DE ANÁLISE DINÂMICA ---
+    function addLog(msg) {
+        const consoleObj = document.getElementById('log-console');
+        const entry = document.createElement('div');
+        entry.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
+        consoleObj.prepend(entry);
+        if (consoleObj.childNodes.length > 15) consoleObj.lastChild.remove();
+    }
+
+    // Simula análise mudando números
+    setInterval(() => {
+        const price = (1.08 + Math.random() * 0.01).toFixed(5);
+        document.getElementById('v-ema14').innerText = price;
+        addLog(`ANALISANDO FLUXO DE VELA: ${(Math.random() * 100).toFixed(0)}% ESTÁVEL`);
+    }, 3000);
+
+    // --- ALERTAS E EXECUÇÃO ---
+    function checkSchedules() {
         const now = new Date();
-        const curH = now.getHours();
-        const curM = now.getMinutes();
+        const currentH = now.getHours();
+        const currentM = now.getMinutes();
+        document.getElementById('live-clock').innerText = now.toLocaleTimeString();
 
-        document.getElementById('clock').innerText = now.toLocaleTimeString();
+        rawSignals.forEach((sig, i) => {
+            const [h, m] = sig.time.split(':').map(Number);
+            const target = new Date(); target.setHours(h, m, 0);
+            const diff = (target - now) / 60000;
 
-        signals.forEach((sig, index) => {
-            const sigTime = new Date();
-            sigTime.setHours(sig.h, sig.m, 0);
-            
-            const diff = (sigTime - now) / 60000;
+            // 10 MINUTOS ANTES - ALERTA NA TELA
+            if (diff <= 10 && diff > 9.8) {
+                triggerAlert("ANÁLISE INICIADA", `SINAL EM 10 MIN: ${sig.dir} ${sig.time}`);
+            }
 
-            // Alerta 10 minutos antes
-            if (diff <= 10 && diff > 9.5) {
-                showTopAlert(Math.ceil(diff));
-            } else if (diff < 0 && !sig.processed) {
-                executeSignal(sig, index);
+            // 3 MINUTOS ANTES - PREPARAÇÃO
+            if (diff <= 3 && diff > 2.8) {
+                triggerAlert("PREPARAR ENTRADA", `SINAL ${sig.dir} EM 3 MINUTOS!`, true);
+                addLog(`ALGORITMO CONFIRMANDO ${sig.desc}...`);
+            }
+
+            // EXECUÇÃO DO RESULTADO
+            if (diff <= 0 && !sig.done) {
+                executeResult(sig, i);
             }
         });
     }
 
-    function showTopAlert(m) {
-        const alert = document.getElementById('alert-overlay');
-        document.getElementById('mins-left').innerText = m;
-        alert.style.display = 'block';
-        setTimeout(() => alert.style.display = 'none', 5000);
+    function triggerAlert(title, msg, isGreen = false) {
+        const box = document.getElementById('main-alert');
+        box.style.display = 'block';
+        box.style.background = isGreen ? 'rgba(0, 255, 65, 0.9)' : 'rgba(255, 0, 0, 0.9)';
+        document.getElementById('alert-title').innerText = title;
+        document.getElementById('alert-msg').innerText = msg;
+        setTimeout(() => box.style.display = 'none', 8000);
     }
 
-    function executeSignal(sig, idx) {
-        sig.processed = true;
-        const row = document.getElementById(`sig-${idx}`);
+    function executeResult(sig, index) {
+        sig.done = true;
+        const row = document.getElementById(`row-${index}`);
+        addLog(`EXECUTANDO SINAL: ${sig.dir} @ ${sig.time}`);
         
-        // Simulação de Gale 1 Realista
+        // Simulação Realista com Gale 1
         setTimeout(() => {
-            const isWin = Math.random() > 0.4;
-            if(isWin) {
-                wins++;
-                row.className = 'sig-row win-border';
-                row.innerHTML += ' <b>WIN</b>';
+            const win = Math.random() > 0.3;
+            if(win) {
+                wins++; row.className = 'signal-row win';
+                addLog(`SINAL ${sig.time}: WIN DIRETO!`);
             } else {
-                // Tenta Gale 1
+                addLog(`SINAL ${sig.time}: LOSS DIRETO. ENTRANDO GALE 1...`);
                 setTimeout(() => {
-                    if(Math.random() > 0.5) {
-                        wins++;
-                        row.className = 'sig-row win-border';
-                        row.innerHTML += ' <b>GALE 1</b>';
+                    if(Math.random() > 0.4) {
+                        wins++; row.className = 'signal-row win';
+                        addLog(`SINAL ${sig.time}: WIN NO GALE 1!`);
                     } else {
-                        losses++;
-                        row.className = 'sig-row loss-border';
-                        row.innerHTML += ' <b>LOSS</b>';
+                        losses++; row.className = 'signal-row loss';
+                        addLog(`SINAL ${sig.time}: LOSS TOTAL.`);
                     }
                     updateScore();
-                }, 2000);
+                }, 3000);
             }
             updateScore();
-        }, 3000);
+        }, 5000);
     }
 
     function updateScore() {
-        document.getElementById('wins').innerText = wins;
-        document.getElementById('losses').innerText = losses;
-        const total = wins + losses;
-        const perc = total > 0 ? ((wins / total) * 100).toFixed(1) : 0;
-        document.getElementById('assert').innerText = perc + '%';
+        document.getElementById('w').innerText = wins;
+        document.getElementById('l').innerText = losses;
     }
 
-    // Renderizar Lista Inicial
-    const container = document.getElementById('signal-list');
-    signals.forEach((s, i) => {
+    // Gerar lista
+    const container = document.getElementById('list-container');
+    rawSignals.forEach((s, i) => {
         container.innerHTML += `
-            <div class="sig-row" id="sig-${i}">
-                <span>${s.h}:${s.m.toString().padStart(2,'0')}</span>
-                <span style="color:${s.dir === 'CALL' ? 'var(--neon-green)' : 'var(--alert-red)'}">${s.dir}</span>
-                <span style="font-size:0.6rem; opacity:0.7">${s.label}</span>
+            <div class="signal-row" id="row-${i}">
+                <span>${s.time}</span>
+                <span style="font-weight:bold">${s.dir}</span>
+                <small>${s.desc}</small>
             </div>
         `;
     });
 
-    // Ajuste Automático do Gráfico ao Redimensionar
-    window.addEventListener('resize', () => {
-        chart.applyOptions({ 
-            width: document.getElementById('chart').clientWidth,
-            height: document.getElementById('chart').clientHeight 
-        });
-    });
+    setInterval(checkSchedules, 1000);
 
 </script>
 </body>
