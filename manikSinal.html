@@ -2,163 +2,159 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>QUANTUM TACTICAL TERMINAL | V6.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL MILITAR | EUR/USD</title>
     <style>
         :root {
-            --neon-green: #00ff41;
-            --dark-bg: #010101;
-            --alert-red: #ff003c;
-            --army-green: #1a2e1a;
-            --interface-gold: #ffcc00;
+            --neon: #00ff41;
+            --bg: #050505;
+            --alert: #ff0000;
         }
 
-        * { box-sizing: border-box; font-family: 'Consolas', monospace; }
-
         body {
-            background-color: var(--dark-bg);
-            color: var(--neon-green);
+            background-color: var(--bg);
+            color: var(--neon);
+            font-family: 'Courier New', monospace;
             margin: 0;
             height: 100vh;
             overflow: hidden;
-            border: 2px solid var(--army-green);
+            display: flex;
+            flex-direction: column;
         }
 
-        /* EFEITO DE SCANLINE HACKER */
-        body::after {
-            content: " ";
+        /* EFEITO MATRIX FUNDO */
+        #canvas-matrix {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
-            z-index: 1000;
+            top: 0; left: 0;
+            z-index: -1;
+            opacity: 0.15;
         }
 
         header {
-            display: flex; justify-content: space-between;
-            padding: 10px 20px; background: #000;
-            border-bottom: 1px solid var(--neon-green);
-            font-size: 12px; letter-spacing: 2px;
+            padding: 10px;
+            border-bottom: 1px solid var(--neon);
+            display: flex;
+            justify-content: space-between;
+            background: rgba(0,0,0,0.8);
+            font-size: 12px;
         }
 
-        /* GRID PRINCIPAL */
-        .main-grid {
-            display: grid;
-            grid-template-columns: 300px 1fr;
-            height: calc(100vh - 45px);
+        /* ÁREA DE STATUS */
+        .main-view {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* PAINEL LATERAL */
-        .sidebar {
-            border-right: 1px solid var(--army-green);
-            display: flex; flex-direction: column;
-            background: rgba(0, 10, 0, 0.5);
-        }
-
-        .panel-title {
-            background: var(--army-green);
-            color: white; padding: 5px 10px;
-            font-size: 11px; text-transform: uppercase;
-        }
-
-        #log-terminal {
-            flex-grow: 1; padding: 10px;
-            font-size: 10px; overflow-y: hidden;
-            color: rgba(0, 255, 65, 0.7);
-        }
-
-        /* ÁREA CENTRAL DO RADAR */
-        .viewport {
+        .radar {
+            width: 200px;
+            height: 200px;
+            border: 2px solid var(--neon);
+            border-radius: 50%;
             position: relative;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
+            animation: pulse 2s infinite;
         }
 
-        #radar-canvas {
-            position: absolute; opacity: 0.2;
-            width: 80%; height: 80%; z-index: -1;
+        .radar::after {
+            content: '';
+            position: absolute;
+            width: 50%; height: 2px;
+            background: var(--neon);
+            top: 50%; left: 50%;
+            transform-origin: left;
+            animation: rotate 4s linear infinite;
         }
 
-        /* NOTIFICAÇÃO 10 MIN (DISCRETA) */
-        #notify-10 {
-            position: absolute; top: 20px; right: -350px;
-            width: 300px; background: rgba(0, 20, 0, 0.9);
-            border: 1px solid var(--interface-gold);
-            padding: 15px; transition: 0.5s;
-            box-shadow: 0 0 15px var(--interface-gold);
+        /* NOTIFICAÇÃO 10 MIN (WINDOWS STYLE) */
+        #notif-10 {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            width: 300px;
+            background: #111;
+            border-right: 5px solid var(--alert);
+            padding: 15px;
+            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 999;
+            box-shadow: 0 0 20px rgba(0,0,0,1);
         }
 
-        /* OVERLAY 3 MIN (SEQUESTRO DE TELA) */
-        #signal-overlay {
-            position: fixed; top: 0; left: 0;
+        #notif-10.show { right: 20px; }
+
+        /* SEQUESTRO DE TELA 3 MIN (LOCK-ON) */
+        #lock-on {
+            position: fixed;
+            top: 0; left: 0;
             width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            display: none; flex-direction: column;
-            align-items: center; justify-content: center;
-            z-index: 2000;
-            border: 10px solid transparent;
+            background: rgba(0,0,0,0.98);
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 15px solid var(--neon);
         }
 
-        #signal-overlay.active-put { display: flex; border-color: var(--alert-red); animation: pulse-red 1.5s infinite; }
-        #signal-overlay.active-call { display: flex; border-color: var(--neon-green); animation: pulse-green 1.5s infinite; }
+        #lock-on.put { border-color: var(--alert); }
 
-        .big-time { font-size: 120px; font-weight: bold; margin: 0; line-height: 1; }
-        .big-dir { font-size: 80px; margin: 20px 0; border: 2px solid #fff; padding: 10px 40px; }
-        .strategy-label { font-size: 20px; color: #888; text-transform: uppercase; }
+        .lock-title { font-size: 20px; letter-spacing: 10px; margin-bottom: 30px; }
+        .lock-time { font-size: 100px; font-weight: bold; line-height: 1; }
+        .lock-dir { font-size: 60px; margin: 20px 0; border: 3px solid #fff; padding: 10px 50px; }
+        .lock-desc { font-size: 18px; color: #888; }
 
-        @keyframes pulse-red { 0% { box-shadow: inset 0 0 50px #ff0000; } 50% { box-shadow: inset 0 0 150px #ff0000; } 100% { box-shadow: inset 0 0 50px #ff0000; } }
-        @keyframes pulse-green { 0% { box-shadow: inset 0 0 50px #00ff41; } 50% { box-shadow: inset 0 0 150px #00ff41; } 100% { box-shadow: inset 0 0 50px #00ff41; } }
+        /* LOGS LATERAIS */
+        #side-logs {
+            position: absolute;
+            left: 10px; bottom: 10px;
+            font-size: 10px;
+            width: 300px;
+            max-height: 200px;
+            overflow: hidden;
+            opacity: 0.6;
+        }
 
-        .blink { animation: blinker 1s linear infinite; }
-        @keyframes blinker { 50% { opacity: 0; } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 5px var(--neon); } 50% { box-shadow: 0 0 20px var(--neon); } 100% { box-shadow: 0 0 5px var(--neon); } }
+
     </style>
 </head>
 <body>
 
+<canvas id="canvas-matrix"></canvas>
+
 <header>
-    <div>STATUS: <span class="blink">SYSTEM_ONLINE</span></div>
-    <div id="pair-header">ASSET: EUR/USD (OTC)</div>
-    <div id="clock">00:00:00</div>
+    <div>STATUS: ANALISANDO FLUXO...</div>
+    <div>EUR/USD</div>
+    <div id="relogio">00:00:00</div>
 </header>
 
-<div class="main-grid">
-    <div class="sidebar">
-        <div class="panel-title">Kernel Activity</div>
-        <div id="log-terminal"></div>
-        <div class="panel-title">Performance Monitor</div>
-        <div style="padding:10px; font-size: 12px;">
-            CPU_LOAD: 14% <br>
-            LATENCY: 12ms <br>
-            WINS: <span id="win-count" style="color:var(--neon-green)">0</span> | 
-            LOSS: <span id="loss-count" style="color:var(--alert-red)">0</span>
-        </div>
-    </div>
-
-    <div class="viewport">
-        <canvas id="radar-canvas"></canvas>
-        <div id="status-text" style="font-size: 18px; letter-spacing: 5px;">AGUARDANDO SEQUÊNCIA DE DADOS...</div>
-        
-        <!-- Notificação lateral 10 min -->
-        <div id="notify-10">
-            <div style="color:var(--interface-gold); font-size:10px; margin-bottom:5px;">[NOTIFICAÇÃO DE ANÁLISE]</div>
-            <div id="notify-msg" style="font-size:13px;">ANÁLISE TRAVADA NO PAR EUR/USD. AGUARDE...</div>
-        </div>
-    </div>
+<div class="main-view">
+    <div class="radar"></div>
+    <p style="margin-top: 20px; letter-spacing: 3px;">SCANNING EUR/USD MARKET...</p>
 </div>
 
-<!-- O Sequestro de Tela (3 min antes) -->
-<div id="signal-overlay">
-    <div class="strategy-label" id="ov-desc">ESTRATÉGIA</div>
-    <div class="big-time" id="ov-time">00:00</div>
-    <div class="big-dir" id="ov-dir">CALL</div>
-    <div class="strategy-label blink">ENTRADA IMINENTE - PREPARAR</div>
+<div id="side-logs"></div>
+
+<!-- Notificação 10 min -->
+<div id="notif-10">
+    <div style="color:var(--alert); font-weight:bold; font-size:12px;">⚠ OPORTUNIDADE DETECTADA</div>
+    <div id="msg-10" style="font-size:14px; margin-top:5px;">Iniciando varredura para o sinal de 00:00</div>
+</div>
+
+<!-- Sequestro de Tela 3 min -->
+<div id="lock-on">
+    <div class="lock-title">TARGET LOCKED</div>
+    <div class="lock-time" id="lk-time">00:00</div>
+    <div class="lock-dir" id="lk-dir">CALL</div>
+    <div class="lock-desc" id="lk-desc">ESTRATEGIA</div>
+    <p class="blink" style="margin-top: 40px; color: var(--alert);">PREPARAR ENTRADA NA CORRETORA</p>
 </div>
 
 <script>
-    // LISTA DE SINAIS MANUAL
-    const signalList = [
+    // LISTA MANUAL
+    const sinais = [
         { time: "19:15", dir: "PUT", desc: "MHI 1 (Minoria)" },
         { time: "19:20", dir: "CALL", desc: "MHI 2 (Minoria)" },
         { time: "19:25", dir: "PUT", desc: "Fluxo (Abaixo da EMA 14)" },
@@ -169,85 +165,70 @@
         { time: "19:50", dir: "CALL", desc: "MHI 2 (Minoria)" }
     ];
 
-    let wins = 0; let losses = 0;
-
-    function addLog(msg) {
-        const terminal = document.getElementById('log-terminal');
-        const entry = document.createElement('div');
-        entry.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
-        terminal.prepend(entry);
-        if(terminal.childNodes.length > 25) terminal.lastChild.remove();
+    function log(msg) {
+        const l = document.getElementById('side-logs');
+        l.innerHTML = `<div>> [${new Date().toLocaleTimeString()}] ${msg}</div>` + l.innerHTML;
     }
 
-    function updateTerminal() {
-        const now = new Date();
-        const curTimeStr = now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
-        document.getElementById('clock').innerText = now.toLocaleTimeString();
+    function engine() {
+        const agora = new Date();
+        document.getElementById('relogio').innerText = agora.toLocaleTimeString();
+        
+        sinais.forEach(s => {
+            const [h, m] = s.time.split(':').map(Number);
+            const alvo = new Date(); alvo.setHours(h, m, 0);
+            const diff = (alvo - agora) / 60000;
 
-        signalList.forEach(sig => {
-            const [h, m] = sig.time.split(':').map(Number);
-            const target = new Date(); target.setHours(h, m, 0);
-            const diffMs = target - now;
-            const diffMin = diffMs / 60000;
-
-            // 1. ALERTA 10 MINUTOS (Notificação lateral)
-            if (diffMin <= 10 && diffMin > 9.8) {
-                const note = document.getElementById('notify-10');
-                note.style.right = '20px';
-                document.getElementById('notify-msg').innerText = `Análise travada para ${sig.time}.`;
-                addLog(`[ALERTA] Varredura iniciada para o sinal das ${sig.time}`);
-                setTimeout(() => { note.style.right = '-350px'; }, 8000);
+            // 10 MINUTOS: ALERTA LATERAL
+            if (diff <= 10 && diff > 9.9) {
+                const n = document.getElementById('notif-10');
+                document.getElementById('msg-10').innerText = `Sinal ${s.dir} detectado às ${s.time}`;
+                n.classList.add('show');
+                log(`VARREDURA (SCANNING) INICIADA PARA ${s.time}`);
+                setTimeout(() => n.classList.remove('show'), 10000);
             }
 
-            // 2. SEQUESTRO DE TELA 3 MINUTOS
-            if (diffMin <= 3 && diffMin > 0) {
-                const overlay = document.getElementById('signal-overlay');
-                overlay.className = sig.dir === 'PUT' ? 'active-put' : 'active-call';
+            // 3 MINUTOS: SEQUESTRO DE TELA
+            if (diff <= 3 && diff > 0) {
+                const lock = document.getElementById('lock-on');
+                lock.style.display = 'flex';
+                lock.className = s.dir.toLowerCase() === 'put' ? 'put' : '';
                 
-                document.getElementById('ov-time').innerText = sig.time;
-                document.getElementById('ov-dir').innerText = sig.dir;
-                document.getElementById('ov-desc').innerText = sig.desc;
-                
-                document.getElementById('status-text').innerText = `SINAL EM CURSO: ${sig.dir}`;
-            } 
-            
-            // 3. FECHAR OVERLAY APÓS O SINAL
-            if (diffMin < 0 && diffMin > -1) {
-                document.getElementById('signal-overlay').className = '';
-                if(!sig.processed) {
-                    sig.processed = true;
-                    // Simulação automática de resultado
-                    const win = Math.random() > 0.3;
-                    if(win) { wins++; addLog(`RESULTADO: WIN @ ${sig.time}`); }
-                    else { losses++; addLog(`RESULTADO: LOSS @ ${sig.time}`); }
-                    document.getElementById('win-count').innerText = wins;
-                    document.getElementById('loss-count').innerText = losses;
-                }
+                document.getElementById('lk-time').innerText = s.time;
+                document.getElementById('lk-dir').innerText = s.dir;
+                document.getElementById('lk-desc').innerText = s.desc;
+            }
+
+            // APÓS O SINAL: LIMPAR TELA
+            if (diff < 0 && diff > -1) {
+                document.getElementById('lock-on').style.display = 'none';
             }
         });
     }
 
-    // Efeito Visual de Radar de fundo
-    const canvas = document.getElementById('radar-canvas');
+    // MATRIX BG
+    const canvas = document.getElementById('canvas-matrix');
     const ctx = canvas.getContext('2d');
-    canvas.width = 600; canvas.height = 600;
-    let angle = 0;
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    const columns = canvas.width / 20;
+    const drops = Array(Math.floor(columns)).fill(1);
 
-    function drawRadar() {
-        ctx.clearRect(0,0,600,600);
-        ctx.strokeStyle = '#00ff41';
-        ctx.beginPath(); ctx.arc(300,300,250,0,Math.PI*2); ctx.stroke();
-        ctx.moveTo(300,300);
-        ctx.lineTo(300 + Math.cos(angle)*250, 300 + Math.sin(angle)*250);
-        ctx.stroke();
-        angle += 0.05;
-        requestAnimationFrame(drawRadar);
+    function drawMatrix() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#00ff41";
+        ctx.font = "15px monospace";
+        drops.forEach((y, i) => {
+            const text = String.fromCharCode(Math.random() * 128);
+            ctx.fillText(text, i * 20, y * 20);
+            if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+            drops[i]++;
+        });
     }
-    drawRadar();
 
-    setInterval(updateTerminal, 1000);
-    addLog("Terminal Quantum Inicializado...");
-    addLog("Lista manual carregada com sucesso.");
+    setInterval(drawMatrix, 50);
+    setInterval(engine, 1000);
+    log("Terminal Inicializado. Modo Fantasma Ativado.");
 </script>
 
 </body>
