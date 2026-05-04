@@ -3,255 +3,232 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SISTEMA DE ANÁLISE HACK-TRADE v4.0</title>
+    <title>SISTEMA DE GERENCIAMENTO HACKER - M1</title>
     <style>
         :root {
-            --neon-green: #00ff41;
-            --neon-red: #ff3e3e;
-            --bg-dark: #050505;
-            --panel-bg: rgba(15, 15, 15, 0.95);
+            --army-green: #4b5320;
+            --dark-green: #0a0c05;
+            --neon-green: #82f00a;
+            --hacker-glow: 0 0 15px rgba(130, 240, 10, 0.4);
         }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-dark);
+        body {
+            background-color: var(--dark-green);
             color: var(--neon-green);
             font-family: 'Courier New', Courier, monospace;
-            height: 100vh;
-            overflow: hidden;
-            text-transform: uppercase;
-        }
-
-        /* Layout Principal */
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            grid-template-rows: 1fr 250px;
-            height: 100vh;
-            gap: 5px;
-            padding: 5px;
-            box-sizing: border-box;
-        }
-
-        /* Área do Gráfico */
-        .chart-area {
-            grid-column: 1;
-            grid-row: 1;
-            background: var(--panel-bg);
-            border: 1px solid #222;
-            position: relative;
-            overflow: hidden;
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Sidebar de Estatísticas */
-        .sidebar {
-            grid-column: 2;
-            grid-row: 1 / 3;
-            background: var(--panel-bg);
-            border: 1px solid #222;
-            padding: 15px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
-        }
-
-        /* Terminal de Log */
-        .terminal {
-            grid-column: 1;
-            grid-row: 2;
-            background: #000;
-            border: 1px solid var(--neon-green);
-            padding: 10px;
-            font-size: 11px;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
             overflow: hidden;
-            box-shadow: inset 0 0 10px rgba(0, 255, 65, 0.2);
         }
 
-        /* Elementos Visuais Dinâmicos */
-        .stat-box {
-            border-bottom: 1px dashed #333;
+        /* Efeito de Scanline (Linhas de monitor antigo) */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 450px;
+            background: rgba(20, 25, 10, 0.9);
+            border: 1px solid var(--army-green);
+            padding: 30px;
+            box-shadow: var(--hacker-glow);
+            border-radius: 2px;
+            position: relative;
+            z-index: 3;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-top: 0;
+            border-bottom: 2px solid var(--army-green);
             padding-bottom: 10px;
         }
 
-        .value {
-            font-size: 24px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            border: 1px solid var(--army-green);
+            border-left: 4px solid var(--neon-green);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            color: #6b7a2d;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
             display: block;
-            margin-top: 5px;
-            text-shadow: 0 0 5px var(--neon-green);
+            font-size: 0.75rem;
+            margin-bottom: 5px;
+            color: var(--army-green);
         }
 
-        .header-info {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 10;
-            background: rgba(0,0,0,0.7);
-            padding: 5px;
-            border-left: 3px solid var(--neon-green);
-        }
-
-        .scan-line {
+        input {
             width: 100%;
-            height: 2px;
-            background: rgba(0, 255, 65, 0.1);
-            position: absolute;
-            top: 0;
-            animation: scan 4s linear infinite;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid var(--army-green);
+            color: var(--neon-green);
+            padding: 10px;
+            box-sizing: border-box;
+            outline: none;
+            font-family: 'Courier New', monospace;
         }
 
-        @keyframes scan {
-            0% { top: 0%; }
-            100% { top: 100%; }
+        input:focus {
+            border-color: var(--neon-green);
         }
 
-        .signal-alert {
-            color: white;
-            background: var(--neon-red);
-            padding: 2px 5px;
-            animation: blink 0.5s infinite;
+        .btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--army-green);
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.2s;
+            letter-spacing: 2px;
         }
 
-        @keyframes blink {
+        .btn:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-green);
+        }
+
+        #log {
+            margin-top: 20px;
+            height: 120px;
+            background: #000;
+            border: 1px solid var(--army-green);
+            padding: 10px;
+            font-size: 0.75rem;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+
+        @keyframes blinker {
             50% { opacity: 0; }
+        }
+
+        .footer-info {
+            text-align: center;
+            font-size: 0.6rem;
+            margin-top: 15px;
+            color: #3d441a;
         }
     </style>
 </head>
 <body>
 
-<div class="main-container">
-    <div class="chart-area">
-        <div class="header-info">
-            ALGO_BOT_CONNECTED // ASSET: BTC/USDT // M1 ANALYSIS<br>
-            <span id="live-price">65432.10</span> USD
-        </div>
-        <div class="scan-line"></div>
-        <canvas id="tradingChart"></canvas>
-    </div>
+    <div class="container">
+        <h1>PROTOCOL_M1_ROBOT</h1>
 
-    <div class="terminal" id="log-output">
-        <p>> INITIALIZING ROBOT ANALYSIS...</p>
-    </div>
-
-    <div class="sidebar">
-        <div class="stat-box">
-            LABEL: PROBABILIDADE WIN
-            <span class="value" id="win-rate">87.5%</span>
-        </div>
-        <div class="stat-box">
-            SMA(50) / EMA(14) DELTA
-            <span class="value" id="delta-val">0.00042</span>
-        </div>
-        <div class="stat-box">
-            FORÇA DO MERCADO
-            <div id="power-bar" style="width: 100%; height: 10px; background: #222; margin-top: 5px;">
-                <div id="power-fill" style="width: 70%; height: 100%; background: var(--neon-green);"></div>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-label">BANCA ATUAL</div>
+                <div class="stat-value" id="display-banca">R$ 50.00</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">RISCO (STOP)</div>
+                <div class="stat-value" id="display-stop" style="color: #ff4444;">R$ 5.00</div>
             </div>
         </div>
-        <div class="stat-box" style="color: #888; font-size: 10px;">
-            SISTEMA HACKER ATIVO: <span id="cpu-load">12%</span> CPU LOAD<br>
-            ENCRYPTION: AES-256<br>
-            STATUS: ANALYZING CANDLE PATTERNS...
+
+        <div class="input-group">
+            <label>VALOR DA BANCA (R$)</label>
+            <input type="number" id="banca-input" value="50" step="0.01">
         </div>
-        <div id="signal-display"></div>
+
+        <div class="input-group">
+            <label>PAYOUT DA CORRETORA (%)</label>
+            <input type="number" id="payout-input" value="85">
+        </div>
+
+        <button class="btn" onclick="iniciarCalculo()">INICIAR PROTOCOLO</button>
+
+        <div id="log">> AGUARDANDO COMANDO...</div>
+
+        <div class="footer-info">
+            SECURE CONNECTION ACTIVE // NO_MARTINGALE_MODE
+        </div>
     </div>
-</div>
 
-<script>
-    const logContainer = document.getElementById('log-output');
-    const canvas = document.getElementById('tradingChart');
-    const ctx = canvas.getContext('2d');
-
-    // Ajustar tamanho do canvas
-    function resize() {
-        canvas.width = canvas.parentElement.clientWidth;
-        canvas.height = canvas.parentElement.clientHeight;
-    }
-    window.addEventListener('resize', resize);
-    resize();
-
-    // Simulação de Logs Profissionais
-    const logs = [
-        "[INFO] Cruzamento de médias detectado: EMA(14) sobre SMA(50)",
-        "[ALERTA] Volume spike em 0.05s - Possível manipulação baleia",
-        "[ANALYSIS] RSI em 68.4 - Aproximando zona de exaustão",
-        "[ROBOT] Calculando Fibonacci Retracement: Nível 0.618 atingido",
-        "[SYSTEM] Ordem de compra simulada enviada para pool de liquidez",
-        "[HACK] Bypass firewall Quotex/Binance... Dados recebidos",
-        "[DATA] Candle Pattern: Engolfo de Alta confirmado",
-        "[INFO] Latência de rede: 14ms - Estável"
-    ];
-
-    function addLog() {
-        const p = document.createElement('p');
-        p.style.margin = "2px 0";
-        p.innerHTML = `> ${new Date().toLocaleTimeString()} ${logs[Math.floor(Math.random() * logs.length)]}`;
-        logContainer.appendChild(p);
-        if (logContainer.childNodes.length > 12) logContainer.removeChild(logContainer.firstChild);
-    }
-
-    // Gráfico de Velas (Candlesticks Animados)
-    let candles = [];
-    function generateCandles() {
-        for(let i=0; i<50; i++) {
-            candles.push({
-                x: i * 20,
-                h: Math.random() * 100 + 50,
-                y: Math.random() * 150 + 100,
-                type: Math.random() > 0.5 ? 'up' : 'down'
-            });
-        }
-    }
-
-    function drawChart() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.strokeStyle = '#222';
-        // Desenha grade
-        for(let i=0; i<canvas.width; i+=40) {
-            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-        }
-
-        // Desenha Velas
-        candles.forEach((c, index) => {
-            ctx.fillStyle = c.type === 'up' ? '#00ff41' : '#ff3e3e';
-            ctx.fillRect(canvas.width - (index * 25), c.y, 15, c.h);
-            // Pavio
-            ctx.beginPath();
-            ctx.moveTo(canvas.width - (index * 25) + 7.5, c.y - 10);
-            ctx.lineTo(canvas.width - (index * 25) + 7.5, c.y + c.h + 10);
-            ctx.stroke();
+    <script>
+        function iniciarCalculo() {
+            const banca = parseFloat(document.getElementById('banca-input').value);
+            const payout = parseFloat(document.getElementById('payout-input').value) / 100;
+            const log = document.getElementById('log');
             
-            // Movimentação das velas
-            c.y += (Math.random() - 0.5) * 2;
-        });
+            // Gerenciamento: 10% de Stop Loss
+            const stopLoss = banca * 0.10;
+            const entrada1 = stopLoss; // Entrada fixa no stop do dia
+            const lucro1 = entrada1 * payout;
+            const entrada2 = entrada1 + lucro1; // Mão de Soros
+            const lucroFinal = lucro1 + (entrada2 * payout);
 
-        requestAnimationFrame(drawChart);
-    }
+            // Atualiza UI
+            document.getElementById('display-banca').innerText = `R$ ${banca.toFixed(2)}`;
+            document.getElementById('display-stop').innerText = `R$ ${stopLoss.toFixed(2)}`;
 
-    // Atualização de Números Dinâmicos
-    setInterval(() => {
-        addLog();
-        document.getElementById('live-price').innerText = (65000 + Math.random() * 500).toFixed(2);
-        document.getElementById('win-rate').innerText = (85 + Math.random() * 10).toFixed(1) + "%";
-        document.getElementById('cpu-load').innerText = Math.floor(Math.random() * 40 + 10) + "%";
-        document.getElementById('power-fill').style.width = Math.random() * 100 + "%";
-        
-        // Alerta de Sinal Aleatório
-        if(Math.random() > 0.9) {
-            const side = Math.random() > 0.5 ? "CALL (COMPRA)" : "PUT (VENDA)";
-            document.getElementById('signal-display').innerHTML = `<div class="signal-alert">SINAL DETECTADO: ${side}</div>`;
-            setTimeout(() => document.getElementById('signal-display').innerHTML = "", 3000);
+            log.innerHTML = "> ACESSANDO MERCADO...<br>";
+            
+            setTimeout(() => {
+                log.innerHTML += "> CALCULANDO PROBABILIDADES M1...<br>";
+            }, 400);
+
+            setTimeout(() => {
+                log.innerHTML = `> <span style="color:white">EXECUTAR GERENCIAMENTO:</span>\n`;
+                log.innerHTML += `> ENTRADA 01: <span style="color:var(--neon-green)">R$ ${entrada1.toFixed(2)}</span>\n`;
+                log.innerHTML += `> SE WIN: PRÓXIMA R$ ${entrada2.toFixed(2)}\n`;
+                log.innerHTML += `> SE LOSS: <span style="color:#ff4444">PARE IMEDIATAMENTE</span>\n`;
+                log.innerHTML += `> ---------------------------\n`;
+                log.innerHTML += `> META DO DIA: <span style="color:var(--neon-green)">+R$ ${lucroFinal.toFixed(2)}</span>\n`;
+                log.innerHTML += `> <span class="blink">AGUARDANDO OPORTUNIDADE M1...</span>`;
+            }, 1000);
         }
-    }, 1000);
-
-    generateCandles();
-    drawChart();
-</script>
-
+    </script>
 </body>
 </html>
