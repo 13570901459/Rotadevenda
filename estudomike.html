@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyMaster Pro - Mobile Ready</title>
+    <title>StudyMaster Pro - Análise Avançada</title>
     <style>
         :root {
             --sidebar-width: 280px;
             --primary: #4f46e5;
-            --bg-body: #f3f4f6;
-            --text-main: #1f2937;
+            --primary-light: #eeebff;
+            --bg-body: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
+        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg-body); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-        /* Menu Lateral Responsivo */
+        /* Menu Lateral */
         aside { 
             width: var(--sidebar-width); 
-            background: #111827; 
+            background: #0f172a; 
             color: white; 
             display: flex; 
             flex-direction: column; 
@@ -30,124 +33,189 @@
             z-index: 1000;
         }
 
-        /* Overlay para fechar o menu no mobile */
         #menu-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.4);
             z-index: 999;
+            backdrop-filter: blur(2px);
         }
 
         .nav-list { flex-grow: 1; overflow-y: auto; list-style: none; margin-top: 20px; }
-        .nav-item { padding: 15px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid transparent; }
-        .nav-item:hover, .nav-item.active { background: #1f2937; border-left-color: var(--primary); }
+        .nav-item { padding: 14px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid transparent; color: #94a3b8; font-weight: 500; transition: all 0.2s; }
+        .nav-item:hover, .nav-item.active { background: #1e293b; color: white; border-left-color: var(--primary); }
         
-        .timer-container { background: #1e293b; color: #fbbf24; padding: 15px; border-radius: 10px; text-align: center; margin: 10px 20px; border: 1px solid #334155; }
-        #timer-display { font-family: monospace; font-size: 1.6rem; font-weight: bold; }
+        .timer-container { background: #1e293b; color: #fbbf24; padding: 15px; border-radius: 12px; text-align: center; margin: 10px 20px; border: 1px solid #334155; }
+        #timer-display { font-family: monospace; font-size: 1.8rem; font-weight: bold; letter-spacing: 1px; }
 
-        /* Mobile Header */
         #mobile-header {
             display: none;
-            background: #111827;
+            background: #0f172a;
             color: white;
             padding: 15px;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        main { flex-grow: 1; overflow-y: auto; padding: 20px; width: 100%; }
-        .content-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; margin-bottom: 20px; }
+        main { flex-grow: 1; overflow-y: auto; padding: 30px; width: 100%; }
+        .welcome-section { margin-bottom: 25px; }
+        .welcome-section h1 { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+        .welcome-section p { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
         
-        /* Stats Grid Responsiva */
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: white; padding: 15px; border-radius: 10px; text-align: center; border-bottom: 4px solid var(--primary); }
+        .content-card { background: white; border-radius: 16px; padding: 24px; box-shadow: var(--card-shadow); max-width: 1100px; margin: 0 auto 24px auto; border: 1px solid #e2e8f0; }
         
-        .item-row { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; gap: 10px; background: white; border-radius: 8px; margin-bottom: 8px; }
+        /* Grid Layout */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; max-width: 1100px; margin-left: auto; margin-right: auto; }
+        .stat-card { background: white; padding: 20px; border-radius: 16px; box-shadow: var(--card-shadow); border: 1px solid #e2e8f0; display: flex; flex-direction: column; justify-content: space-between; position: relative; overflow: hidden; }
+        .stat-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--primary); }
+        .stat-card.success::before { background: var(--success); }
+        .stat-card.danger::before { background: var(--danger); }
+        .stat-card.warning::before { background: var(--warning); }
+        .stat-card h4 { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 8px; }
+        .stat-card .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--text-main); }
+        .stat-card .stat-detail { font-size: 0.8rem; color: var(--text-muted); margin-top: 6px; }
+
+        .dashboard-row { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; max-width: 1100px; margin: 0 auto; }
+        @media (max-width: 900px) { .dashboard-row { grid-template-columns: 1fr; } }
+
+        .item-row { display: flex; flex-direction: column; padding: 16px; border: 1px solid #e2e8f0; background: white; border-radius: 12px; margin-bottom: 12px; transition: transform 0.2s; }
+        .item-row:hover { transform: translateY(-1px); }
+        .item-row-header { display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 8px; }
+        .item-row-stats { display: flex; gap: 12px; font-size: 0.8rem; color: var(--text-muted); flex-wrap: wrap; background: #f8fafc; padding: 6px 12px; border-radius: 8px; }
         
-        .btn { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+        .btn { padding: 10px 16px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s; }
         .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #4338ca; }
         .btn-success { background: var(--success); color: white; }
+        .btn-success:hover { background: #059669; }
         .btn-danger { background: #fee2e2; color: var(--danger); }
+        .btn-danger:hover { background: #fca5a5; color: #b91c1c; }
         .btn-ghost { background: #f1f5f9; color: #475569; }
+        .btn-ghost:hover { background: #e2e8f0; }
 
-        .progress-bar { height: 8px; background: #eee; border-radius: 4px; margin: 8px 0; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--success); }
+        /* Custom Progress Bars */
+        .progress-container { margin-bottom: 16px; }
+        .progress-label { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 500; margin-bottom: 6px; }
+        .progress-bar { height: 10px; background: #f1f5f9; border-radius: 6px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--primary); border-radius: 6px; transition: width 0.5s ease; }
 
-        .option { display: block; width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #e5e7eb; border-radius: 10px; text-align: left; cursor: pointer; background: white; font-size: 1rem; }
-        .option.correct { background: #ecfdf5; border-color: var(--success); }
-        .option.wrong { background: #fef2f2; border-color: var(--danger); }
+        /* Quiz Options */
+        .option { display: block; width: 100%; padding: 16px; margin: 12px 0; border: 2px solid #e2e8f0; border-radius: 12px; text-align: left; cursor: pointer; background: white; font-size: 1rem; font-weight: 500; transition: all 0.2s; }
+        .option:hover { border-color: #cbd5e1; background: #f8fafc; }
+        .option.correct { background: #ecfdf5; border-color: var(--success); color: #065f46; }
+        .option.wrong { background: #fef2f2; border-color: var(--danger); color: #991b1b; }
         
-        /* MEDIA QUERIES PARA CELULAR */
         @media (max-width: 768px) {
-            aside {
-                position: fixed;
-                height: 100%;
-                left: 0;
-                transform: translateX(-100%); /* Esconde o menu */
-            }
-            aside.open {
-                transform: translateX(0); /* Mostra o menu */
-            }
+            aside { position: fixed; height: 100%; left: 0; transform: translateX(-100%); }
+            aside.open { transform: translateX(0); }
             #mobile-header { display: flex; }
-            main { padding: 15px; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .btn { width: auto; font-size: 0.85rem; }
-            #view-subjects .btn { width: 100%; } /* Botões de ação em tela cheia no mobile */
-            .flex-mobile-column { flex-direction: column; }
+            main { padding: 20px 15px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .stat-card .stat-value { font-size: 1.4rem; }
+            #view-subjects .btn { width: 100%; }
         }
 
         .hidden { display: none !important; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+        .badge-info { background: var(--primary-light); color: var(--primary); }
+        .badge-success { background: #ecfdf5; color: var(--success); }
+        .badge-danger { background: #fef2f2; color: var(--danger); }
     </style>
 </head>
 <body>
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
+    <!-- Barra Lateral -->
     <aside id="sidebar">
-        <div style="padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
-            <h2 style="color: #fbbf24; cursor: pointer;" onclick="goHome()">StudyMaster</h2>
-            <button class="btn btn-ghost" onclick="toggleMenu()" style="color: white; background: transparent; font-size: 1.5rem; border: none;">✕</button>
+        <div style="padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="color: #fbbf24; cursor: pointer; font-size: 1.5rem; font-weight: 800;" onclick="goHome()">StudyMaster</h2>
+            <button class="btn btn-ghost" onclick="toggleMenu()" style="color: white; background: transparent; font-size: 1.3rem; border: none; padding: 0;">✕</button>
         </div>
         
         <div class="timer-container">
             <div id="timer-display">00:00:00</div>
-            <div style="margin-top: 10px; display: flex; gap: 5px; justify-content: center;">
-                <button class="btn btn-primary" style="padding: 5px 10px; font-size: 0.7rem;" onclick="toggleTimer()" id="timer-btn">INICIAR</button>
-                <button class="btn btn-danger" style="padding: 5px 10px; font-size: 0.7rem;" onclick="resetTimer()">ZERAR</button>
+            <div style="margin-top: 10px; display: flex; gap: 6px; justify-content: center;">
+                <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="toggleTimer()" id="timer-btn">INICIAR</button>
+                <button class="btn btn-danger" style="padding: 6px 12px; font-size: 0.75rem;" onclick="resetTimer()">ZERAR</button>
             </div>
         </div>
         
         <ul class="nav-list" id="sidebar-disciplines"></ul>
         
-        <div style="padding: 20px; border-top: 1px solid #374151; display: flex; flex-direction: column; gap: 8px;">
+        <div style="padding: 20px; border-top: 1px solid #1e293b; display: flex; flex-direction: column; gap: 8px;">
             <button class="btn btn-primary" onclick="addDiscipline()">+ Disciplina</button>
-            <button class="btn btn-ghost" onclick="exportBackup()">Exportar</button>
-            <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">Importar</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <button class="btn btn-ghost" style="font-size: 0.8rem; padding: 8px;" onclick="exportBackup()">Exportar</button>
+                <button class="btn btn-ghost" style="font-size: 0.8rem; padding: 8px;" onclick="document.getElementById('importFile').click()">Importar</button>
+            </div>
             <input type="file" id="importFile" class="hidden" onchange="importBackup(event)">
         </div>
     </aside>
 
     <div style="flex-grow: 1; display: flex; flex-direction: column; overflow: hidden;">
+        <!-- Header Mobile -->
         <header id="mobile-header">
-            <button onclick="toggleMenu()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;">☰ Menu</button>
+            <button onclick="toggleMenu()" style="background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer;">☰ Menu</button>
             <span id="header-title" style="font-weight: bold; color: #fbbf24;">Dashboard</span>
         </header>
 
+        <!-- Conteúdo Principal -->
         <main>
+            <!-- VIEW: DASHBOARD (MÉTRICAS DETALHADAS FRONTAL) -->
             <div id="view-dashboard">
-                <h1>Olá, Leandro!</h1>
-                <div class="stats-grid">
-                    <div class="stat-card"><h4>Banco</h4><p id="stat-total">0</p></div>
-                    <div class="stat-card"><h4>Resolvidas</h4><p id="stat-solved">0</p></div>
-                    <div class="stat-card"><h4>Aproveitamento</h4><p id="stat-percent">0%</p></div>
+                <div class="welcome-section">
+                    <h1>Olá, Leandro!</h1>
+                    <p>Aqui estão as suas estatísticas consolidadas de desempenho.</p>
                 </div>
-                <div class="content-card">
-                    <h3>Progresso das Matérias</h3>
-                    <div id="edital-summary-list"></div>
+                
+                <!-- Frontal Grid Reestruturada -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h4>Total no Banco</h4>
+                        <p class="stat-value" id="stat-total">0</p>
+                        <p class="stat-detail">Questões importadas</p>
+                    </div>
+                    <div class="stat-card">
+                        <h4>Resolvidas</h4>
+                        <p class="stat-value" id="stat-solved">0</p>
+                        <p class="stat-detail">Volume total de treinos</p>
+                    </div>
+                    <div class="stat-card success">
+                        <h4>Acertos</h4>
+                        <p class="stat-value" id="dash-hits-count" style="color: var(--success);">0</p>
+                        <p class="stat-detail">Respostas corretas</p>
+                    </div>
+                    <div class="stat-card danger">
+                        <h4>Erros</h4>
+                        <p class="stat-value" id="dash-misses-count" style="color: var(--danger);">0</p>
+                        <p class="stat-detail">Respostas incorretas</p>
+                    </div>
+                    <div class="stat-card" id="card-percent">
+                        <h4>Aproveitamento</h4>
+                        <p class="stat-value" id="stat-percent">0%</p>
+                        <p class="stat-detail">Média líquida geral</p>
+                    </div>
+                </div>
+
+                <div class="dashboard-row">
+                    <div class="content-card" style="margin: 0;">
+                        <h3 style="margin-bottom: 15px; font-size: 1.1rem; font-weight: 700;">Progresso Baseado nos Editais</h3>
+                        <div id="edital-summary-list"></div>
+                    </div>
+                    
+                    <div class="content-card" style="margin: 0; background: #fafafa;">
+                        <h3 style="margin-bottom: 12px; font-size: 1.1rem; font-weight: 700;">💡 Dica de Foco</h3>
+                        <div id="dashboard-insight" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.4;">
+                            Alimente os editais locais das suas matérias para recalibrar as sugestões.
+                        </div>
+                    </div>
                 </div>
             </div>
 
+            <!-- VIEW: ASSUNTOS (MÉTRICAS POR ASSUNTO ADICIONADAS) -->
             <div id="view-subjects" class="hidden">
                 <div style="display:flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
                     <h1 id="view-title">Matéria</h1>
@@ -157,42 +225,65 @@
                     </div>
                 </div>
                 <div class="content-card" id="local-edital-card">
-                    <h4 style="margin-bottom: 10px;">Checklist do Edital</h4>
+                    <h4 style="margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+                        <span>Checklist do Edital</span>
+                        <span id="edital-count-badge" class="badge badge-info">0/0</span>
+                    </h4>
                     <div id="local-edital-content"></div>
                 </div>
-                <h3 style="margin-top: 20px;">Meus Assuntos de Questões</h3>
-                <div id="subject-list" style="margin-top: 10px;"></div>
+                <h3 style="margin-top: 25px; margin-bottom: 12px;">Meus Assuntos e Aproveitamento</h3>
+                <div id="subject-list"></div>
             </div>
 
+            <!-- VIEW: LOTES DE QUESTÕES E REESCOLHA DE PROGRESSO -->
             <div id="view-details" class="hidden">
                 <button class="btn btn-ghost" onclick="showSubjects()">← Voltar</button>
                 <div class="content-card" style="margin-top: 20px;">
-                    <h2 id="subj-name-display">Assunto</h2>
-                    <div style="margin: 20px 0; background: #f8fafc; padding: 15px; border-radius: 8px;">
-                        <textarea id="json-input" rows="3" style="width:100%; padding:10px; border-radius: 8px; border: 1px solid #ddd;" placeholder="Cole o JSON aqui..."></textarea>
-                        <button class="btn btn-primary" style="margin-top:10px; width:100%;" onclick="importBatch()">Salvar Lote</button>
+                    <h2 id="subj-name-display" style="margin-bottom: 15px;">Assunto</h2>
+                    
+                    <!-- Opção de continuar simulado salvo -->
+                    <div id="resume-quiz-box" class="hidden" style="margin-bottom: 20px; background: #fffbeb; border: 1px solid #fef3c7; padding: 16px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                        <div>
+                            <strong style="color: #b45309; display: block;">Simulado em andamento localizado!</strong>
+                            <span id="resume-quiz-details" style="font-size: 0.85rem; color: #78350f;">Você parou na questão X</span>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-success" style="background: var(--warning); color: white;" onclick="resumeQuiz()">Continuar Onde Parei</button>
+                            <button class="btn btn-ghost" style="background: transparent; color: #92400e;" onclick="clearSavedQuiz()">Recomeçar do Zero</button>
+                        </div>
                     </div>
+
+                    <div style="margin: 20px 0; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                        <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted); display:block; margin-bottom: 6px;">Cole o JSON das Questões:</label>
+                        <textarea id="json-input" rows="4" style="width:100%; padding:12px; border-radius: 8px; border: 1px solid #cbd5e1; font-family: monospace; font-size: 0.85rem;" placeholder='[{"q":"Enunciado...", "a":"Opção A", "b":"Opção B", "correct":"a", "comment":"Explicação"}]'></textarea>
+                        <button class="btn btn-primary" style="margin-top:12px; width:100%;" onclick="importBatch()">Salvar em Lote</button>
+                    </div>
+                    <h4 style="margin-bottom: 10px; color: var(--text-muted);">Lotes Vinculados</h4>
                     <div id="batch-list"></div>
-                    <button class="btn btn-primary" style="width: 100%; padding: 20px; font-size: 1.1rem; margin-top: 20px;" onclick="startQuiz()">INICIAR SIMULADO</button>
+                    
+                    <button id="main-start-quiz-btn" class="btn btn-primary" style="width: 100%; padding: 18px; font-size: 1.1rem; margin-top: 25px; border-radius: 12px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);" onclick="startQuiz(false)">INICIAR NOVO SIMULADO</button>
                 </div>
             </div>
 
+            <!-- VIEW: SIMULADO COM OPÇÃO DE SAÍDA INTERMEDIÁRIA -->
             <div id="view-quiz" class="hidden">
-                <div class="content-card" style="max-width: 750px;">
+                <div class="content-card" style="max-width: 800px;">
                     <div id="quiz-active">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span id="quiz-progress" style="font-weight: bold; color: var(--primary);"></span>
-                            <button class="btn btn-danger" style="padding: 5px 10px;" onclick="finishQuiz()">Finalizar</button>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px;">
+                            <span id="quiz-progress" style="font-weight: 700; color: var(--primary); font-size: 1.1rem;"></span>
+                            <!-- Botão de interrupção segura sem perda de progresso -->
+                            <button class="btn btn-ghost" style="color: var(--warning); background: #fef3c7; padding: 6px 12px; font-size: 0.8rem;" onclick="pauseAndExitQuiz()">Pausar e Sair do Assunto</button>
                         </div>
-                        <h3 id="q-text" style="margin: 20px 0; font-size: 1.1rem; line-height: 1.4;"></h3>
+                        <h3 id="q-text" style="margin: 20px 0; font-size: 1.15rem; line-height: 1.5; font-weight: 600;"></h3>
                         <div id="options-container"></div>
-                        <div id="commentary" class="hidden" style="margin-top:15px; padding:15px; background:#eff6ff; border-left:4px solid var(--primary); font-size: 0.9rem;"></div>
-                        <button id="next-btn" class="btn btn-primary hidden" style="width:100%; margin-top:20px; padding: 15px;" onclick="nextQuestion()">Próxima Questão</button>
+                        <div id="commentary" class="hidden" style="margin-top:20px; padding:20px; background:#f0fdf4; border-left:4px solid var(--success); border-radius: 0 12px 12px 0; font-size: 0.95rem;"></div>
+                        <button id="next-btn" class="btn btn-primary hidden" style="width:100%; margin-top:25px; padding: 16px; border-radius: 12px;" onclick="nextQuestion()">Avançar para Próxima Questão →</button>
                     </div>
-                    <div id="quiz-results" class="hidden" style="text-align:center;">
-                        <h2>Resultado: <span id="res-perc">0%</span></h2>
-                        <p style="margin:20px 0;">Acertos: <span id="res-hits">0</span> | Erros: <span id="res-miss">0</span></p>
-                        <button class="btn btn-primary" style="width:100%;" onclick="goHome()">Voltar ao Início</button>
+                    <div id="quiz-results" class="hidden" style="text-align:center; padding: 20px 0;">
+                        <span style="font-size: 3rem;">🎯</span>
+                        <h2 style="font-size: 2rem; margin-top: 10px;">Resultado: <span id="res-perc" style="color: var(--primary);">0%</span></h2>
+                        <p style="margin:15px 0; color: var(--text-muted); font-size: 1.1rem;">Nesta rodada você acertou <strong id="res-hits" style="color: var(--success);">0</strong> e errou <strong id="res-miss" style="color: var(--danger);">0</strong>.</p>
+                        <button class="btn btn-primary" style="width:100%; padding: 14px;" onclick="closeAndSaveQuizState()">Finalizar e Computar Dados</button>
                     </div>
                 </div>
             </div>
@@ -200,15 +291,17 @@
     </div>
 
 <script>
+    // Recupera DB ou inicializa com suporte a dados analíticos por assunto
     let db = JSON.parse(localStorage.getItem('studyDB_v8')) || { 
-        disciplines: [], stats: { hits: 0, misses: 0, solved: 0 }
+        disciplines: [], 
+        stats: { hits: 0, misses: 0, solved: 0 }
     };
 
     let curDisc = -1, curSubj = -1, curQuest = 0;
     let activeQs = [], sHits = 0, sMiss = 0;
     let timerVal = 0, timerInt = null;
 
-    // --- CONTROLE DE MENU MOBILE ---
+    // --- INTERFACE BASE ---
     function toggleMenu() {
         const sidebar = document.getElementById('sidebar');
         const overlay = document.getElementById('menu-overlay');
@@ -220,7 +313,6 @@
         ['view-dashboard', 'view-subjects', 'view-details', 'view-quiz'].forEach(id => {
             document.getElementById(id).classList.add('hidden');
         });
-        // Fecha o menu ao mudar de tela (no mobile)
         if(window.innerWidth <= 768) {
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('menu-overlay').style.display = 'none';
@@ -264,90 +356,148 @@
     }
     function resetTimer() { clearInterval(timerInt); timerInt = null; timerVal = 0; document.getElementById('timer-display').innerText = "00:00:00"; document.getElementById('timer-btn').innerText = "INICIAR"; }
 
-    // --- LÓGICA DE DADOS ---
-    function save() { localStorage.setItem('studyDB_v8', JSON.stringify(db)); renderSidebar(); updateDashboard(); }
+    function save() { 
+        localStorage.setItem('studyDB_v8', JSON.stringify(db)); 
+        renderSidebar(); 
+        updateDashboard(); 
+    }
 
+    // --- REESTRUTURAÇÃO DO DASHBOARD (FRONTAL) ---
     function updateDashboard() {
         let total = 0;
         db.disciplines.forEach(d => d.subjects.forEach(s => s.batches.forEach(b => total += b.questions.length)));
+        
+        // Atribuição de métricas frontais solicitadas
         document.getElementById('stat-total').innerText = total;
-        document.getElementById('stat-solved').innerText = db.stats.solved;
+        document.getElementById('stat-solved').innerText = db.stats.solved || 0;
+        document.getElementById('dash-hits-count').innerText = db.stats.hits || 0;
+        document.getElementById('dash-misses-count').innerText = db.stats.misses || 0;
+        
         let p = db.stats.solved > 0 ? Math.round((db.stats.hits / db.stats.solved) * 100) : 0;
         document.getElementById('stat-percent').innerText = p + "%";
+        
+        const cardPercent = document.getElementById('card-percent');
+        cardPercent.className = "stat-card";
+        if(p >= 75) cardPercent.classList.add('success');
+        else if(p > 0 && p < 50) cardPercent.classList.add('danger');
+        
         renderGlobalEdital();
+        generateDashboardInsights();
     }
 
     function renderGlobalEdital() {
         const cont = document.getElementById('edital-summary-list');
         cont.innerHTML = '';
+        if(db.disciplines.length === 0) {
+            cont.innerHTML = '<p style="color:gray; font-size:0.85rem;">Nenhuma disciplina criada.</p>';
+            return;
+        }
         db.disciplines.forEach(d => {
             let topics = d.localEdital || [];
             let done = topics.filter(t => t.done).length;
             let p = topics.length > 0 ? Math.round((done / topics.length) * 100) : 0;
+            
             cont.innerHTML += `
-                <div style="margin-bottom: 12px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem;">
-                        <span>${d.name}</span><span>${p}%</span>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span style="font-weight:600;">${d.name}</span>
+                        <span style="color:var(--text-muted); font-size:0.8rem;">${done}/${topics.length} tópicos (${p}%)</span>
                     </div>
-                    <div class="progress-bar"><div class="progress-fill" style="width:${p}%"></div></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width:${p}%; background: ${p === 100 ? 'var(--success)' : 'var(--primary)'}"></div>
+                    </div>
                 </div>`;
         });
     }
 
-    function renderLocalEdital() {
-        const cont = document.getElementById('local-edital-content');
-        const topics = db.disciplines[curDisc].localEdital || [];
-        if(topics.length === 0) { cont.innerHTML = '<p style="color:gray; font-size:0.8rem;">Toque no botão verde para adicionar o edital.</p>'; return; }
-        let html = '<div style="max-height: 250px; overflow-y: auto;">';
-        topics.forEach((t, ti) => {
-            html += `
-                <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid #f9f9f9;">
-                    <input type="checkbox" style="width:20px; height:20px;" ${t.done ? 'checked' : ''} onchange="toggleTopic(${ti})">
-                    <span style="font-size:0.95rem; ${t.done ? 'text-decoration:line-through; color:gray' : ''}">${t.name}</span>
-                </div>`;
+    function generateDashboardInsights() {
+        const insightCont = document.getElementById('dashboard-insight');
+        if (db.disciplines.length === 0) return;
+        let menosEstudada = null; let menorProgresso = 101;
+        db.disciplines.forEach(d => {
+            let topics = d.localEdital || [];
+            if(topics.length > 0) {
+                let done = topics.filter(t => t.done).length;
+                let pct = Math.round((done / topics.length) * 100);
+                if(pct < menorProgresso) { menorProgresso = pct; menosEstudada = d.name; }
+            }
         });
-        html += '</div>';
-        cont.innerHTML = html;
-    }
-
-    function toggleTopic(ti) { db.disciplines[curDisc].localEdital[ti].done = !db.disciplines[curDisc].localEdital[ti].done; save(); renderLocalEdital(); }
-
-    function configLocalEdital() {
-        const raw = prompt("Cole os assuntos separados por vírgula:");
-        if(raw) {
-            db.disciplines[curDisc].localEdital = raw.split(',').map(item => ({ name: item.trim(), done: false }));
-            save(); renderLocalEdital();
+        if (menosEstudada && menorProgresso < 100) {
+            insightCont.innerHTML = `<p>🎯 Sua menor cobertura de edital encontra-se em <strong>${menosEstudada}</strong> (${menorProgresso}% feito).</p><p style="margin-top:5px;">Priorize esta matéria nas próximas baterias.</p>`;
+        } else {
+            insightCont.innerHTML = `<p>🚀 Tudo equilibrado! Continue alimentando os lotes e batendo as metas.</p>`;
         }
     }
 
-    function renderSidebar() {
-        const list = document.getElementById('sidebar-disciplines');
-        list.innerHTML = `<li class="nav-item ${curDisc === -1 ? 'active' : ''}" onclick="goHome()">🏠 Dashboard</li>`;
-        db.disciplines.forEach((d, i) => {
-            list.innerHTML += `<li class="nav-item ${curDisc === i ? 'active' : ''}" onclick="selectDiscipline(${i})">
-                <span>${d.name}</span><span onclick="deleteDisc(event, ${i})">✕</span></li>`;
-        });
-    }
-
-    function addDiscipline() { let n = prompt("Nome da Disciplina:"); if(n){ db.disciplines.push({name:n, subjects:[], localEdital:[]}); save(); }}
-    function deleteDisc(e, i) { e.stopPropagation(); if(confirm("Excluir?")){ db.disciplines.splice(i,1); save(); goHome(); }}
-
+    // --- SEÇÃO DE ASSUNTOS (MÉTRICAS POR ASSUNTO INDIVIDUAL) ---
     function renderSubjects() {
         const list = document.getElementById('subject-list'); list.innerHTML = '';
+        if(db.disciplines[curDisc].subjects.length === 0) {
+            list.innerHTML = '<p style="color:gray; font-size:0.9rem;">Insira um assunto para começar.</p>';
+            return;
+        }
         db.disciplines[curDisc].subjects.forEach((s, i) => {
-            list.innerHTML += `<div class="item-row">
-                <div style="flex-grow:1; cursor:pointer" onclick="openSubject(${i})"><strong>${s.name}</strong></div>
-                <button class="btn btn-ghost" onclick="editSubject(${i})">✏️</button>
-                <button class="btn btn-danger" onclick="deleteSubject(${i})">✕</button>
-            </div>`;
+            let qCount = s.batches.reduce((acc, curr) => acc + curr.questions.length, 0);
+            
+            // Tratamento das estatísticas específicas de cada assunto
+            let sSolved = s.solved || 0;
+            let sHitsCount = s.hits || 0;
+            let sMissesCount = s.misses || 0;
+            let sPercent = sSolved > 0 ? Math.round((sHitsCount / sSolved) * 100) : 0;
+
+            // Alerta visual de desempenho no assunto
+            let badgeClass = sPercent >= 75 ? 'badge-success' : (sPercent > 0 && sPercent < 50 ? 'badge-danger' : 'badge-info');
+
+            list.innerHTML += `
+                <div class="item-row">
+                    <div class="item-row-header">
+                        <div style="cursor:pointer; font-size:0.95rem; flex-grow: 1;" onclick="openSubject(${i})">
+                            <strong>${s.name}</strong> 
+                            <span style="font-size:0.8rem; color:var(--text-muted); margin-left:4px;">(Banco: ${qCount} qts)</span>
+                        </div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-ghost" style="padding:4px 8px;" onclick="editSubject(${i})">✏️</button>
+                            <button class="btn btn-danger" style="padding:4px 8px;" onclick="deleteSubject(${i})">✕</button>
+                        </div>
+                    </div>
+                    <!-- Nova barra analítica por assunto solicitada -->
+                    <div class="item-row-stats">
+                        <span>Feitas: <strong>${sSolved}</strong></span>
+                        <span style="color:var(--success)">Acertos: <strong>${sHitsCount}</strong></span>
+                        <span style="color:var(--danger)">Erros: <strong>${sMissesCount}</strong></span>
+                        <span class="badge ${badgeClass}">Aproveitamento: ${sPercent}%</span>
+                        ${s.savedProgress ? `<span class="badge" style="background:#fef3c7; color:#b45309; font-weight:bold;">⏸️ Em Andamento</span>` : ''}
+                    </div>
+                </div>`;
         });
     }
-    function addSubject() { let n = prompt("Assunto:"); if(n){ db.disciplines[curDisc].subjects.push({name:n, batches:[]}); save(); renderSubjects(); }}
-    function editSubject(i) { let n = prompt("Nome:", db.disciplines[curDisc].subjects[i].name); if(n){ db.disciplines[curDisc].subjects[i].name = n; save(); renderSubjects(); }}
-    function deleteSubject(i) { if(confirm("Excluir?")){ db.disciplines[curDisc].subjects.splice(i,1); save(); renderSubjects(); }}
 
-    function openSubject(i) { curSubj = i; hideAll(); document.getElementById('view-details').classList.remove('hidden'); document.getElementById('subj-name-display').innerText = db.disciplines[curDisc].subjects[i].name; renderBatches(); }
-    function renderBatches() { const list = document.getElementById('batch-list'); list.innerHTML = ''; db.disciplines[curDisc].subjects[curSubj].batches.forEach((b, i) => { list.innerHTML += `<div class="item-row">Lote #${i+1} (${b.questions.length} qts) <button class="btn btn-danger" onclick="deleteBatch(${i})">✕</button></div>`; }); }
+    function addSubject() { let n = prompt("Nome do Assunto:"); if(n){ db.disciplines[curDisc].subjects.push({name:n, batches:[], solved:0, hits:0, misses:0}); save(); renderSubjects(); }}
+    function editSubject(i) { let n = prompt("Modificar Nome:", db.disciplines[curDisc].subjects[i].name); if(n){ db.disciplines[curDisc].subjects[i].name = n; save(); renderSubjects(); }}
+    function deleteSubject(i) { if(confirm("Excluir assunto?")){ db.disciplines[curDisc].subjects.splice(i,1); save(); renderSubjects(); }}
+
+    // --- GERENCIAMENTO DO DETALHE E RETOMADA DE PROGRESSO ---
+    function openSubject(i) { 
+        curSubj = i; 
+        hideAll(); 
+        document.getElementById('view-details').classList.remove('hidden'); 
+        document.getElementById('subj-name-display').innerText = db.disciplines[curDisc].subjects[i].name; 
+        
+        // Verifica se há progresso salvo para exibir a caixa de recuperação
+        const subject = db.disciplines[curDisc].subjects[curSubj];
+        const resumeBox = document.getElementById('resume-quiz-box');
+        
+        if(subject.savedProgress && subject.savedProgress.activeQs && subject.savedProgress.activeQs.length > 0) {
+            resumeBox.classList.remove('hidden');
+            document.getElementById('resume-quiz-details').innerText = `Você resolveu ${subject.savedProgress.curQuest} de ${subject.savedProgress.activeQs.length} questões deste bloco.`;
+        } else {
+            resumeBox.classList.add('hidden');
+        }
+
+        renderBatches(); 
+    }
+
+    function renderBatches() { const list = document.getElementById('batch-list'); list.innerHTML = ''; if(db.disciplines[curDisc].subjects[curSubj].batches.length === 0) { list.innerHTML = '<p style="color:gray; font-size:0.85rem;">Nenhum lote neste assunto.</p>'; return; } db.disciplines[curDisc].subjects[curSubj].batches.forEach((b, i) => { list.innerHTML += `<div class="item-row" style="padding:10px; flex-direction:row; justify-content:space-between; align-items:center; font-size:0.9rem;"><span>📦 Lote #${i+1} (${b.questions.length} qts)</span> <button class="btn btn-danger" style="padding:4px 8px; font-size:0.75rem;" onclick="deleteBatch(${i})">Remover</button></div>`; }); }
     function deleteBatch(i) { db.disciplines[curDisc].subjects[curSubj].batches.splice(i,1); save(); renderBatches(); }
 
     function importBatch() {
@@ -355,38 +505,98 @@
         try {
             const data = JSON.parse(area.value);
             let qs = Array.isArray(data) ? data : (data.questoes || [data]);
-            let fmt = qs.map(q => ({ id: Math.random(), q: q.p || q.q, a: q.a, b: q.b, c: q.c, d: q.d, e: q.e || "N.D.A", correct: (q.r || q.correct).toLowerCase(), comment: q.coment || q.comment }));
+            let fmt = qs.map(q => ({ id: Math.random(), q: q.p || q.q, a: q.a, b: q.b, c: q.c, d: q.d, e: q.e || "N.D.A", correct: (q.r || q.correct).toLowerCase(), comment: q.coment || q.comment || "Sem comentários." }));
             db.disciplines[curDisc].subjects[curSubj].batches.push({ questions: fmt });
-            save(); area.value = ''; renderBatches(); alert("Importado!");
-        } catch(e) { alert("JSON Inválido!"); }
+            save(); area.value = ''; renderBatches(); alert("Lote adicionado!");
+        } catch(e) { alert("JSON Inválido."); }
     }
 
-    function startQuiz() {
-        activeQs = db.disciplines[curDisc].subjects[curSubj].batches.flatMap(b => b.questions);
-        if(activeQs.length === 0) return alert("Sem questões!");
-        curQuest = 0; sHits = 0; sMiss = 0; hideAll();
+    // --- MECANISMO DE ALTERNÂNCIA DE SIMULADO (SALVAR / RETOMAR / ENCERRAR) ---
+    function startQuiz(isResume = false) {
+        const subject = db.disciplines[curDisc].subjects[curSubj];
+        
+        if(isResume && subject.savedProgress) {
+            // Reconecta variáveis locais com o estado salvo
+            activeQs = subject.savedProgress.activeQs;
+            curQuest = subject.savedProgress.curQuest;
+            sHits = subject.savedProgress.sHits;
+            sMiss = subject.savedProgress.sMiss;
+        } else {
+            // Constrói um novo bloco limpo
+            activeQs = subject.batches.flatMap(b => b.questions);
+            if(activeQs.length === 0) return alert("Insira questões no assunto para gerar o simulado.");
+            curQuest = 0; sHits = 0; sMiss = 0;
+        }
+
+        hideAll();
         document.getElementById('view-quiz').classList.remove('hidden');
         document.getElementById('quiz-active').classList.remove('hidden');
         document.getElementById('quiz-results').classList.add('hidden');
         renderQuestion();
     }
+
+    function resumeQuiz() {
+        startQuiz(true);
+    }
+
+    function clearSavedQuiz() {
+        if(confirm("Deseja apagar o progresso anterior e iniciar uma nova rodada completa?")) {
+            db.disciplines[curDisc].subjects[curSubj].savedProgress = null;
+            save();
+            document.getElementById('resume-quiz-box').classList.add('hidden');
+            alert("Progresso reiniciado.");
+        }
+    }
+
+    // Ação acionada quando o usuário opta por "Pausar e Sair do Assunto"
+    function pauseAndExitQuiz() {
+        db.disciplines[curDisc].subjects[curSubj].savedProgress = {
+            activeQs: activeQs,
+            curQuest: curQuest,
+            sHits: sHits,
+            sMiss: sMiss
+        };
+        save();
+        alert("Seu simulado foi pausado! Você pode voltar a qualquer momento para continuar de onde parou.");
+        selectDiscipline(curDisc); // Redireciona com segurança de volta aos assuntos
+    }
+
     function renderQuestion() {
         const q = activeQs[curQuest];
-        document.getElementById('quiz-progress').innerText = `Q ${curQuest+1}/${activeQs.length}`;
+        document.getElementById('quiz-progress').innerText = `Questão ${curQuest+1} de ${activeQs.length}`;
         document.getElementById('q-text').innerText = q.q;
         const cont = document.getElementById('options-container'); cont.innerHTML = '';
         document.getElementById('commentary').classList.add('hidden');
         document.getElementById('next-btn').classList.add('hidden');
+        
         ['a','b','c','d','e'].forEach(l => {
             if(q[l]) {
                 const b = document.createElement('button'); b.className = 'option';
                 b.innerText = `${l.toUpperCase()}) ${q[l]}`;
                 b.onclick = () => {
                     const opts = document.querySelectorAll('.option'); opts.forEach(o => o.onclick = null);
-                    db.stats.solved++;
-                    if(l === q.correct) { b.classList.add('correct'); sHits++; db.stats.hits++; }
-                    else { b.classList.add('wrong'); sMiss++; db.stats.misses++; opts.forEach(o => { if(o.innerText.toLowerCase().startsWith(q.correct+")")) o.classList.add('correct'); }); }
-                    document.getElementById('commentary').innerHTML = `<strong>Gabarito: ${q.correct.toUpperCase()}</strong><br>${q.comment}`;
+                    
+                    // Alimenta estatística global do site (Frente)
+                    db.stats.solved = (db.stats.solved || 0) + 1;
+                    
+                    // Alimenta estatística local por assunto específico
+                    const subj = db.disciplines[curDisc].subjects[curSubj];
+                    subj.solved = (subj.solved || 0) + 1;
+
+                    if(l === q.correct) { 
+                        b.classList.add('correct'); 
+                        sHits++; 
+                        db.stats.hits = (db.stats.hits || 0) + 1;
+                        subj.hits = (subj.hits || 0) + 1;
+                    } else { 
+                        b.classList.add('wrong'); 
+                        sMiss++; 
+                        db.stats.misses = (db.stats.misses || 0) + 1;
+                        subj.misses = (subj.misses || 0) + 1;
+                        opts.forEach(o => { if(o.innerText.toLowerCase().startsWith(q.correct+")")) o.classList.add('correct'); }); 
+                    }
+                    
+                    document.getElementById('commentary').innerHTML = `<h5 style="margin-bottom:4px; font-weight:700;">Gabarito: ${q.correct.toUpperCase()}</h5>${q.comment}`;
                     document.getElementById('commentary').classList.remove('hidden'); document.getElementById('next-btn').classList.remove('hidden');
                     save();
                 };
@@ -394,10 +604,65 @@
             }
         });
     }
-    function nextQuestion() { curQuest++; if(curQuest < activeQs.length) renderQuestion(); else finishQuiz(); }
-    function finishQuiz() { document.getElementById('quiz-active').classList.add('hidden'); document.getElementById('quiz-results').classList.remove('hidden'); document.getElementById('res-hits').innerText = sHits; document.getElementById('res-miss').innerText = sMiss; document.getElementById('res-perc').innerText = Math.round((sHits/activeQs.length)*100) + "%"; }
 
-    function exportBackup() { const b = new Blob([JSON.stringify(db)], {type:"application/json"}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = "backup_pmpe.json"; a.click(); }
+    function nextQuestion() { 
+        curQuest++; 
+        if(curQuest < activeQs.length) {
+            renderQuestion(); 
+        } else { 
+            finishQuiz(); 
+        }
+    }
+    
+    function finishQuiz() { 
+        document.getElementById('quiz-active').classList.add('hidden'); 
+        document.getElementById('quiz-results').classList.remove('hidden'); 
+        document.getElementById('res-hits').innerText = sHits; 
+        document.getElementById('res-miss').innerText = sMiss; 
+        document.getElementById('res-perc').innerText = Math.round((sHits/activeQs.length)*100) + "%"; 
+        
+        // Limpa o estado temporário já que o bloco foi concluído de ponta a ponta
+        db.disciplines[curDisc].subjects[curSubj].savedProgress = null;
+        localStorage.setItem('studyDB_v8', JSON.stringify(db));
+    }
+
+    function closeAndSaveQuizState() {
+        goHome();
+    }
+
+    // --- CHECKLIST EDITAL LOCAL ---
+    function renderLocalEdital() {
+        const cont = document.getElementById('local-edital-content');
+        const topics = db.disciplines[curDisc].localEdital || [];
+        const badge = document.getElementById('edital-count-badge');
+        let doneCount = topics.filter(t => t.done).length;
+        badge.innerText = `${doneCount}/${topics.length}`;
+        if(topics.length === 0) { cont.innerHTML = '<p style="color:gray; font-size:0.85rem; padding: 10px 0;">Configure a ementa desta disciplina.</p>'; return; }
+        let html = '<div style="max-height: 250px; overflow-y: auto;">';
+        topics.forEach((t, ti) => {
+            html += `
+                <div style="display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid #f1f5f9;">
+                    <input type="checkbox" style="width:18px; height:18px;" ${t.done ? 'checked' : ''} onchange="toggleTopic(${ti})">
+                    <span style="font-size:0.9rem; ${t.done ? 'text-decoration:line-through; color:gray' : ''}">${t.name}</span>
+                </div>`;
+        });
+        html += '</div>';
+        cont.innerHTML = html;
+    }
+    function toggleTopic(ti) { db.disciplines[curDisc].localEdital[ti].done = !db.disciplines[curDisc].localEdital[ti].done; save(); renderLocalEdital(); }
+    function configLocalEdital() { const raw = prompt("Cole tópicos separados por vírgula:"); if(raw) { db.disciplines[curDisc].localEdital = raw.split(',').map(item => ({ name: item.trim(), done: false })).filter(item => item.name.length > 0); save(); renderLocalEdital(); } }
+
+    // --- BACKUP & COMPATIBILIDADE ---
+    function renderSidebar() {
+        const list = document.getElementById('sidebar-disciplines');
+        list.innerHTML = `<li class="nav-item ${curDisc === -1 ? 'active' : ''}" onclick="goHome()">🏠 Painel Central</li>`;
+        db.disciplines.forEach((d, i) => {
+            list.innerHTML += `<li class="nav-item ${curDisc === i ? 'active' : ''}" onclick="selectDiscipline(${i})"><span style="max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📚 ${d.name}</span><span onclick="deleteDisc(event, ${i})" style="color:#ef4444; padding:2px 6px;">✕</span></li>`;
+        });
+    }
+    function addDiscipline() { let n = prompt("Nome da Disciplina:"); if(n){ db.disciplines.push({name:n, subjects:[], localEdital:[]}); save(); }}
+    function deleteDisc(e, i) { e.stopPropagation(); if(confirm("Excluir disciplina?")){ db.disciplines.splice(i,1); save(); goHome(); }}
+    function exportBackup() { const b = new Blob([JSON.stringify(db)], {type:"application/json"}); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = "backup_studymaster.json"; a.click(); }
     function importBackup(e) { const r = new FileReader(); r.onload = (ev) => { db = JSON.parse(ev.target.result); save(); location.reload(); }; r.readAsText(e.target.files[0]); }
 
     window.onload = () => { updateDashboard(); renderSidebar(); };
