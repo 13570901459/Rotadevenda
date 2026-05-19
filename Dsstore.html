@@ -67,7 +67,7 @@
             gap: 10px;
         }
 
-        /* Barra de Busca Avançada */
+        /* Barra de Busca */
         .search-container {
             flex: 1;
             max-width: 500px;
@@ -123,7 +123,7 @@
             justify-content: center;
         }
 
-        /* Seção de Categorias em Bolinhas (Estilo Stories) */
+        /* Categorias Estilo Bolinha */
         .categories-section {
             margin-top: 90px;
             padding: 20px 5% 10px 5%;
@@ -138,15 +138,12 @@
             overflow-x: auto;
             padding: 10px 5px;
             scroll-behavior: smooth;
-        }
-
-        /* Esconder barra de rolagem mas manter funcionalidade */
-        .categories-carousel::-webkit-scrollbar {
-            display: none;
-        }
-        .categories-carousel {
             -ms-overflow-style: none;
             scrollbar-width: none;
+        }
+
+        .categories-carousel::-webkit-scrollbar {
+            display: none;
         }
 
         .category-item {
@@ -159,9 +156,7 @@
             transition: transform 0.2s;
         }
 
-        .category-item:hover {
-            transform: scale(1.05);
-        }
+        .category-item:hover { transform: scale(1.05); }
 
         .category-sphere {
             width: 65px;
@@ -189,7 +184,6 @@
             font-size: 0.75rem;
             font-weight: 500;
             color: var(--texto-mutado);
-            white-space: nowrap;
         }
 
         .category-item.active span {
@@ -236,36 +230,68 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            position: relative;
         }
 
         .product-card:hover {
-            transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 242, 254, 0.1);
         }
 
-        .product-img-wrapper {
+        /* Slide / Carrossel interno do Card */
+        .product-slider-wrapper {
             width: 100%;
             height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative;
             background: #1e293b;
             border-radius: 10px;
             overflow: hidden;
             margin-bottom: 15px;
-            cursor: pointer;
         }
 
-        .product-img-wrapper img {
+        .product-slides {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s ease-in-out;
+        }
+
+        .product-slide-item {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-slide-item img, .product-slide-item video {
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            transition: transform 0.3s;
         }
 
-        .product-card:hover .product-img-wrapper img {
-            transform: scale(1.05);
+        /* Setas do Slide na Vitrine */
+        .slide-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(15, 23, 42, 0.7);
+            color: var(--cor-primaria);
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            z-index: 10;
+            transition: background 0.3s;
         }
+
+        .slide-arrow:hover { background: rgba(0, 242, 254, 0.3); color: #000; }
+        .arrow-left { left: 8px; }
+        .arrow-right { right: 8px; }
 
         .product-category {
             font-size: 0.8rem;
@@ -314,21 +340,19 @@
             color: var(--cor-primaria);
         }
 
-        .btn-cart:hover {
-            background-color: var(--cor-primaria);
-            color: #000;
-        }
+        .btn-cart:hover { background-color: var(--cor-primaria); color: #000; }
 
-        .btn-buy {
-            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
-            color: #000;
+        .btn-info {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--texto-mutado);
         }
+        .btn-info:hover { border-color: var(--texto-claro); color: var(--texto-claro); }
 
-        .btn-buy:hover {
-            opacity: 0.9;
-        }
+        .btn-buy { background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria)); color: #000; }
+        .btn-buy:hover { opacity: 0.9; }
 
-        /* Modal de Detalhes do Produto */
+        /* Janela Flutuante / Modal de Detalhes */
         .modal {
             position: fixed;
             top: 0;
@@ -365,14 +389,10 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: var(--texto-mutado);
+            z-index: 10;
         }
 
-        /* Carrossel Mídia Modal */
-        .media-display {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .media-display { display: flex; flex-direction: column; gap: 15px; }
 
         .main-media-container {
             width: 100%;
@@ -391,13 +411,7 @@
             object-fit: contain;
         }
 
-        .thumb-container {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 5px;
-        }
-
+        .thumb-container { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px; }
         .thumb {
             width: 60px;
             height: 60px;
@@ -411,23 +425,11 @@
             overflow: hidden;
             flex-shrink: 0;
         }
+        .thumb.active { border-color: var(--cor-primaria); }
+        .thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .thumb i { font-size: 1.2rem; color: var(--cor-primaria); }
 
-        .thumb.active {
-            border-color: var(--cor-primaria);
-        }
-
-        .thumb img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .thumb i {
-            font-size: 1.2rem;
-            color: var(--cor-primaria);
-        }
-
-        /* Lateral Carrinho (Drawer) */
+        /* Lateral Carrinho */
         .cart-sidebar {
             position: fixed;
             top: 0;
@@ -443,155 +445,31 @@
             flex-direction: column;
         }
 
-        .cart-sidebar.open {
-            right: 0;
-        }
+        .cart-sidebar.open { right: 0; }
+        .cart-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .cart-items-list { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        
+        .cart-item { display: flex; gap: 15px; background-color: var(--bg-principal); padding: 10px; border-radius: 10px; align-items: center; }
+        .cart-item-img { width: 60px; height: 60px; object-fit: contain; background: #fff; border-radius: 5px; }
+        .cart-item-info { flex: 1; }
+        .cart-item-title { font-size: 0.9rem; font-weight: 500; }
+        .cart-item-price { color: var(--cor-primaria); font-weight: 600; font-size: 0.95rem; }
+        .cart-item-qty { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qty-btn { background: none; border: 1px solid var(--texto-mutado); color: var(--texto-claro); width: 22px; height: 22px; border-radius: 50%; cursor: pointer; }
+        .remove-item { color: #ef4444; cursor: pointer; margin-left: 10px; }
 
-        .cart-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .cart-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); background-color: rgba(15, 23, 42, 0.6); }
+        .summary-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 0.95rem; }
+        .summary-total { font-size: 1.2rem; font-weight: 700; color: var(--cor-primaria); border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 10px; margin-top: 10px; }
+        
+        .checkout-form { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; max-height: 200px; overflow-y: auto; padding-right: 5px; }
+        .form-group { display: flex; gap: 10px; }
+        .checkout-form input { background-color: var(--bg-principal); border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 6px; color: white; font-size: 0.85rem; width: 100%; }
+        .checkout-form input:focus { outline: 1px solid var(--cor-primaria); }
 
-        .cart-items-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+        .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background-color: var(--sucesso); color: white; padding: 12px 25px; border-radius: 30px; font-weight: 500; z-index: 3000; transition: transform 0.3s ease; box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4); }
+        .toast.show { transform: translateX(-50%) translateY(0); }
 
-        .cart-item {
-            display: flex;
-            gap: 15px;
-            background-color: var(--bg-principal);
-            padding: 10px;
-            border-radius: 10px;
-            align-items: center;
-        }
-
-        .cart-item-img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
-            background: #fff;
-            border-radius: 5px;
-        }
-
-        .cart-item-info {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .cart-item-price {
-            color: var(--cor-primaria);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .cart-item-qty {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 5px;
-        }
-
-        .qty-btn {
-            background: none;
-            border: 1px solid var(--texto-mutado);
-            color: var(--texto-claro);
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-
-        .remove-item {
-            color: #ef4444;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-
-        /* Checkout Form no Carrinho */
-        .cart-footer {
-            padding: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            background-color: rgba(15, 23, 42, 0.6);
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-
-        .summary-total {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--cor-primaria);
-            border-top: 1px dashed rgba(255,255,255,0.2);
-            padding-top: 10px;
-            margin-top: 10px;
-        }
-
-        .checkout-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-            max-height: 200px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .form-group {
-            display: flex;
-            gap: 10px;
-        }
-
-        .checkout-form input {
-            background-color: var(--bg-principal);
-            border: 1px solid rgba(255,255,255,0.1);
-            padding: 10px;
-            border-radius: 6px;
-            color: white;
-            font-size: 0.85rem;
-            width: 100%;
-        }
-
-        .checkout-form input:focus {
-            outline: 1px solid var(--cor-primaria);
-        }
-
-        /* Toast de Notificação */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background-color: var(--sucesso);
-            color: white;
-            padding: 12px 25px;
-            border-radius: 30px;
-            font-weight: 500;
-            z-index: 3000;
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 15px rgba(34, 197, 94, 0.4);
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* Ajustes Responsivos adicionais */
         @media (max-width: 768px) {
             .navbar { padding: 10px 20px; justify-content: space-between; }
             .search-container { order: 3; max-width: 100%; min-width: 100%; margin-top: 5px;}
@@ -605,14 +483,11 @@
     <!-- Toast Informativo -->
     <div class="toast" id="toast">Item adicionado ao carrinho! 🛒</div>
 
-    <!-- Header com Busca e Marca -->
+    <!-- Header -->
     <header>
         <div class="navbar">
-            <div class="logo">
-                <i class="fa-solid fa-bolt"></i> DS Store
-            </div>
+            <div class="logo"><i class="fa-solid fa-bolt"></i> DS Store</div>
             
-            <!-- Barra de Busca Avançada -->
             <div class="search-container">
                 <input type="text" id="campo-busca" placeholder="Buscar produto..." oninput="executarFiltros()">
                 <i class="fa-solid fa-magnifying-glass"></i>
@@ -625,40 +500,32 @@
         </div>
     </header>
 
-    <!-- Menu de Categorias Estilo Bolinha (Stories) -->
+    <!-- Menu de Categorias Bolinha -->
     <section class="categories-section">
         <div class="categories-carousel">
             <div class="category-item active" onclick="selecionarCategoria('todos', this)">
-                <div class="category-sphere"><i class="fa-solid fa-border-all"></i></div>
-                <span>Todos</span>
+                <div class="category-sphere"><i class="fa-solid fa-border-all"></i></div><span>Todos</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('acessorios', this)">
-                <div class="category-sphere"><i class="fa-solid fa-plug"></i></div>
-                <span>Acessórios</span>
+                <div class="category-sphere"><i class="fa-solid fa-plug"></i></div><span>Acessórios</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('fone', this)">
-                <div class="category-sphere"><i class="fa-solid fa-headset"></i></div>
-                <span>Fones</span>
+                <div class="category-sphere"><i class="fa-solid fa-headset"></i></div><span>Fones</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('capinha', this)">
-                <div class="category-sphere"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                <span>Capinhas</span>
+                <div class="category-sphere"><i class="fa-solid fa-mobile-screen-button"></i></div><span>Capinhas</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('pelicula', this)">
-                <div class="category-sphere"><i class="fa-solid fa-shield-halved"></i></div>
-                <span>Películas</span>
+                <div class="category-sphere"><i class="fa-solid fa-shield-halved"></i></div><span>Películas</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('carregador', this)">
-                <div class="category-sphere"><i class="fa-solid fa-battery-three-quarters"></i></div>
-                <span>Carregador</span>
+                <div class="category-sphere"><i class="fa-solid fa-battery-three-quarters"></i></div><span>Carregador</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('gamer', this)">
-                <div class="category-sphere"><i class="fa-solid fa-gamepad"></i></div>
-                <span>Gamer</span>
+                <div class="category-sphere"><i class="fa-solid fa-gamepad"></i></div><span>Gamer</span>
             </div>
             <div class="category-item" onclick="selecionarCategoria('informatica', this)">
-                <div class="category-sphere"><i class="fa-solid fa-laptop"></i></div>
-                <span>Informática</span>
+                <div class="category-sphere"><i class="fa-solid fa-laptop"></i></div><span>Informática</span>
             </div>
         </div>
     </section>
@@ -667,22 +534,18 @@
     <main class="container">
         <h2 class="section-title" id="titulo-vitrine">Todos os Produtos</h2>
         <div class="grid-produtos" id="vitrine-produtos">
-            <!-- Injetado dinamicamente via JS -->
+            <!-- Injetado dinamicamente -->
         </div>
     </main>
 
-    <!-- Modal Detalhes do Produto -->
+    <!-- Página Flutuante / Modal Detalhes -->
     <div class="modal" id="modal-produto" onclick="fecharModalFora(event)">
         <div class="modal-content">
             <span class="close-modal" onclick="fecharModal()"><i class="fa-solid fa-xmark"></i></span>
             
             <div class="media-display">
-                <div class="main-media-container" id="container-midia-principal">
-                    <!-- Mídia em destaque -->
-                </div>
-                <div class="thumb-container" id="container-thumbs">
-                    <!-- Miniaturas de fotos/vídeos -->
-                </div>
+                <div class="main-media-container" id="container-midia-principal"></div>
+                <div class="thumb-container" id="container-thumbs"></div>
             </div>
 
             <div style="display: flex; flex-direction: column; justify-content: space-between;">
@@ -690,7 +553,7 @@
                     <span class="product-category" id="modal-categoria">Categoria</span>
                     <h2 id="modal-titulo" style="margin-bottom: 15px;">Nome do Produto</h2>
                     <div class="product-price" id="modal-preco">R$ 0,00</div>
-                    <p id="modal-descricao" style="color: var(--texto-mutado); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">Descrição detalhada.</p>
+                    <p id="modal-descricao" style="color: var(--texto-mutado); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;"></p>
                 </div>
                 <div>
                     <button class="btn-action btn-cart" id="modal-btn-carrinho"><i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho</button>
@@ -700,23 +563,20 @@
         </div>
     </div>
 
-    <!-- Lateral do Carrinho -->
+    <!-- Carrinho Lateral -->
     <div class="cart-sidebar" id="carrinho-lateral">
         <div class="cart-header">
             <h3>Seu Carrinho</h3>
             <span style="cursor:pointer; font-size: 1.3rem;" onclick="toggleCarrinho(false)"><i class="fa-solid fa-xmark"></i></span>
         </div>
 
-        <div class="cart-items-list" id="lista-itens-carrinho">
-            <!-- Itens do carrinho -->
-        </div>
+        <div class="cart-items-list" id="lista-itens-carrinho"></div>
 
         <div class="cart-footer">
             <div class="summary-row"><span>Subtotal:</span><span id="subtotal-val">R$ 0,00</span></div>
             <div class="summary-row"><span>Desconto:</span><span id="desconto-val" style="color: var(--sucesso)">- R$ 0,00</span></div>
             <div class="summary-row summary-total"><span>Total:</span><span id="total-val">R$ 0,00</span></div>
 
-            <!-- Form de Envio -->
             <form class="checkout-form" id="form-checkout" onsubmit="event.preventDefault();">
                 <input type="text" id="checkout-nome" placeholder="Nome Completo *" required>
                 <div class="form-group">
@@ -734,21 +594,20 @@
         </div>
     </div>
 
-    <!-- Banco de Dados e Lógica do App -->
     <script>
-        // WhatsApp Config
         const TELEFONE_WHATSAPP = "558199152441"; 
 
-        // Banco de dados expandido com novas categorias
+        // Banco de dados com múltiplos slides (Imagens e Vídeo) cadastrados por produto
         const PRODUTOS = [
             {
                 id: 1,
-                titulo: "Headphone Bluetooth JBL Tune 720BT Noise Cancelling",
+                titulo: "Headphone Bluetooth JBL Tune 720BT",
                 categoria: "fone",
                 preco: 349.90,
                 descricao: "Experimente graves profundos Pure Bass com isolamento acústico de ponta. Até 44 horas de bateria recarregável em alto desempenho.",
                 midias: [
                     { tipo: 'img', url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80' },
+                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
                     { tipo: 'video', url: 'https://www.w3schools.com/html/mov_bbb.mp4' }
                 ]
             },
@@ -758,23 +617,10 @@
                 categoria: "capinha",
                 preco: 79.90,
                 descricao: "Proteção de nível militar contra quedas de até 3 metros. Design ultra fino compatível com carregamento MagSafe.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&q=80' }]
-            },
-            {
-                id: 3,
-                titulo: "Película de Vidro Cúpula 9D Privacidade Total",
-                categoria: "pelicula",
-                preco: 39.90,
-                descricao: "Proteja seus dados contra olhares curiosos. Vidro temperado com dureza 9H resistente a riscos profundos.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80' }]
-            },
-            {
-                id: 4,
-                titulo: "Carregador Rápido Turbo GaN Baseus 30W USB-C",
-                categoria: "carregador",
-                preco: 129.00,
-                descricao: "Carregamento turbo inteligente de alta velocidade para smartphones e tablets com tecnologia GaN avançada.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&q=80' }]
+                midias: [
+                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&q=80' },
+                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=500&q=80' }
+                ]
             },
             {
                 id: 5,
@@ -782,47 +628,47 @@
                 categoria: "gamer",
                 preco: 450.00,
                 descricao: "Descubra uma experiência de jogos mais profunda e imersiva com o inovador controle do PS5, apresentando feedback tátil e gatilhos dinâmicos.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&q=80' }]
-            },
-            {
-                id: 6,
-                titulo: "Mouse Gamer RGB Redragon Cobra 10000 DPI",
-                categoria: "gamer",
-                preco: 149.90,
-                descricao: "Alta performance e sensor óptico preciso. Iluminação Chroma RGB ajustável para deixar seu setup completo.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500&q=80' }]
-            },
-            {
-                id: 7,
-                titulo: "SSD Kingston NV2 1TB NVMe M.2 2280",
-                categoria: "informatica",
-                preco: 389.00,
-                descricao: "Velocidades incríveis de leitura de até 3500MB/s. Dê um upgrade definitivo na velocidade do seu computador ou notebook.",
-                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80' }]
+                midias: [
+                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&q=80' },
+                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1592840496694-26d035b52b48?w=500&q=80' }
+                ]
             }
         ];
 
         let carrinho = [];
         let categoriaSelecionada = "todos";
         let descontoPorcentagem = 0;
+        let indicesSlides = {}; // Controla qual foto está aparecendo em cada card da vitrine
 
+        // INICIALIZAÇÃO: Carrega dados salvos do LocalStorage se existirem
         document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("ds_store_cart")) {
+                try {
+                    carrinho = JSON.parse(localStorage.getItem("ds_store_cart"));
+                } catch (e) {
+                    carrinho = [];
+                }
+            }
             renderizarProdutos(PRODUTOS);
+            atualizarCarrinhoDOM();
         });
 
-        // Lógica de Renderização Filtrada (Junção da Busca + Categoria)
+        // Função para salvar o estado atual do carrinho no LocalStorage
+        function salvarLocalStorage() {
+            localStorage.setItem("ds_store_cart", JSON.stringify(carrinho));
+        }
+
         function executarFiltros() {
             const termoBusca = document.getElementById("campo-busca").value.toLowerCase().trim();
-            
             const produtosFiltrados = PRODUTOS.filter(produto => {
                 const correspondeCategoria = (categoriaSelecionada === "todos" || produto.categoria === categoriaSelecionada);
                 const correspondeBusca = produto.titulo.toLowerCase().includes(termoBusca) || produto.descricao.toLowerCase().includes(termoBusca);
                 return correspondeCategoria && correspondeBusca;
             });
-
             renderizarProdutos(produtosFiltrados);
         }
 
+        // Renderizar a vitrine com slides embutidos de fotos e vídeos
         function renderizarProdutos(lista) {
             const grid = document.getElementById("vitrine-produtos");
             if(lista.length === 0) {
@@ -830,44 +676,83 @@
                 return;
             }
 
-            grid.innerHTML = lista.map(p => `
-                <div class="product-card">
-                    <div>
-                        <div class="product-img-wrapper" onclick="abrirModal(${p.id})">
-                            <img src="${p.midias[0].url}" alt="${p.titulo}">
+            grid.innerHTML = lista.map(p => {
+                // Inicia o controle do slide para este item se não existir
+                if (indicesSlides[p.id] === undefined) indicesSlides[p.id] = 0;
+
+                // Constrói o HTML de cada slide do carrossel interno do produto
+                const slidesHtml = p.midias.map(midia => `
+                    <div class="product-slide-item">
+                        ${midia.tipo === 'img' ? `<img src="${midia.url}" alt="${p.titulo}">` : `<video src="${midia.url}" muted loop autoplay></video>`}
+                    </div>
+                `).join('');
+
+                // Só exibe as setas se houver mais de uma imagem/vídeo no produto
+                const mostrarSetas = p.midias.length > 1 ? '' : 'display:none;';
+
+                return `
+                    <div class="product-card" id="card-${p.id}">
+                        <div>
+                            <div class="product-slider-wrapper">
+                                <button class="slide-arrow arrow-left" style="${mostrarSetas}" onclick="mudarSlide(${p.id}, -1)">❮</button>
+                                <div class="product-slides" id="slides-${p.id}">
+                                    ${slidesHtml}
+                                </div>
+                                <button class="slide-arrow arrow-right" style="${mostrarSetas}" onclick="mudarSlide(${p.id}, 1)">❯</button>
+                            </div>
+                            <div class="product-category">${p.categoria}</div>
+                            <div class="product-title">${p.titulo}</div>
                         </div>
-                        <div class="product-category">${p.categoria}</div>
-                        <div class="product-title">${p.titulo}</div>
+                        <div>
+                            <div class="product-price">R$ ${p.preco.toFixed(2).replace('.',',')}</div>
+                            <button class="btn-action btn-info" onclick="abrirModal(${p.id})"><i class="fa-solid fa-circle-info"></i> Saber Mais / Detalhes</button>
+                            <button class="btn-action btn-cart" onclick="adicionarAoCarrinho(${p.id}, false)"><i class="fa-solid fa-cart-plus"></i> Carrinho</button>
+                            <button class="btn-action btn-buy" onclick="adicionarAoCarrinho(${p.id}, true)">Comprar</button>
+                        </div>
                     </div>
-                    <div>
-                        <div class="product-price">R$ ${p.preco.toFixed(2).replace('.',',')}</div>
-                        <button class="btn-action btn-cart" onclick="adicionarAoCarrinho(${p.id}, false)"><i class="fa-solid fa-cart-plus"></i> Carrinho</button>
-                        <button class="btn-action btn-buy" onclick="adicionarAoCarrinho(${p.id}, true)">Comprar</button>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+
+            // Alinha os carrosséis nas posições corretas pós-renderização
+            lista.forEach(p => moverSlideDOM(p.id));
         }
 
-        // Evento de click nas bolinhas de categorias
+        // Avançar ou retroceder imagens no slide do produto na vitrine
+        function mudarSlide(id, direcao) {
+            const produto = PRODUTOS.find(p => p.id === id);
+            if (!produto) return;
+
+            indicesSlides[id] += direcao;
+
+            if (indicesSlides[id] >= produto.midias.length) indicesSlides[id] = 0;
+            if (indicesSlides[id] < 0) indicesSlides[id] = produto.midias.length - 1;
+
+            moverSlideDOM(id);
+        }
+
+        function moverSlideDOM(id) {
+            const containerSlides = document.getElementById(`slides-${id}`);
+            if (containerSlides) {
+                const deslocamento = indicesSlides[id] * 100;
+                containerSlides.style.transform = `translateX(-${deslocamento}%)`;
+            }
+        }
+
         function selecionarCategoria(cat, elemento) {
             document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
             elemento.classList.add('active');
-            
             categoriaSelecionada = cat;
             document.getElementById("titulo-vitrine").innerText = cat === "todos" ? "Todos os Produtos" : cat.toUpperCase();
-            
             executarFiltros();
         }
 
-        // Toast Handler
         function dispararToast(mensagem) {
             const toast = document.getElementById("toast");
-            if(mensagem) toast.innerText = message;
+            if(mensagem) toast.innerText = mensagem;
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2500);
         }
 
-        // Carrinho Lateral Drawer
         function toggleCarrinho(abrir) {
             const lateral = document.getElementById("carrinho-lateral");
             if(abrir) lateral.classList.add("open");
@@ -885,6 +770,7 @@
             }
 
             atualizarCarrinhoDOM();
+            salvarLocalStorage(); // Atualiza o LocalStorage
             
             if(comprarDireto) {
                 fecharModal();
@@ -902,12 +788,14 @@
                     carrinho = carrinho.filter(i => i.id !== id);
                 }
                 atualizarCarrinhoDOM();
+                salvarLocalStorage(); // Atualiza o LocalStorage
             }
         }
 
         function removerDoCarrinho(id) {
             carrinho = carrinho.filter(i => i.id !== id);
             atualizarCarrinhoDOM();
+            salvarLocalStorage(); // Atualiza o LocalStorage
         }
 
         function atualizarCarrinhoDOM() {
@@ -946,15 +834,11 @@
 
         function aplicarCupom() {
             const valorCupom = document.getElementById("checkout-cupom").value.toUpperCase().trim();
-            if(valorCupom === "DS10") {
-                descontoPorcentagem = 0.10;
-            } else {
-                descontoPorcentagem = 0;
-            }
+            descontoPorcentagem = valorCupom === "DS10" ? 0.10 : 0;
             atualizarCarrinhoDOM();
         }
 
-        // Modal Detalhes Dinâmicos
+        // Modal Flutuante Avançado de Detalhes (Saber Mais)
         function abrirModal(id) {
             const produto = PRODUTOS.find(p => p.id === id);
             if(!produto) return;
@@ -1007,7 +891,6 @@
             elemento.classList.add('active');
         }
 
-        // Envio do Formulário para WhatsApp
         function finalizarPedido() {
             if(carrinho.length === 0) {
                 dispararToast("Seu carrinho está vazio!");
