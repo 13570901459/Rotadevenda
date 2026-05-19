@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TechStore - Eletrônicos & Acessórios</title>
+    <title>DS Store - Eletrônicos & Acessórios</title>
     <!-- Font Awesome para Ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
@@ -35,22 +35,25 @@
 
         /* Header & Navegação */
         header {
-            background-color: rgba(30, 41, 59, 0.8);
+            background-color: rgba(30, 41, 59, 0.95);
             backdrop-filter: blur(10px);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 0;
         }
 
         .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1rem 5%;
+            padding: 0 5%;
             max-width: 1300px;
             margin: 0 auto;
+            gap: 15px;
+            flex-wrap: wrap;
         }
 
         .logo {
@@ -64,22 +67,38 @@
             gap: 10px;
         }
 
-        .nav-categories {
-            display: flex;
-            gap: 20px;
-            list-style: none;
+        /* Barra de Busca Avançada */
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            min-width: 200px;
+            position: relative;
         }
 
-        .nav-categories a {
-            color: var(--texto-claro);
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-            cursor: pointer;
+        .search-container input {
+            width: 100%;
+            background-color: var(--bg-principal);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            padding-right: 40px;
+            border-radius: 30px;
+            color: white;
+            font-size: 0.9rem;
+            transition: all 0.3s;
         }
 
-        .nav-categories a:hover, .nav-categories a.active {
-            color: var(--cor-primaria);
+        .search-container input:focus {
+            outline: none;
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .search-container i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--texto-mutado);
         }
 
         .cart-icon-container {
@@ -104,33 +123,90 @@
             justify-content: center;
         }
 
-        /* Banner Hero */
-        .hero {
-            margin-top: 80px;
-            padding: 60px 5%;
-            background: radial-gradient(circle at top right, rgba(0, 242, 254, 0.15), transparent);
+        /* Seção de Categorias em Bolinhas (Estilo Stories) */
+        .categories-section {
+            margin-top: 90px;
+            padding: 20px 5% 10px 5%;
+            max-width: 1300px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .categories-carousel {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 10px 5px;
+            scroll-behavior: smooth;
+        }
+
+        /* Esconder barra de rolagem mas manter funcionalidade */
+        .categories-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .categories-carousel {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
             text-align: center;
+            min-width: 85px;
+            transition: transform 0.2s;
         }
 
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
+        .category-item:hover {
+            transform: scale(1.05);
         }
 
-        .hero span {
+        .category-sphere {
+            width: 65px;
+            height: 65px;
+            background: var(--bg-card);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+            color: var(--texto-claro);
+            transition: all 0.3s;
+        }
+
+        .category-item.active .category-sphere {
+            border-color: var(--cor-primaria);
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.2), transparent);
             color: var(--cor-primaria);
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .category-item span {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--texto-mutado);
+            white-space: nowrap;
+        }
+
+        .category-item.active span {
+            color: var(--cor-primaria);
+            font-weight: 600;
         }
 
         /* Vitrine de Produtos */
         .container {
             max-width: 1300px;
             margin: 0 auto;
-            padding: 40px 5%;
+            padding: 20px 5% 40px 5%;
         }
 
         .section-title {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
+            font-size: 1.6rem;
+            margin-bottom: 25px;
             position: relative;
             display: inline-block;
         }
@@ -471,7 +547,7 @@
             flex-direction: column;
             gap: 10px;
             margin-top: 15px;
-            max-height: 220px;
+            max-height: 200px;
             overflow-y: auto;
             padding-right: 5px;
         }
@@ -515,12 +591,12 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* Responsividade */
+        /* Ajustes Responsivos adicionais */
         @media (max-width: 768px) {
-            .navbar { padding: 1rem 20px; }
-            .nav-categories { display: none; } /* Menu dinâmico de categorias em mobile simplificado por botões na vitrine */
+            .navbar { padding: 10px 20px; justify-content: space-between; }
+            .search-container { order: 3; max-width: 100%; min-width: 100%; margin-top: 5px;}
+            .categories-section { margin-top: 140px; }
             .modal-content { grid-template-columns: 1fr; }
-            .hero h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -529,19 +605,19 @@
     <!-- Toast Informativo -->
     <div class="toast" id="toast">Item adicionado ao carrinho! 🛒</div>
 
-    <!-- Header -->
+    <!-- Header com Busca e Marca -->
     <header>
         <div class="navbar">
             <div class="logo">
-                <i class="fa-solid :fa-bolt"></i> TechStore
+                <i class="fa-solid fa-bolt"></i> DS Store
             </div>
-            <ul class="nav-categories" id="main-nav">
-                <li><a onclick="filtrarCategoria('todos')" class="active cat-btn">Todos</a></li>
-                <li><a onclick="filtrarCategoria('acessorios')" class="cat-btn">Acessórios</a></li>
-                <li><a onclick="filtrarCategoria('fone')" class="cat-btn">Fones de Ouvido</a></li>
-                <li><a onclick="filtrarCategoria('capinha')" class="cat-btn">Capinhas</a></li>
-                <li><a onclick="filtrarCategoria('pelicula')" class="cat-btn">Películas</a></li>
-            </ul>
+            
+            <!-- Barra de Busca Avançada -->
+            <div class="search-container">
+                <input type="text" id="campo-busca" placeholder="Buscar produto..." oninput="executarFiltros()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+
             <div class="cart-icon-container" onclick="toggleCarrinho(true)">
                 <i class="fa-solid fa-bag-shopping"></i>
                 <div class="cart-count" id="cart-count">0</div>
@@ -549,10 +625,42 @@
         </div>
     </header>
 
-    <!-- Hero Banner -->
-    <section class="hero">
-        <h1>Os Melhores Eletrônicos com <span>Entrega Rápida</span></h1>
-        <p style="color: var(--texto-mutado)">Peça direto pelo WhatsApp de forma simples e segura.</p>
+    <!-- Menu de Categorias Estilo Bolinha (Stories) -->
+    <section class="categories-section">
+        <div class="categories-carousel">
+            <div class="category-item active" onclick="selecionarCategoria('todos', this)">
+                <div class="category-sphere"><i class="fa-solid fa-border-all"></i></div>
+                <span>Todos</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('acessorios', this)">
+                <div class="category-sphere"><i class="fa-solid fa-plug"></i></div>
+                <span>Acessórios</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('fone', this)">
+                <div class="category-sphere"><i class="fa-solid fa-headset"></i></div>
+                <span>Fones</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('capinha', this)">
+                <div class="category-sphere"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                <span>Capinhas</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('pelicula', this)">
+                <div class="category-sphere"><i class="fa-solid fa-shield-halved"></i></div>
+                <span>Películas</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('carregador', this)">
+                <div class="category-sphere"><i class="fa-solid fa-battery-three-quarters"></i></div>
+                <span>Carregador</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('gamer', this)">
+                <div class="category-sphere"><i class="fa-solid fa-gamepad"></i></div>
+                <span>Gamer</span>
+            </div>
+            <div class="category-item" onclick="selecionarCategoria('informatica', this)">
+                <div class="category-sphere"><i class="fa-solid fa-laptop"></i></div>
+                <span>Informática</span>
+            </div>
+        </div>
     </section>
 
     <!-- Vitrine Principal -->
@@ -582,7 +690,7 @@
                     <span class="product-category" id="modal-categoria">Categoria</span>
                     <h2 id="modal-titulo" style="margin-bottom: 15px;">Nome do Produto</h2>
                     <div class="product-price" id="modal-preco">R$ 0,00</div>
-                    <p id="modal-descricao" style="color: var(--texto-mutado); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">Descrição detalhada aqui.</p>
+                    <p id="modal-descricao" style="color: var(--texto-mutado); font-size: 0.9rem; margin-bottom: 20px; line-height: 1.5;">Descrição detalhada.</p>
                 </div>
                 <div>
                     <button class="btn-action btn-cart" id="modal-btn-carrinho"><i class="fa-solid fa-cart-plus"></i> Adicionar ao Carrinho</button>
@@ -629,9 +737,9 @@
     <!-- Banco de Dados e Lógica do App -->
     <script>
         // WhatsApp Config
-        const TELEFONE_WHATSAPP = "558199152441"; // Formatado para link internacional
+        const TELEFONE_WHATSAPP = "558199152441"; 
 
-        // Mock Banco de Dados de Produtos (Exemplo com imagens genéricas de alta qualidade)
+        // Banco de dados expandido com novas categorias
         const PRODUTOS = [
             {
                 id: 1,
@@ -641,8 +749,7 @@
                 descricao: "Experimente graves profundos Pure Bass com isolamento acústico de ponta. Até 44 horas de bateria recarregável em alto desempenho.",
                 midias: [
                     { tipo: 'img', url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80' },
-                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=500&q=80' },
-                    { tipo: 'video', url: 'https://www.w3schools.com/html/mov_bbb.mp4' } // Vídeo de teste padrão
+                    { tipo: 'video', url: 'https://www.w3schools.com/html/mov_bbb.mp4' }
                 ]
             },
             {
@@ -651,9 +758,7 @@
                 categoria: "capinha",
                 preco: 79.90,
                 descricao: "Proteção de nível militar contra quedas de até 3 metros. Design ultra fino compatível com carregamento MagSafe.",
-                midias: [
-                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&q=80' }
-                ]
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=500&q=80' }]
             },
             {
                 id: 3,
@@ -661,34 +766,70 @@
                 categoria: "pelicula",
                 preco: 39.90,
                 descricao: "Proteja seus dados contra olhares curiosos. Vidro temperado com dureza 9H resistente a riscos profundos.",
-                midias: [
-                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80' }
-                ]
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=500&q=80' }]
             },
             {
                 id: 4,
-                titulo: "Carregador Rápido de Tomada Baseus 30W USB-C Nitro",
-                categoria: "acessorios",
+                titulo: "Carregador Rápido Turbo GaN Baseus 30W USB-C",
+                categoria: "carregador",
                 preco: 129.00,
                 descricao: "Carregamento turbo inteligente de alta velocidade para smartphones e tablets com tecnologia GaN avançada.",
-                midias: [
-                    { tipo: 'img', url: 'https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&q=80' }
-                ]
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&q=80' }]
+            },
+            {
+                id: 5,
+                titulo: "Controle Sem Fio PS5 DualSense - Midnight Black",
+                categoria: "gamer",
+                preco: 450.00,
+                descricao: "Descubra uma experiência de jogos mais profunda e imersiva com o inovador controle do PS5, apresentando feedback tátil e gatilhos dinâmicos.",
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=500&q=80' }]
+            },
+            {
+                id: 6,
+                titulo: "Mouse Gamer RGB Redragon Cobra 10000 DPI",
+                categoria: "gamer",
+                preco: 149.90,
+                descricao: "Alta performance e sensor óptico preciso. Iluminação Chroma RGB ajustável para deixar seu setup completo.",
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=500&q=80' }]
+            },
+            {
+                id: 7,
+                titulo: "SSD Kingston NV2 1TB NVMe M.2 2280",
+                categoria: "informatica",
+                preco: 389.00,
+                descricao: "Velocidades incríveis de leitura de até 3500MB/s. Dê um upgrade definitivo na velocidade do seu computador ou notebook.",
+                midias: [{ tipo: 'img', url: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=500&q=80' }]
             }
         ];
 
         let carrinho = [];
-        let cupomAtivo = "";
+        let categoriaSelecionada = "todos";
         let descontoPorcentagem = 0;
 
-        // Inicialização
         document.addEventListener("DOMContentLoaded", () => {
             renderizarProdutos(PRODUTOS);
         });
 
-        // Renderizar Vitrine
+        // Lógica de Renderização Filtrada (Junção da Busca + Categoria)
+        function executarFiltros() {
+            const termoBusca = document.getElementById("campo-busca").value.toLowerCase().trim();
+            
+            const produtosFiltrados = PRODUTOS.filter(produto => {
+                const correspondeCategoria = (categoriaSelecionada === "todos" || produto.categoria === categoriaSelecionada);
+                const correspondeBusca = produto.titulo.toLowerCase().includes(termoBusca) || produto.descricao.toLowerCase().includes(termoBusca);
+                return correspondeCategoria && correspondeBusca;
+            });
+
+            renderizarProdutos(produtosFiltrados);
+        }
+
         function renderizarProdutos(lista) {
             const grid = document.getElementById("vitrine-produtos");
+            if(lista.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding: 40px; color: var(--texto-mutado);">Nenhum produto encontrado.</div>`;
+                return;
+            }
+
             grid.innerHTML = lista.map(p => `
                 <div class="product-card">
                     <div>
@@ -707,31 +848,26 @@
             `).join('');
         }
 
-        // Filtro de Categorias
-        function filtrarCategoria(cat) {
-            // Atualizar classes ativas no menu
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if(cat === 'todos') {
-                document.getElementById("titulo-vitrine").innerText = "Todos os Produtos";
-                renderizarProdutos(PRODUTOS);
-            } else {
-                const filtrados = PRODUTOS.filter(p => p.categoria === cat);
-                document.getElementById("titulo-vitrine").innerText = cat.charAt(0).toUpperCase() + cat.slice(1) + "s";
-                renderizarProdutos(filtrados);
-            }
+        // Evento de click nas bolinhas de categorias
+        function selecionarCategoria(cat, elemento) {
+            document.querySelectorAll('.category-item').forEach(item => item.classList.remove('active'));
+            elemento.classList.add('active');
+            
+            categoriaSelecionada = cat;
+            document.getElementById("titulo-vitrine").innerText = cat === "todos" ? "Todos os Produtos" : cat.toUpperCase();
+            
+            executarFiltros();
         }
 
         // Toast Handler
         function dispararToast(mensagem) {
             const toast = document.getElementById("toast");
-            if(mensagem) toast.innerText = mensagem;
+            if(mensagem) toast.innerText = message;
             toast.classList.add("show");
             setTimeout(() => toast.classList.remove("show"), 2500);
         }
 
-        // Gerenciamento do Carrinho Lateral
+        // Carrinho Lateral Drawer
         function toggleCarrinho(abrir) {
             const lateral = document.getElementById("carrinho-lateral");
             if(abrir) lateral.classList.add("open");
@@ -754,7 +890,7 @@
                 fecharModal();
                 toggleCarrinho(true);
             } else {
-                dispararToast();
+                dispararToast("Item adicionado ao carrinho! 🛒");
             }
         }
 
@@ -775,11 +911,9 @@
         }
 
         function atualizarCarrinhoDOM() {
-            // Contador de Ícone
             const totalItens = carrinho.reduce((acc, item) => acc + item.quantidade, 0);
             document.getElementById("cart-count").innerText = totalItens;
 
-            // Renderização da lista interna
             const lista = document.getElementById("lista-itens-carrinho");
             if(carrinho.length === 0) {
                 lista.innerHTML = `<p style="text-align:center; color: var(--texto-mutado); margin-top: 40px;">Seu carrinho está vazio.</p>`;
@@ -801,7 +935,6 @@
                 `).join('');
             }
 
-            // Cálculos Financeiros
             const subtotal = carrinho.reduce((acc, item) => acc + (item.preco * item.quantidade), 0);
             const valorDesconto = subtotal * descontoPorcentagem;
             const total = subtotal - valorDesconto;
@@ -811,16 +944,14 @@
             document.getElementById("total-val").innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
         }
 
-        // Sistema de Cupom Simples
         function aplicarCupom() {
             const valorCupom = document.getElementById("checkout-cupom").value.toUpperCase().trim();
-            if(valorCupom === "TECH10") {
-                descontoPorcentagem = 0.10; // 10% de desconto
-                atualizarCarrinhoDOM();
+            if(valorCupom === "DS10") {
+                descontoPorcentagem = 0.10;
             } else {
                 descontoPorcentagem = 0;
-                atualizarCarrinhoDOM();
             }
+            atualizarCarrinhoDOM();
         }
 
         // Modal Detalhes Dinâmicos
@@ -833,19 +964,16 @@
             document.getElementById("modal-preco").innerText = `R$ ${produto.preco.toFixed(2).replace('.',',')}`;
             document.getElementById("modal-descricao").innerText = produto.descricao;
 
-            // Atribuindo eventos aos botões internos do modal
             document.getElementById("modal-btn-carrinho").onclick = () => adicionarAoCarrinho(produto.id, false);
             document.getElementById("modal-btn-comprar").onclick = () => adicionarAoCarrinho(produto.id, true);
 
-            // Carrossel de Mídias
             renderizarMidiasModal(produto.midias);
-
             document.getElementById("modal-produto").style.display = "flex";
         }
 
         function fecharModal() {
             document.getElementById("modal-produto").style.display = "none";
-            document.getElementById("container-midia-principal").innerHTML = ""; // Pausar mídias como vídeos
+            document.getElementById("container-midia-principal").innerHTML = "";
         }
 
         function fecharModalFora(e) {
@@ -856,10 +984,8 @@
             const principal = document.getElementById("container-midia-principal");
             const thumbsContainer = document.getElementById("container-thumbs");
 
-            // Define mídia padrão inicial
             alterarMidiaDestaque(midias[0]);
 
-            // Cria miniaturas
             thumbsContainer.innerHTML = midias.map((midia, index) => `
                 <div class="thumb ${index === 0 ? 'active' : ''}" onclick="setThumbAtiva(this); alterarMidiaDestaque(${JSON.stringify(midia)})">
                     ${midia.tipo === 'img' ? `<img src="${midia.url}">` : `<i class="fa-solid fa-circle-play"></i>`}
@@ -881,14 +1007,13 @@
             elemento.classList.add('active');
         }
 
-        // Finalização e Integração com WhatsApp
+        // Envio do Formulário para WhatsApp
         function finalizarPedido() {
             if(carrinho.length === 0) {
                 dispararToast("Seu carrinho está vazio!");
                 return;
             }
 
-            // Validar Formulário
             const nome = document.getElementById("checkout-nome").value;
             const cep = document.getElementById("checkout-cep").value;
             const endereco = document.getElementById("checkout-endereco").value;
@@ -897,17 +1022,16 @@
             const cupom = document.getElementById("checkout-cupom").value;
 
             if(!nome || !cep || !endereco || !bairro || !numero) {
-                dispararToast("Por favor, preencha todos os campos obrigatórios (*)");
+                dispararToast("Preencha todos os campos obrigatórios (*)");
                 return;
             }
 
-            // Montagem da Mensagem do Pedido
-            let mensagem = `🚀 *NOVO PEDIDO - TECHSTORE* \n\n`;
+            let mensagem = `🚀 *NOVO PEDIDO - DS STORE* \n\n`;
             mensagem += `👤 *Cliente:* ${nome}\n`;
             mensagem += `📍 *Entrega:* ${endereco}, Nº ${numero}\n`;
             mensagem += `🏢 *Bairro:* ${bairro} | *CEP:* ${cep}\n`;
-            if(cupom) mensagem += `🎟️ *Cupom Aplicado:* ${cupom.toUpperCase()}\n`;
-            mensagem += `\n-----------------------------\n📦 *ITENS DO PEDIDO:* \n\n`;
+            if(cupom) mensagem += `🎟️ *Cupom:* ${cupom.toUpperCase()}\n`;
+            mensagem += `\n-----------------------------\n📦 *ITENS:* \n\n`;
 
             carrinho.forEach(item => {
                 mensagem += `▪️ ${item.quantidade}x ${item.titulo}\n`;
@@ -921,9 +1045,8 @@
             mensagem += `-----------------------------\n`;
             mensagem += `💵 *Subtotal:* R$ ${subtotal.toFixed(2).replace('.',',')}\n`;
             if(valorDesconto > 0) mensagem += `🔻 *Desconto:* R$ ${valorDesconto.toFixed(2).replace('.',',')}\n`;
-            mensagem += `💰 *TOTAL COM ENTREGA:* R$ ${total.toFixed(2).replace('.',',')}`;
+            mensagem += `💰 *TOTAL DO PEDIDO:* R$ ${total.toFixed(2).replace('.',',')}`;
 
-            // Codificação e redirecionamento para o Link Oficial do API do WhatsApp
             const urlFinal = `https://api.whatsapp.com/send?phone=${TELEFONE_WHATSAPP}&text=${encodeURIComponent(mensagem)}`;
             window.open(urlFinal, '_blank');
         }
