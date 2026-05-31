@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedido - Lista de Pedidos</title>
+    <title>Verdão - Lista de Pedidos</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,6 +13,8 @@
         :root {
             --primary: #2e7d32;
             --primary-light: #e8f5e9;
+            --danger: #d32f2f;
+            --danger-light: #ffebee;
             --background: #f8f9fa;
             --surface: #ffffff;
             --text: #212529;
@@ -175,7 +176,7 @@
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
 
@@ -188,12 +189,21 @@
             align-items: center;
             justify-content: space-between;
             border: 1px solid var(--border);
+            gap: 0.5rem;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            min-width: 0;
         }
 
         .product-info h3 {
             font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .product-meta {
@@ -201,7 +211,7 @@
             color: var(--text-muted);
         }
 
-        /* Controles de Quantidade */
+        /* Novo Controle de Quantidade Avançado com Input Manual */
         .quantity-control {
             display: flex;
             align-items: center;
@@ -209,13 +219,16 @@
             border-radius: 20px;
             padding: 2px;
             border: 1px solid var(--border);
+            width: 120px;
+            justify-content: space-between;
+            flex-shrink: 0;
         }
 
         .qty-btn {
             background: none;
             border: none;
-            width: 32px;
-            height: 32px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -228,11 +241,23 @@
             background-color: var(--primary-light);
         }
 
-        .qty-value {
-            width: 32px;
+        /* Input Numérico Manual */
+        .qty-input {
+            width: 45px;
             text-align: center;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 0.95rem;
+            border: none;
+            background: transparent;
+            outline: none;
+            color: var(--text);
+            -moz-appearance: textfield;
+        }
+
+        .qty-input::-webkit-outer-spin-button,
+        .qty-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
         }
 
         /* Barra Inferior Fixa */
@@ -268,13 +293,13 @@
             cursor: pointer;
         }
 
-        /* Modal / Gaveta Lateral da Lista de Separados */
+        /* Modal / Gaveta Lateral da Lista */
         .cart-modal {
             position: fixed;
             top: 0;
             right: -100%;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             height: 100%;
             background-color: var(--surface);
             box-shadow: var(--shadow-lg);
@@ -309,20 +334,54 @@
             flex-grow: 1;
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .cart-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 1rem;
+            padding-bottom: 1.2rem;
             border-bottom: 1px solid var(--border);
+            gap: 0.5rem;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+            min-width: 0;
         }
 
         .cart-item-details h4 {
             font-size: 0.95rem;
             font-weight: 600;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cart-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-shrink: 0;
+        }
+
+        /* Botão de excluir item do carrinho */
+        .btn-delete-item {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete-item:hover {
+            background-color: var(--danger-light);
         }
 
         .cart-modal-footer {
@@ -405,7 +464,7 @@
             </div>
             <button class="btn-view-cart" id="btnViewCart">
                 <span class="material-icons-round">playlist_add_check</span>
-                Ver Itens e Finalizar
+                Ver Lista e Finalizar
             </button>
         </div>
     </div>
@@ -433,9 +492,9 @@
 
     <script>
         // DIGITE SEU NÚMERO DO WHATSAPP AQUI (Com DDD)
-        const NUMERO_WHATSAPP = "558199115241"; 
+        const NUMERO_WHATSAPP = "5581999999999"; 
 
-        // Banco de Dados Consertado (Sem os erros de formato de preço que quebravam a listagem)
+        // Banco de Dados Limpo
         const PRODUTOS_DATA = [
             // Hidropônicos
             { id: "860", nome: "Chicória Hidropônica", und: "UN", categoria: "hidroponicos" },
@@ -616,7 +675,7 @@
 
         let carrinho = {};
 
-        // Mapeamento dos elementos DOM
+        // DOM Elements
         const catalogContainer = document.getElementById('catalogContainer');
         const searchInput = document.getElementById('searchInput');
         const categoriesNav = document.getElementById('categoriesNav');
@@ -666,7 +725,7 @@
                                 <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', -1)">
                                     <span class="material-icons-round">remove</span>
                                 </button>
-                                <span class="qty-value" id="qty-catalog-${prod.id}">${qtdNoCarrinho}</span>
+                                <input type="number" class="qty-input" id="input-catalog-${prod.id}" value="${qtdNoCarrinho}" min="0" oninput="ajustarManual('${prod.id}', this.value)">
                                 <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', 1)">
                                     <span class="material-icons-round">add</span>
                                 </button>
@@ -685,26 +744,51 @@
             }
         }
 
-        // Altera quantidades ou remove se desistir (chegar a 0)
+        // Altera quantidades por cliques (+ / -)
         window.alterarQuantidade = function(id, delta) {
             const produto = PRODUTOS_DATA.find(p => p.id === id);
             if (!produto) return;
 
             if (!carrinho[id]) {
-                if (delta > 0) {
-                    carrinho[id] = { ...produto, qtd: delta };
-                }
+                if (delta > 0) carrinho[id] = { ...produto, qtd: delta };
             } else {
                 carrinho[id].qtd += delta;
-                if (carrinho[id].qtd <= 0) {
-                    delete carrinho[id];
-                }
+                if (carrinho[id].qtd <= 0) delete carrinho[id];
             }
 
-            // Sincroniza o número na tela principal
-            const elCatalog = document.getElementById(`qty-catalog-${id}`);
-            if (elCatalog) elCatalog.innerText = carrinho[id] ? carrinho[id].qtd : 0;
+            sincronizarInterfaces(id);
+        }
 
+        // Altera quantidades escrevendo manualmente o número no teclado
+        window.ajustarManual = function(id, valor) {
+            const produto = PRODUTOS_DATA.find(p => p.id === id);
+            if (!produto) return;
+
+            let novaQtd = parseInt(valor);
+            if (isNaN(novaQtd) || novaQtd <= 0) {
+                delete carrinho[id];
+            } else {
+                carrinho[id] = { ...produto, qtd: novaQtd };
+            }
+
+            sincronizarInterfaces(id);
+        }
+
+        // Exclui o item direto pelo botão de lixeira no carrinho
+        window.removerItemTotal = function(id) {
+            delete carrinho[id];
+            sincronizarInterfaces(id);
+        }
+
+        // Atualiza todas as telas e inputs de forma síncrona
+        function sincronizarInterfaces(id) {
+            const valorAtual = carrinho[id] ? carrinho[id].qtd : 0;
+
+            // Atualiza input da lista principal
+            const inputCatalog = document.getElementById(`input-catalog-${id}`);
+            if (inputCatalog) inputCatalog.value = valorAtual;
+
+            // Atualiza barra inferior e modal
             atualizarContadorBarra();
             renderCarrinhoModal();
         }
@@ -717,7 +801,7 @@
             barQty.innerText = totalItens;
         }
 
-        // Renderiza itens na gaveta lateral
+        // Renderiza itens na gaveta lateral (Carrinho) com opção de Excluir e Editar
         function renderCarrinhoModal() {
             cartItemsList.innerHTML = "";
             const itens = Object.values(carrinho);
@@ -733,15 +817,20 @@
                 itemRow.innerHTML = `
                     <div class="cart-item-details">
                         <h4>${item.nome}</h4>
-                        <div style="font-size:0.8rem; color:var(--text-muted)">Cód: ${item.id}</div>
+                        <div style="font-size:0.8rem; color:var(--text-muted)">Cód: ${item.id} - ${item.und}</div>
                     </div>
-                    <div class="quantity-control">
-                        <button class="qty-btn" onclick="alterarQuantidade('${item.id}', -1)">
-                            <span class="material-icons-round">remove</span>
-                        </button>
-                        <span class="qty-value">${item.qtd}</span>
-                        <button class="qty-btn" onclick="alterarQuantidade('${item.id}', 1)">
-                            <span class="material-icons-round">add</span>
+                    <div class="cart-item-actions">
+                        <div class="quantity-control">
+                            <button class="qty-btn" onclick="alterarQuantidade('${item.id}', -1)">
+                                <span class="material-icons-round">remove</span>
+                            </button>
+                            <input type="number" class="qty-input" value="${item.qtd}" min="1" oninput="ajustarManual('${item.id}', this.value)">
+                            <button class="qty-btn" onclick="alterarQuantidade('${item.id}', 1)">
+                                <span class="material-icons-round">add</span>
+                            </button>
+                        </div>
+                        <button class="btn-delete-item" onclick="removerItemTotal('${item.id}')" title="Remover item">
+                            <span class="material-icons-round">delete_outline</span>
                         </button>
                     </div>
                 `;
@@ -761,7 +850,7 @@
             }
         }
 
-        // Monitoramento de filtros por Categoria
+        // Filtro por categorias
         categoriesNav.addEventListener('click', (e) => {
             const btn = e.target.closest('.category-btn');
             if (!btn) return;
@@ -772,7 +861,7 @@
             renderCatalog(searchInput.value, btn.dataset.category);
         });
 
-        // Monitoramento da caixa de busca
+        // Caixa de busca
         searchInput.addEventListener('input', (e) => {
             const categoriaAtiva = document.querySelector('.category-btn.active').dataset.category;
             renderCatalog(e.target.value, categoriaAtiva);
@@ -782,7 +871,7 @@
         btnCloseCart.addEventListener('click', () => alternarModal(false));
         modalOverlay.addEventListener('click', () => alternarModal(false));
 
-        // Envio limpo e formatado para o WhatsApp
+        // Envio estruturado via WhatsApp
         btnSubmitOrder.addEventListener('click', () => {
             const itens = Object.values(carrinho);
             if (itens.length === 0) return alert("Sua lista está vazia! Adicione itens primeiro.");
@@ -791,7 +880,7 @@
             textoPedido += `----------------------------------------------\n\n`;
 
             itens.forEach(item => {
-                textoPedido += `▪️ *${item.qtd}x* ${item.nome}  _(Cód: ${item.id} - ${item.und})_\n`;
+                textoPedido += `▪️ *${item.qtd}* ${item.und} de ${item.nome} _(Cód: ${item.id})_\n`;
             });
 
             textoPedido += `\n----------------------------------------------\n`;
@@ -801,7 +890,7 @@
             window.open(urlFinal, '_blank');
         });
 
-        // Início automático do catálogo
+        // Inicialização Inicial
         renderCatalog();
     </script>
 </body>
