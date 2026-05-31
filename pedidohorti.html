@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verdão - Pedido Online</title>
+    <title>Pedido - Lista de Pedidos</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,15 +14,14 @@
         :root {
             --primary: #2e7d32;
             --primary-light: #e8f5e9;
-            --secondary: #ff9800;
             --background: #f8f9fa;
             --surface: #ffffff;
             --text: #212529;
             --text-muted: #6c757d;
             --border: #e9ecef;
             --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
         * {
@@ -63,7 +63,7 @@
         }
 
         .brand h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: var(--primary);
             display: flex;
             align-items: center;
@@ -112,11 +112,11 @@
 
         @media (min-width: 992px) {
             main {
-                grid-template-columns: 240px 1fr;
+                grid-template-columns: 260px 1fr;
             }
         }
 
-        /* Categorias Lateral (PC) / Scroll (Mobile) */
+        /* Categorias Lateral / Scroll Mobile */
         .categories-nav {
             display: flex;
             gap: 0.5rem;
@@ -157,13 +157,13 @@
             color: var(--surface);
         }
 
-        /* Seções de Produtos */
+        /* Seções e Listagem de Itens */
         .products-section {
             margin-bottom: 2.5rem;
         }
 
         .section-title {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: var(--text);
             margin-bottom: 1rem;
             display: flex;
@@ -185,40 +185,20 @@
             padding: 1rem;
             box-shadow: var(--shadow);
             display: flex;
-            flex-direction: column;
+            align-items: center;
             justify-content: space-between;
-            border: 1px solid transparent;
-            transition: transform 0.2s, border-color 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-2px);
-            border-color: var(--primary-light);
+            border: 1px solid var(--border);
         }
 
         .product-info h3 {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
         .product-meta {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-bottom: 1rem;
-        }
-
-        .product-actions {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-top: auto;
-        }
-
-        .product-price {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
         }
 
         /* Controles de Quantidade */
@@ -228,6 +208,7 @@
             background-color: var(--background);
             border-radius: 20px;
             padding: 2px;
+            border: 1px solid var(--border);
         }
 
         .qty-btn {
@@ -248,20 +229,20 @@
         }
 
         .qty-value {
-            width: 30px;
+            width: 32px;
             text-align: center;
             font-weight: 600;
             font-size: 0.95rem;
         }
 
-        /* Barra de Resumo Fixa / Carrinho */
+        /* Barra Inferior Fixa */
         .cart-bar {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
             background-color: var(--surface);
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
             padding: 1rem;
             z-index: 20;
         }
@@ -285,10 +266,9 @@
             align-items: center;
             gap: 0.5rem;
             cursor: pointer;
-            box-shadow: var(--shadow);
         }
 
-        /* Modal do Carrinho Estilo Gaveta */
+        /* Modal / Gaveta Lateral da Lista de Separados */
         .cart-modal {
             position: fixed;
             top: 0;
@@ -342,27 +322,13 @@
 
         .cart-item-details h4 {
             font-size: 0.95rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .cart-item-price {
-            color: var(--primary);
             font-weight: 600;
-            font-size: 0.9rem;
         }
 
         .cart-modal-footer {
             padding: 1.5rem;
             border-top: 1px solid var(--border);
             background-color: var(--background);
-        }
-
-        .cart-total-row {
-            display: flex;
-            justify-content: space-between;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 1.5rem;
         }
 
         .btn-submit-order {
@@ -379,7 +345,6 @@
             justify-content: center;
             gap: 0.5rem;
             cursor: pointer;
-            box-shadow: var(--shadow);
         }
 
         .modal-overlay {
@@ -409,11 +374,11 @@
     <header>
         <div class="header-container">
             <div class="brand">
-                <h1><span class="material-icons-round">local_mall</span> Verdão Distribuidora</h1>
+                <h1><span class="material-icons-round">fact_check</span> Verdão Distribuidora</h1>
             </div>
             <div class="search-container">
                 <span class="material-icons-round">search</span>
-                <input type="text" id="searchInput" class="search-input" placeholder="Buscar produtos...">
+                <input type="text" id="searchInput" class="search-input" placeholder="Buscar por código ou nome...">
             </div>
         </div>
     </header>
@@ -435,12 +400,12 @@
     <div class="cart-bar">
         <div class="cart-bar-container">
             <div>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Seu carrinho</p>
-                <p id="barTotal" style="font-weight: 700; font-size: 1.2rem; color: var(--primary);">R$ 0,00</p>
+                <p style="font-weight: 600; color: var(--primary);">Itens selecionados</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);"><span id="barQty">0</span> produto(s) na lista</p>
             </div>
             <button class="btn-view-cart" id="btnViewCart">
-                <span class="material-icons-round">shopping_cart</span>
-                Ver Carrinho (<span id="barQty">0</span>)
+                <span class="material-icons-round">playlist_add_check</span>
+                Ver Itens e Finalizar
             </button>
         </div>
     </div>
@@ -449,7 +414,7 @@
 
     <div class="cart-modal" id="cartModal">
         <div class="cart-modal-header">
-            <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span class="material-icons-round">shopping_basket</span> Meu Pedido</h3>
+            <h3 style="display: flex; align-items: center; gap: 0.5rem;"><span class="material-icons-round">shopping_basket</span> Produtos Escolhidos</h3>
             <button class="btn-close-cart" id="btnCloseCart">
                 <span class="material-icons-round" style="font-size: 2rem;">close</span>
             </button>
@@ -459,194 +424,188 @@
             </div>
 
         <div class="cart-modal-footer">
-            <div class="cart-total-row">
-                <span>Total:</span>
-                <span id="modalTotal" style="color: var(--primary);">R$ 0,00</span>
-            </div>
             <button class="btn-submit-order" id="btnSubmitOrder">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.513 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.503-5.729-1.457L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.742.002-2.602-1.005-5.05-2.837-6.88C16.671 2.151 14.237 1.148 11.66 1.148c-5.442 0-9.866 4.372-9.87 9.744a9.619 9.619 0 0 0 1.481 4.854l-.969 3.54 3.635-.94.11.063zM17.43 14.34c-.318-.16-1.884-.93-2.175-1.038-.29-.106-.503-.16-.713.16-.21.32-.812.102-.995.32-.182.217-.364.244-.682.084-.318-.16-1.342-.495-2.556-1.577-.944-.843-1.58-1.883-1.763-2.203-.182-.32-.02-.492.14-.65.143-.142.318-.37.476-.557.16-.188.212-.32.318-.534.106-.214.053-.4-.027-.56-.08-.16-.713-1.72-.977-2.356-.258-.62-.52-.536-.713-.546-.185-.01-.397-.01-.61-.01-.212 0-.557.08-.848.4-.29.32-1.11 1.087-1.11 2.65 0 1.565 1.14 3.076 1.298 3.29 1.16 1.56 2.457 2.87 4.144 3.52.417.16.834.254 1.25.326.54.086 1.03.047 1.417-.01.433-.064 1.342-.547 1.53-.1.188-.447.188-.83 0-1.15z"/></svg>
-                Enviar Pedido via WhatsApp
+                Enviar Lista via WhatsApp
             </button>
         </div>
     </div>
 
     <script>
-        // CONFIGURAÇÃO: Insira seu número do WhatsApp corporativo aqui (com código de área)
-        const NUMERO_WHATSAPP = "5581991152441"; 
+        // DIGITE SEU NÚMERO DO WHATSAPP AQUI (Com DDD)
+        const NUMERO_WHATSAPP = "558199115241"; 
 
-        // Banco de Dados extraído diretamente da tabela fornecida
+        // Banco de Dados Consertado (Sem os erros de formato de preço que quebravam a listagem)
         const PRODUTOS_DATA = [
             // Hidropônicos
-            { id: "860", nome: "Chicória Hidropônica", preco: 2.50, und: "UN", categoria: "hidroponicos" },
-            { id: "149", nome: "Couve Flor Embalado Hidropônico", preco: 8.70, und: "KG", categoria: "hidroponicos" },
-            { id: "859", nome: "Escarola Hidropônica", preco: 2.50, und: "UN", categoria: "hidroponicos" },
-            { id: "855", nome: "Agrião Hidropônico", preco: 2.50, und: "UN", categoria: "hidroponicos" },
-            { id: "913", nome: "Espinafre Hidropônico", preco: 2.90, und: "UN", categoria: "hidroponicos" },
-            { id: "519", nome: "Alface Americana Hidropônica", preco: 2.75, und: "UN", categoria: "hidroponicos" },
-            { id: "517", nome: "Alface Crespa Hidropônica", preco: 2.30, und: "UN", categoria: "hidroponicos" },
-            { id: "516", nome: "Alface Lisa Hidropônica", preco: 2.20, und: "UN", categoria: "hidroponicos" },
-            { id: "518", nome: "Alface Roxa Hidropônica", preco: 2.30, und: "UN", categoria: "hidroponicos" },
-            { id: "900", nome: "Hortelã Hidropônico 180g", preco: 2.45, und: "UN", categoria: "hidroponicos" },
-            { id: "958", nome: "Menta Hidropônica", preco: 2.50, und: "UN", categoria: "hidroponicos" },
-            { id: "16",  nome: "Rúcula Hidropônica", preco: 2.20, und: "UN", categoria: "hidroponicos" },
-            { id: "17",  nome: "Salsa Hidropônica", preco: 2.20, und: "UN", categoria: "hidroponicos" },
+            { id: "860", nome: "Chicória Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "149", nome: "Couve Flor Embalado Hidropônico", und: "KG", categoria: "hidroponicos" },
+            { id: "859", nome: "Escarola Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "855", nome: "Agrião Hidropônico", und: "UN", categoria: "hidroponicos" },
+            { id: "913", nome: "Espinafre Hidropônico", und: "UN", categoria: "hidroponicos" },
+            { id: "519", nome: "Alface Americana Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "517", nome: "Alface Crespa Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "516", nome: "Alface Lisa Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "518", nome: "Alface Roxa Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "900", nome: "Hortelã Hidropônico 180g", und: "UN", categoria: "hidroponicos" },
+            { id: "958", nome: "Menta Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "16",  nome: "Rúcula Hidropônica", und: "UN", categoria: "hidroponicos" },
+            { id: "17",  nome: "Salsa Hidropônica", und: "UN", categoria: "hidroponicos" },
 
             // Frutas
-            { id: "2104", nome: "Mamão Formosa Especial", preco: 5.60, und: "KG", categoria: "frutas" },
-            { id: "76",   nome: "Abacate", preco: 4.70, und: "KG", categoria: "frutas" },
-            { id: "12",   nome: "Mamão Formosa KG", preco: 3.70, und: "KG", categoria: "frutas" },
-            { id: "44",   nome: "Abacaxi", preco: 4.85, und: "UN", categoria: "frutas" },
-            { id: "63",   nome: "Mamão Havaí Gold KG", preco: 3.10, und: "KG", category: "frutas" },
-            { id: "311",  nome: "Coco Seco", preco: 5.80, und: "KG", categoria: "frutas" },
-            { id: "40",   nome: "Manga Espada", preco: 3.90, und: "KG", categoria: "frutas" },
-            { id: "326",  nome: "Coco Seco KG", preco: 4.30, und: "KG", categoria: "frutas" },
-            { id: "46",   nome: "Coco Verde", preco: 2.30, und: "UN", categoria: "frutas" },
-            { id: "93",   nome: "Manga Rosa", preco: 4.50, und: "KG", categoria: "frutas" },
-            { id: "97",   nome: "Manga Tomy", preco: 4.85, und: "KG", categoria: "frutas" },
-            { id: "28",   nome: "Acerola CB", preco: 4.50, und: "KG", categoria: "frutas" },
-            { id: "201",  nome: "Achachairu", preco: 17.50, und: "KG", categoria: "frutas" },
-            { id: "47",   nome: "Maracujá", preco: 7.15, und: "KG", categoria: "frutas" },
-            { id: "48",   nome: "Frutas Cristalizadas", preco: 6.50, und: "KG", categoria: "frutas" },
-            { id: "174",  nome: "Gengibre", preco: 16.00, und: "KG", categoria: "frutas" },
-            { id: "104",  nome: "Melancia Codama", preco: 4.40, und: "KG", categoria: "frutas" },
-            { id: "131",  nome: "Goiaba", preco: 12.50, und: "KG", categoria: "frutas" },
-            { id: "49",   nome: "Melancia Graúda KG", preco: 4.80, und: "KG", categoria: "frutas" },
-            { id: "32",   nome: "Melancia Pingo Doce", preco: 2.50, und: "KG", categoria: "frutas" },
-            { id: "964",  nome: "Melão Dino Melicia KG", preco: 4.70, und: "KG", categoria: "frutas" },
-            { id: "933",  nome: "Melão Espanhol KG", preco: 4.80, und: "KG", categoria: "frutas" },
-            { id: "250",  nome: "Melão Espanhol Redinha", preco: 5.90, und: "UN", categoria: "frutas" },
-            { id: "570",  nome: "Melão Galia KG", preco: 6.80, und: "KG", categoria: "frutas" },
-            { id: "100",  nome: "Melão Japonês", preco: 5.10, und: "KG", categoria: "frutas" },
-            { id: "52",   nome: "Melão Orange", preco: 4.50, und: "KG", categoria: "frutas" },
-            { id: "480",  nome: "Melão Português KG", preco: 4.80, und: "KG", categoria: "frutas" },
-            { id: "68",   nome: "Ameixa Fresca Importada", preco: 8.60, und: "KG", categoria: "frutas" },
-            { id: "34",   nome: "Ameixa Seca com Caroço", preco: 12.80, und: "KG", categoria: "frutas" },
-            { id: "61",   nome: "Ameixa Seca sem Caroço", preco: 25.80, und: "KG", categoria: "frutas" },
-            { id: "1948", nome: "Morango Peterfrut 200g", preco: 9.80, und: "UN", categoria: "frutas" },
-            { id: "274",  nome: "Banana Comprida", preco: 5.80, und: "KG", categoria: "frutas" },
-            { id: "142",  nome: "Banana Granalne", preco: 6.20, und: "KG", categoria: "frutas" },
-            { id: "69",   nome: "Kiwi", preco: 23.80, und: "KG", categoria: "frutas" },
-            { id: "153",  nome: "Laranja Bahia KG", preco: 6.00, und: "KG", categoria: "frutas" },
-            { id: "54",   nome: "Banana Maçã", preco: 9.85, und: "KG", categoria: "frutas" },
-            { id: "159",  nome: "Laranja Lima KG", preco: 4.30, und: "KG", categoria: "frutas" },
-            { id: "90",   nome: "Banana Nanica", preco: 4.40, und: "KG", categoria: "frutas" },
-            { id: "320",  nome: "Laranja Mimo", preco: 9.85, und: "KG", categoria: "frutas" },
-            { id: "254",  nome: "Banana Prata", preco: 4.20, und: "KG", categoria: "frutas" },
-            { id: "340",  nome: "Laranja Pera", preco: 4.50, und: "KG", categoria: "frutas" },
-            { id: "497",  nome: "Laranja Pera Redinha 3kg", preco: 4.55, und: "KG", categoria: "frutas" },
-            { id: "354",  nome: "Pera Asiática", preco: 24.50, und: "KG", categoria: "frutas" },
-            { id: "1464", nome: "Pera Importada Danju", preco: 9.80, und: "KG", categoria: "frutas" },
-            { id: "210",  nome: "Laranja Pera Redinha 3kg Pct", preco: 7.20, und: "UN", categoria: "frutas" },
-            { id: "263",  nome: "Pera Portuguesa", preco: 4.90, und: "KG", categoria: "frutas" },
-            { id: "264",  nome: "Lichia Cx com 4 Blister", preco: 30.00, und: "CX", categoria: "frutas" },
-            { id: "266",  nome: "Pera Red", preco: 16.20, und: "KG", categoria: "frutas" },
-            { id: "41",   nome: "Limão", preco: 2.70, und: "KG", categoria: "frutas" },
-            { id: "819",  nome: "Physalis", preco: 85.00, und: "CX", categoria: "frutas" },
-            { id: "770",  nome: "Limão Redinha", preco: 2.70, und: "KG", categoria: "frutas" },
-            { id: "258",  nome: "Limão Siciliano", preco: 10.60, und: "KG", categoria: "frutas" },
-            { id: "305",  nome: "Limão Tahiti Pct", preco: 6.20, und: "KG", categoria: "frutas" },
-            { id: "43",   nome: "Maçã Argentina", preco: 19.00, und: "KG", categoria: "frutas" },
-            { id: "1458", nome: "Maça Fiesta Sacola 850g", preco: 7.95, und: "PT", categoria: "frutas" },
-            { id: "970",  nome: "Maçã Nac Cat 1 (110 a 135)", preco: 8.70, und: "KG", categoria: "frutas" },
-            { id: "971",  nome: "Maçã Nac Cat 1 (150 a 165)", preco: 6.90, und: "KG", categoria: "frutas" },
-            { id: "972",  nome: "Maçã Nac Cat 1 (180)", preco: 5.30, und: "KG", categoria: "frutas" },
-            { id: "351",  nome: "Maçã Verde", preco: 13.50, und: "KG", categoria: "frutas" },
-            { id: "16",   nome: "Pitaya", preco: 13.90, und: "KG", categoria: "frutas" },
-            { id: "21",   nome: "Sapoti", preco: 14.50, und: "KG", categoria: "frutas" },
-            { id: "38",   nome: "Tangerina Importada", preco: 9.50, und: "KG", categoria: "frutas" },
-            { id: "40",   nome: "Tangerina Nacional", preco: 7.50, und: "KG", categoria: "frutas" },
-            { id: "48",   nome: "Uva Benitaka na Cumbuca 500g", preco: 7.50, und: "UN", categoria: "frutas" },
-            { id: "51",   nome: "Uva Benitaka KG", preco: 8.90, und: "KG", categoria: "frutas" },
-            { id: "53",   nome: "Uva Crimson 500g", preco: 7.80, und: "UN", categoria: "frutas" },
-            { id: "55",   nome: "Uva Isabel 400g", preco: 5.80, und: "UN", categoria: "frutas" },
-            { id: "58",   nome: "Uva Itália", preco: 8.80, und: "KG", categoria: "frutas" },
-            { id: "60",   nome: "Uva Itália na Cumbuca 500g", preco: 7.50, und: "UN", categoria: "frutas" },
-            { id: "63",   nome: "Uva Nacional Vitória 500g", preco: 7.80, und: "UN", categoria: "frutas" },
-            { id: "66",   nome: "Uva Passas", preco: 23.80, und: "KG", categoria: "frutas" },
-            { id: "68",   nome: "Uva Thompson 500g", preco: 7.80, und: "UN", categoria: "frutas" },
+            { id: "2104", nome: "Mamão Formosa Especial", und: "KG", categoria: "frutas" },
+            { id: "76",   nome: "Abacate", und: "KG", categoria: "frutas" },
+            { id: "12",   nome: "Mamão Formosa KG", und: "KG", categoria: "frutas" },
+            { id: "44",   nome: "Abacaxi", und: "UN", categoria: "frutas" },
+            { id: "63",   nome: "Mamão Havaí Gold KG", und: "KG", categoria: "frutas" },
+            { id: "311",  nome: "Coco Seco", und: "KG", categoria: "frutas" },
+            { id: "40",   nome: "Manga Espada", und: "KG", categoria: "frutas" },
+            { id: "326",  nome: "Coco Seco KG", und: "KG", categoria: "frutas" },
+            { id: "46",   nome: "Coco Verde", und: "UN", categoria: "frutas" },
+            { id: "93",   nome: "Manga Rosa", und: "KG", categoria: "frutas" },
+            { id: "97",   nome: "Manga Tomy", und: "KG", categoria: "frutas" },
+            { id: "28",   nome: "Acerola CB", und: "KG", categoria: "frutas" },
+            { id: "201",  nome: "Achachairu", und: "KG", categoria: "frutas" },
+            { id: "47",   nome: "Maracujá", und: "KG", categoria: "frutas" },
+            { id: "48",   nome: "Frutas Cristalizadas", und: "KG", categoria: "frutas" },
+            { id: "174",  nome: "Gengibre", und: "KG", categoria: "frutas" },
+            { id: "104",  nome: "Melancia Codama", und: "KG", categoria: "frutas" },
+            { id: "131",  nome: "Goiaba", und: "KG", categoria: "frutas" },
+            { id: "49",   nome: "Melancia Graúda KG", und: "KG", categoria: "frutas" },
+            { id: "32",   nome: "Melancia Pingo Doce", und: "KG", categoria: "frutas" },
+            { id: "964",  nome: "Melão Dino Melicia KG", und: "KG", categoria: "frutas" },
+            { id: "933",  nome: "Melão Espanhol KG", und: "KG", categoria: "frutas" },
+            { id: "250",  nome: "Melão Espanhol Redinha", und: "UN", categoria: "frutas" },
+            { id: "570",  nome: "Melão Galia KG", und: "KG", categoria: "frutas" },
+            { id: "100",  nome: "Melão Japonês", und: "KG", categoria: "frutas" },
+            { id: "52",   nome: "Melão Orange", und: "KG", categoria: "frutas" },
+            { id: "480",  nome: "Melão Português KG", und: "KG", categoria: "frutas" },
+            { id: "68",   nome: "Ameixa Fresca Importada", und: "KG", categoria: "frutas" },
+            { id: "34",   nome: "Ameixa Seca com Caroço", und: "KG", categoria: "frutas" },
+            { id: "61",   nome: "Ameixa Seca sem Caroço", und: "KG", categoria: "frutas" },
+            { id: "1948", nome: "Morango Peterfrut 200g", und: "UN", categoria: "frutas" },
+            { id: "274",  nome: "Banana Comprida", und: "KG", categoria: "frutas" },
+            { id: "142",  nome: "Banana Granalne", und: "KG", categoria: "frutas" },
+            { id: "69",   nome: "Kiwi", und: "KG", categoria: "frutas" },
+            { id: "153",  nome: "Laranja Bahia KG", und: "KG", categoria: "frutas" },
+            { id: "54",   nome: "Banana Maçã", und: "KG", categoria: "frutas" },
+            { id: "159",  nome: "Laranja Lima KG", und: "KG", categoria: "frutas" },
+            { id: "90",   nome: "Banana Nanica", und: "KG", categoria: "frutas" },
+            { id: "320",  nome: "Laranja Mimo", und: "KG", categoria: "frutas" },
+            { id: "254",  nome: "Banana Prata", und: "KG", categoria: "frutas" },
+            { id: "340",  nome: "Laranja Pera", und: "KG", categoria: "frutas" },
+            { id: "354",  nome: "Pera Asiática", und: "KG", categoria: "frutas" },
+            { id: "1464", nome: "Pera Importada Danju", und: "KG", categoria: "frutas" },
+            { id: "210",  nome: "Laranja Pera Redinha 3kg Pct", und: "UN", categoria: "frutas" },
+            { id: "263",  nome: "Pera Portuguesa", und: "KG", categoria: "frutas" },
+            { id: "264",  nome: "Lichia Cx com 4 Blister", und: "CX", categoria: "frutas" },
+            { id: "266",  nome: "Pera Red", und: "KG", categoria: "frutas" },
+            { id: "41",   nome: "Limão", und: "KG", categoria: "frutas" },
+            { id: "819",  nome: "Physalis", und: "CX", categoria: "frutas" },
+            { id: "770",  nome: "Limão Redinha", und: "KG", categoria: "frutas" },
+            { id: "258",  nome: "Limão Siciliano", und: "KG", categoria: "frutas" },
+            { id: "305",  nome: "Limão Tahiti Pct", und: "KG", categoria: "frutas" },
+            { id: "43",   nome: "Maçã Argentina", und: "KG", categoria: "frutas" },
+            { id: "1458", nome: "Maça Fiesta Sacola 850g", und: "PT", categoria: "frutas" },
+            { id: "970",  nome: "Maçã Nac Cat 1 (110 a 135)", und: "KG", categoria: "frutas" },
+            { id: "971",  nome: "Maçã Nac Cat 1 (150 a 165)", und: "KG", categoria: "frutas" },
+            { id: "972",  nome: "Maçã Nac Cat 1 (180)", und: "KG", categoria: "frutas" },
+            { id: "351",  nome: "Maçã Verde", und: "KG", categoria: "frutas" },
+            { id: "16",   nome: "Pitaya", und: "KG", categoria: "frutas" },
+            { id: "21",   nome: "Sapoti", und: "KG", categoria: "frutas" },
+            { id: "38",   nome: "Tangerina Importada", und: "KG", categoria: "frutas" },
+            { id: "40",   nome: "Tangerina Nacional", und: "KG", categoria: "frutas" },
+            { id: "48",   nome: "Uva Benitaka na Cumbuca 500g", und: "UN", categoria: "frutas" },
+            { id: "51",   nome: "Uva Benitaka KG", und: "KG", categoria: "frutas" },
+            { id: "53",   nome: "Uva Crimson 500g", und: "UN", categoria: "frutas" },
+            { id: "55",   nome: "Uva Isabel 400g", und: "UN", categoria: "frutas" },
+            { id: "58",   nome: "Uva Itália", und: "KG", categoria: "frutas" },
+            { id: "60",   nome: "Uva Itália na Cumbuca 500g", und: "UN", categoria: "frutas" },
+            { id: "63",   nome: "Uva Nacional Vitória 500g", und: "UN", categoria: "frutas" },
+            { id: "66",   nome: "Uva Passas", und: "KG", categoria: "frutas" },
+            { id: "68",   nome: "Uva Thompson 500g", und: "UN", categoria: "frutas" },
 
             // Verduras e Legumes
-            { id: "5",    nome: "Chuchu", preco: 3,10, und: "KG", categoria: "verduras" },
-            { id: "57",   nome: "Abóbora Japonesa", preco: 3.10, und: "KG", categoria: "verduras" },
-            { id: "58",   nome: "Abóbora Moranga KG", preco: 3.90, und: "KG", categoria: "verduras" },
-            { id: "186",  nome: "Abóbora Paulista", preco: 4.50, und: "KG", categoria: "verduras" },
-            { id: "861",  nome: "Coentro", preco: 4.85, und: "KG", categoria: "verduras" },
-            { id: "3",    nome: "Abobrinha KG", preco: 3.70, und: "KG", categoria: "verduras" },
-            { id: "73",   nome: "Acelga", preco: 4.50, und: "KG", categoria: "verduras" },
-            { id: "911",  nome: "Manjericão", preco: 1.50, und: "UN", categoria: "verduras" },
-            { id: "868",  nome: "Couve Folha", preco: 1.25, und: "UN", categoria: "verduras" },
-            { id: "27",   nome: "Manjericão Roxo", preco: 2.50, und: "UN", categoria: "verduras" },
-            { id: "3",    nome: "Feijão Verde", preco: 19.80, und: "KG", categoria: "verduras" },
-            { id: "82",   nome: "Alecrim", preco: 7.40, und: "UN", categoria: "verduras" },
-            { id: "899",  nome: "Mastruz", preco: 2.50, und: "UN", categoria: "verduras" },
-            { id: "932",  nome: "Feijão Verde Embalado", preco: 9.90, und: "UN", categoria: "verduras" },
-            { id: "482",  nome: "Maxixe Embalado", preco: 2.30, und: "UN", categoria: "verduras" },
-            { id: "122",  nome: "Alho Poró KG", preco: 18.50, und: "KG", categoria: "verduras" },
-            { id: "462",  nome: "Alho Redinha", preco: 22.00, und: "KG", categoria: "verduras" },
-            { id: "86",   nome: "Alho Redinha Pct", preco: 7.40, und: "KG", categoria: "verduras" },
-            { id: "85",   nome: "Almeirão", preco: 2.20, und: "UN", categoria: "verduras" },
-            { id: "760",  nome: "Inhame a Vácuo 700g", preco: 9.90, und: "UN", categoria: "verduras" },
-            { id: "17",   nome: "Inhame da Costa", preco: 4.50, und: "KG", categoria: "verduras" },
-            { id: "36",   nome: "Jacarezinho (Abóbora) KG", preco: 2.70, und: "KG", categoria: "verduras" },
-            { id: "513",  nome: "Jerimum Leite (Abóbora) KG", preco: 2.30, und: "KG", categoria: "verduras" },
-            { id: "37",   nome: "Milho Doce", preco: 5.80, und: "UN", categoria: "verduras" },
-            { id: "38",   nome: "Jiló Embalado", preco: 9.80, und: "KG", categoria: "verduras" },
-            { id: "741",  nome: "Arruda", preco: 1.80, und: "UN", categoria: "verduras" },
-            { id: "321",  nome: "Mostarda", preco: 1.50, und: "UN", categoria: "verduras" },
-            { id: "229",  nome: "Nabo KG", preco: 4.50, und: "KG", categoria: "verduras" },
-            { id: "299",  nome: "Pepino Caipira", preco: 4.30, und: "KG", categoria: "verduras" },
-            { id: "138",  nome: "Pepino Comum", preco: 4.40, und: "KG", categoria: "verduras" },
-            { id: "39",   nome: "Pepino Japonês", preco: 4.60, und: "KG", categoria: "verduras" },
-            { id: "21",   nome: "Batata Doce Americana", preco: 4.20, und: "KG", categoria: "verduras" },
-            { id: "470",  nome: "Batata Doce Branca", preco: 2.40, und: "KG", categoria: "verduras" },
-            { id: "20",   nome: "Batata Inglesa", preco: 2.40, und: "KG", categoria: "verduras" },
-            { id: "22",   nome: "Batata Vinagrete", preco: 4.90, und: "KG", categoria: "verduras" },
-            { id: "23",   nome: "Batata Yacon", preco: 13.50, und: "KG", categoria: "verduras" },
-            { id: "2001", nome: "Berinjela", preco: 2.70, und: "KG", categoria: "verduras" },
-            { id: "135",  nome: "Beterraba KG", preco: 4.90, und: "KG", categoria: "verduras" },
-            { id: "158",  nome: "Brócolis Premium 300g", preco: 8.90, und: "UN", categoria: "verduras" },
-            { id: "1397", nome: "Capim Santo", preco: 2.70, und: "UN", categoria: "verduras" },
-            { id: "35",   nome: "Caqui Nacional", preco: 8.50, und: "KG", categoria: "verduras" },
-            { id: "103",  nome: "Cará a Vácuo 700g", preco: 6.50, und: "UN", categoria: "verduras" },
-            { id: "71",   nome: "Cará Santomé", preco: 8.10, und: "KG", categoria: "verduras" },
-            { id: "181",  nome: "Cebola Branca", preco: 7.50, und: "KG", categoria: "verduras" },
-            { id: "137",  nome: "Cebola Roxa", preco: 5.20, und: "KG", categoria: "verduras" },
-            { id: "94",   nome: "Macassa", preco: 1.80, und: "UN", categoria: "verduras" },
-            { id: "56",   nome: "Cebola Vinagrete", preco: 4.20, und: "KG", categoria: "verduras" },
-            { id: "1382", nome: "Cebolinha", preco: 3.45, und: "KG", categoria: "verduras" },
-            { id: "4",    nome: "Macaxeira", preco: 1.50, und: "UN", categoria: "verduras" },
-            { id: "2",    nome: "Cenoura", preco: 4.80, und: "UN", categoria: "verduras" },
-            { id: "8",    nome: "Quiabo Embalado", preco: 8.90, und: "KG", categoria: "verduras" },
-            { id: "9",    nome: "Pimentão Amarelo Block 150g", preco: 5.90, und: "UN", categoria: "verduras" },
-            { id: "8711", nome: "Pimentão Amarelo KG", preco: 19.80, und: "KG", categoria: "verduras" },
-            { id: "7",    nome: "Pimentão Vermelho", preco: 4.80, und: "KG", categoria: "verduras" },
-            { id: "42",   nome: "Tomate da Região", preco: 5.80, und: "KG", categoria: "verduras" },
-            { id: "9",    nome: "Rabanete", preco: 2.30, und: "UN", categoria: "verduras" },
-            { id: "11",   nome: "Repolho Roxo", preco: 6.10, und: "KG", categoria: "verduras" },
-            { id: "13",   nome: "Repolho Verde", preco: 4.60, und: "KG", categoria: "verduras" },
-            { id: "19",   nome: "Salsão", preco: 2.20, und: "UN", categoria: "verduras" },
-            { id: "70",   nome: "Vagem Embalado", preco: 8.70, und: "KG", categoria: "verduras" },
-            { id: "72",   nome: "Vagem Macarrão Embalado", preco: 9.80, und: "KG", categoria: "verduras" },
+            { id: "5",    nome: "Chuchu", und: "KG", categoria: "verduras" },
+            { id: "57",   nome: "Abóbora Japonesa", und: "KG", categoria: "verduras" },
+            { id: "58",   nome: "Abóbora Moranga KG", und: "KG", categoria: "verduras" },
+            { id: "186",  nome: "Abóbora Paulista", und: "KG", categoria: "verduras" },
+            { id: "861",  nome: "Coentro", und: "KG", categoria: "verduras" },
+            { id: "3",    nome: "Abobrinha KG", und: "KG", categoria: "verduras" },
+            { id: "73",   nome: "Acelga", und: "KG", categoria: "verduras" },
+            { id: "911",  nome: "Manjericão", und: "UN", categoria: "verduras" },
+            { id: "868",  nome: "Couve Folha", und: "UN", categoria: "verduras" },
+            { id: "27",   nome: "Manjericão Roxo", und: "UN", categoria: "verduras" },
+            { id: "3",    nome: "Feijão Verde", und: "KG", categoria: "verduras" },
+            { id: "82",   nome: "Alecrim", und: "UN", categoria: "verduras" },
+            { id: "899",  nome: "Mastruz", und: "UN", categoria: "verduras" },
+            { id: "932",  nome: "Feijão Verde Embalado", und: "UN", categoria: "verduras" },
+            { id: "482",  nome: "Maxixe Embalado", und: "UN", categoria: "verduras" },
+            { id: "122",  nome: "Alho Poró KG", und: "KG", categoria: "verduras" },
+            { id: "462",  nome: "Alho Redinha", und: "KG", categoria: "verduras" },
+            { id: "86",   nome: "Alho Redinha Pct", und: "KG", categoria: "verduras" },
+            { id: "85",   nome: "Almeirão", und: "UN", categoria: "verduras" },
+            { id: "760",  nome: "Inhame a Vácuo 700g", und: "UN", categoria: "verduras" },
+            { id: "17",   nome: "Inhame da Costa", und: "KG", categoria: "verduras" },
+            { id: "36",   nome: "Jacarezinho (Abóbora) KG", und: "KG", categoria: "verduras" },
+            { id: "513",  nome: "Jerimum Leite (Abóbora) KG", und: "KG", categoria: "verduras" },
+            { id: "37",   nome: "Milho Doce", und: "UN", categoria: "verduras" },
+            { id: "38",   nome: "Jiló Embalado", und: "KG", categoria: "verduras" },
+            { id: "741",  nome: "Arruda", und: "UN", categoria: "verduras" },
+            { id: "321",  nome: "Mostarda", und: "UN", categoria: "verduras" },
+            { id: "229",  nome: "Nabo KG", und: "KG", categoria: "verduras" },
+            { id: "299",  nome: "Pepino Caipira", und: "KG", categoria: "verduras" },
+            { id: "138",  nome: "Pepino Comum", und: "KG", categoria: "verduras" },
+            { id: "39",   nome: "Pepino Japonês", und: "KG", categoria: "verduras" },
+            { id: "21",   nome: "Batata Doce Americana", und: "KG", categoria: "verduras" },
+            { id: "470",  nome: "Batata Doce Branca", und: "KG", categoria: "verduras" },
+            { id: "20",   nome: "Batata Inglesa", und: "KG", categoria: "verduras" },
+            { id: "22",   nome: "Batata Vinagrete", und: "KG", categoria: "verduras" },
+            { id: "23",   nome: "Batata Yacon", und: "KG", categoria: "verduras" },
+            { id: "2001", nome: "Berinjela", und: "KG", categoria: "verduras" },
+            { id: "135",  nome: "Beterraba KG", und: "KG", categoria: "verduras" },
+            { id: "158",  nome: "Brócolis Premium 300g", und: "UN", categoria: "verduras" },
+            { id: "1397", nome: "Capim Santo", und: "UN", categoria: "verduras" },
+            { id: "35",   nome: "Caqui Nacional", und: "KG", categoria: "verduras" },
+            { id: "103",  nome: "Cará a Vácuo 700g", und: "UN", categoria: "verduras" },
+            { id: "71",   nome: "Cará Santomé", und: "KG", categoria: "verduras" },
+            { id: "181",  nome: "Cebola Branca", und: "KG", categoria: "verduras" },
+            { id: "137",  nome: "Cebola Roxa", und: "KG", categoria: "verduras" },
+            { id: "94",   nome: "Macassa", und: "UN", categoria: "verduras" },
+            { id: "56",   nome: "Cebola Vinagrete", und: "KG", categoria: "verduras" },
+            { id: "1382", nome: "Cebolinha", und: "KG", categoria: "verduras" },
+            { id: "4",    nome: "Macaxeira", und: "UN", categoria: "verduras" },
+            { id: "2",    nome: "Cenoura", und: "UN", categoria: "verduras" },
+            { id: "8",    nome: "Quiabo Embalado", und: "KG", categoria: "verduras" },
+            { id: "9",    nome: "Pimentão Amarelo Block 150g", und: "UN", categoria: "verduras" },
+            { id: "8711", nome: "Pimentão Amarelo KG", und: "KG", categoria: "verduras" },
+            { id: "7",    nome: "Pimentão Vermelho", und: "KG", categoria: "verduras" },
+            { id: "42",   nome: "Tomate da Região", und: "KG", categoria: "verduras" },
+            { id: "9",    nome: "Rabanete", und: "UN", categoria: "verduras" },
+            { id: "11",   nome: "Repolho Roxo", und: "KG", categoria: "verduras" },
+            { id: "13",   nome: "Repolho Verde", und: "KG", categoria: "verduras" },
+            { id: "19",   nome: "Salsão", und: "UN", categoria: "verduras" },
+            { id: "70",   nome: "Vagem Embalado", und: "KG", categoria: "verduras" },
+            { id: "72",   nome: "Vagem Macarrão Embalado", und: "KG", categoria: "verduras" },
 
             // Massas e Gomas (Mercearia)
-            { id: "24",   nome: "Massa Verdão 1KG", preco: 7.40, und: "UN", categoria: "mercearia" },
-            { id: "519",  nome: "Massa Zé de Lima 1KG", preco: 7.40, und: "UN", categoria: "mercearia" },
-            { id: "129",  nome: "Goma de Batata Doce Verdão", preco: 4.70, und: "KG", categoria: "mercearia" },
-            { id: "171",  nome: "Goma de Tapioca 700g Verdão", preco: 7.80, und: "UN", categoria: "mercearia" },
-            { id: "200",  nome: "Goma Verdão 1 KG", preco: 5.60, und: "UN", categoria: "mercearia" },
-            { id: "786",  nome: "Goma Zé de Lima 1KG", preco: 5.90, und: "UN", categoria: "mercearia" },
-            { id: "1382", nome: "Macaxeira Congelada 700g", preco: 8.85, und: "KG", categoria: "mercearia" },
+            { id: "24",   nome: "Massa Verdão 1KG", und: "UN", categoria: "mercearia" },
+            { id: "519",  nome: "Massa Zé de Lima 1KG", und: "UN", categoria: "mercearia" },
+            { id: "129",  nome: "Goma de Batata Doce Verdão", und: "KG", categoria: "mercearia" },
+            { id: "171",  nome: "Goma de Tapioca 700g Verdão", und: "UN", categoria: "mercearia" },
+            { id: "200",  nome: "Goma Verdão 1 KG", und: "UN", categoria: "mercearia" },
+            { id: "786",  nome: "Goma Zé de Lima 1KG", und: "UN", categoria: "mercearia" },
+            { id: "1382", nome: "Macaxeira Congelada 700g", und: "KG", categoria: "mercearia" },
 
             // Sopas Prontas
-            { id: "23",   nome: "Sopa Brejeira 400G", preco: 8.50, und: "UN", categoria: "sopas" },
-            { id: "25",   nome: "Sopa Canja de Galinha 400G", preco: 8.50, und: "UN", categoria: "sopas" },
-            { id: "28",   nome: "Sopa de Caldo Verde 400G", preco: 8.50, und: "UN", categoria: "sopas" },
-            { id: "31",   nome: "Sopa de Carne 400G", preco: 8.50, und: "UN", categoria: "sopas" },
-            { id: "33",   nome: "Sopa Verdão Brejeira e Caldo", preco: 8.50, und: "CX", categoria: "sopas" },
-            { id: "36",   nome: "Sopa Verdão Canja/Carne", preco: 8.50, und: "CX", categoria: "sopas" }
+            { id: "23",   nome: "Sopa Brejeira 400G", und: "UN", categoria: "sopas" },
+            { id: "25",   nome: "Sopa Canja de Galinha 400G", und: "UN", categoria: "sopas" },
+            { id: "28",   nome: "Sopa de Caldo Verde 400G", und: "UN", categoria: "sopas" },
+            { id: "31",   nome: "Sopa de Carne 400G", und: "UN", categoria: "sopas" },
+            { id: "33",   nome: "Sopa Verdão Brejeira e Caldo", und: "CX", categoria: "sopas" },
+            { id: "36",   nome: "Sopa Verdão Canja/Carne", und: "CX", categoria: "sopas" }
         ];
 
-        // Mapeamento das Categorias por extenso
         const CATEGORIAS_NOMES = {
             hidroponicos: "Hidropônicos",
             frutas: "Frutas",
@@ -655,28 +614,23 @@
             sopas: "Sopas Prontas"
         };
 
-        // Estado da aplicação (Carrinho de compras)
         let carrinho = {};
 
-        // Elementos DOM
+        // Mapeamento dos elementos DOM
         const catalogContainer = document.getElementById('catalogContainer');
         const searchInput = document.getElementById('searchInput');
         const categoriesNav = document.getElementById('categoriesNav');
-        const barTotal = document.getElementById('barTotal');
         const barQty = document.getElementById('barQty');
         const cartModal = document.getElementById('cartModal');
         const modalOverlay = document.getElementById('modalOverlay');
         const btnViewCart = document.getElementById('btnViewCart');
         const btnCloseCart = document.getElementById('btnCloseCart');
         const cartItemsList = document.getElementById('cartItemsList');
-        const modalTotal = document.getElementById('modalTotal');
         const btnSubmitOrder = document.getElementById('btnSubmitOrder');
 
-        // Inicialização do Catálogo
+        // Renderiza o catálogo de itens
         function renderCatalog(filterText = "", filterCategory = "all") {
             catalogContainer.innerHTML = "";
-
-            // Agrupa os itens por categorias para renderizar por seções
             const categoriasParaRenderizar = filterCategory === "all" ? Object.keys(CATEGORIAS_NOMES) : [filterCategory];
 
             categoriasParaRenderizar.forEach(catKey => {
@@ -692,7 +646,7 @@
 
                     const title = document.createElement('h2');
                     title.className = 'section-title';
-                    title.innerHTML = `${CATEGORIAS_NOMES[catKey]} <span style='font-size:0.9rem; color:var(--text-muted); font-weight:normal;'>(${produtosDaCategoria.length})</span>`;
+                    title.innerHTML = `${CATEGORIAS_NOMES[catKey]} <span style='font-size:0.85rem; color:var(--text-muted); font-weight:normal;'>(${produtosDaCategoria.length})</span>`;
                     section.appendChild(title);
 
                     const grid = document.createElement('div');
@@ -706,19 +660,16 @@
                         card.innerHTML = `
                             <div class="product-info">
                                 <h3>${prod.nome}</h3>
-                                <div class="product-meta">Cód: ${prod.id} • Unidade: ${prod.und}</div>
+                                <div class="product-meta">Cód: ${prod.id} • ${prod.und}</div>
                             </div>
-                            <div class="product-actions">
-                                <span class="product-price">R$ ${prod.preco.toFixed(2).replace('.',',')}</span>
-                                <div class="quantity-control">
-                                    <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', -1)">
-                                        <span class="material-icons-round">remove</span>
-                                    </button>
-                                    <span class="qty-value" id="qty-catalog-${prod.id}">${qtdNoCarrinho}</span>
-                                    <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', 1)">
-                                        <span class="material-icons-round">add</span>
-                                    </button>
-                                </div>
+                            <div class="quantity-control">
+                                <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', -1)">
+                                    <span class="material-icons-round">remove</span>
+                                </button>
+                                <span class="qty-value" id="qty-catalog-${prod.id}">${qtdNoCarrinho}</span>
+                                <button class="qty-btn" onclick="alterarQuantidade('${prod.id}', 1)">
+                                    <span class="material-icons-round">add</span>
+                                </button>
                             </div>
                         `;
                         grid.appendChild(card);
@@ -734,7 +685,7 @@
             }
         }
 
-        // Altera a quantidade de itens no carrinho
+        // Altera quantidades ou remove se desistir (chegar a 0)
         window.alterarQuantidade = function(id, delta) {
             const produto = PRODUTOS_DATA.find(p => p.id === id);
             if (!produto) return;
@@ -750,36 +701,29 @@
                 }
             }
 
-            // Atualiza os inputs do catálogo se estiverem visíveis
+            // Sincroniza o número na tela principal
             const elCatalog = document.getElementById(`qty-catalog-${id}`);
             if (elCatalog) elCatalog.innerText = carrinho[id] ? carrinho[id].qtd : 0;
 
-            atualizarResumoBarra();
+            atualizarContadorBarra();
             renderCarrinhoModal();
         }
 
-        // Atualiza os totais e indicadores da barra flutuante inferior
-        function atualizarResumoBarra() {
-            let total = 0;
+        function atualizarContadorBarra() {
             let totalItens = 0;
-
             Object.values(carrinho).forEach(item => {
-                total += item.preco * item.qtd;
                 totalItens += item.qtd;
             });
-
-            barTotal.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
-            modalTotal.innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
             barQty.innerText = totalItens;
         }
 
-        // Renderiza os itens dentro do modal/gaveta do carrinho
+        // Renderiza itens na gaveta lateral
         function renderCarrinhoModal() {
             cartItemsList.innerHTML = "";
             const itens = Object.values(carrinho);
 
             if (itens.length === 0) {
-                cartItemsList.innerHTML = "<p class='empty-cart-msg'><span class='material-icons-round' style='font-size:3rem; display:block; margin-bottom:0.5rem;'>shopping_cart_checkout</span>Seu carrinho está vazio.</p>";
+                cartItemsList.innerHTML = "<p class='empty-cart-msg'><span class='material-icons-round' style='font-size:2.5rem; display:block; margin-bottom:0.5rem;'>playlist_add</span>Sua lista está vazia.</p>";
                 return;
             }
 
@@ -789,7 +733,7 @@
                 itemRow.innerHTML = `
                     <div class="cart-item-details">
                         <h4>${item.nome}</h4>
-                        <span class="cart-item-price">R$ ${(item.preco * item.qtd).toFixed(2).replace('.', ',')}</span>
+                        <div style="font-size:0.8rem; color:var(--text-muted)">Cód: ${item.id}</div>
                     </div>
                     <div class="quantity-control">
                         <button class="qty-btn" onclick="alterarQuantidade('${item.id}', -1)">
@@ -805,12 +749,11 @@
             });
         }
 
-        // Controle do Modal
         function alternarModal(abrir) {
             if (abrir) {
                 cartModal.classList.add('open');
                 modalOverlay.classList.add('open');
-                document.body.style.overflow = 'hidden'; // trava scroll da página de fundo
+                document.body.style.overflow = 'hidden';
             } else {
                 cartModal.classList.remove('open');
                 modalOverlay.classList.remove('open');
@@ -818,7 +761,7 @@
             }
         }
 
-        // Eventos e Filtros de Categorias
+        // Monitoramento de filtros por Categoria
         categoriesNav.addEventListener('click', (e) => {
             const btn = e.target.closest('.category-btn');
             if (!btn) return;
@@ -829,45 +772,36 @@
             renderCatalog(searchInput.value, btn.dataset.category);
         });
 
-        // Busca em Tempo Real
+        // Monitoramento da caixa de busca
         searchInput.addEventListener('input', (e) => {
             const categoriaAtiva = document.querySelector('.category-btn.active').dataset.category;
             renderCatalog(e.target.value, categoriaAtiva);
         });
 
-        // Eventos do Modal
         btnViewCart.addEventListener('click', () => alternarModal(true));
         btnCloseCart.addEventListener('click', () => alternarModal(false));
         modalOverlay.addEventListener('click', () => alternarModal(false));
 
-        // Formatação profissional para envio via WhatsApp
+        // Envio limpo e formatado para o WhatsApp
         btnSubmitOrder.addEventListener('click', () => {
             const itens = Object.values(carrinho);
-            if (itens.length === 0) return alert("Adicione produtos antes de enviar!");
+            if (itens.length === 0) return alert("Sua lista está vazia! Adicione itens primeiro.");
 
-            let textoPedido = `*🛒 NOVO PEDIDO - VERDÃO DISTRIBUIDORA*\n`;
+            let textoPedido = `*📋 LISTA DE SEPARAÇÃO - VERDÃO DISTRIBUIDORA*\n`;
             textoPedido += `----------------------------------------------\n\n`;
 
-            let totalGeral = 0;
             itens.forEach(item => {
-                const subtotal = item.preco * item.qtd;
-                totalGeral += subtotal;
-                textoPedido += `▪️ *${item.qtd}x* ${item.nome}\n`;
-                textoPedido += `   _Cód: ${item.id} | Subtotal: R$ ${subtotal.toFixed(2).replace('.', ',')}_\n\n`;
+                textoPedido += `▪️ *${item.qtd}x* ${item.nome}  _(Cód: ${item.id} - ${item.und})_\n`;
             });
 
-            textoPedido += `----------------------------------------------\n`;
-            textoPedido += `*Total do Pedido: R$ ${totalGeral.toFixed(2).replace('.', ',')}*\n\n`;
-            textoPedido += `_Por favor, confirme as informações e informe o endereço de entrega._`;
+            textoPedido += `\n----------------------------------------------\n`;
+            textoPedido += `_Por favor, verifique a disponibilidade destes itens._`;
 
-            // Codifica o texto para formato URL padrão do WhatsApp
             const urlFinal = `https://api.whatsapp.com/send?phone=${NUMERO_WHATSAPP}&text=${encodeURIComponent(textoPedido)}`;
-            
-            // Abre nova aba redirecionando para o app ou web do WhatsApp
             window.open(urlFinal, '_blank');
         });
 
-        // Inicialização Padrão
+        // Início automático do catálogo
         renderCatalog();
     </script>
 </body>
